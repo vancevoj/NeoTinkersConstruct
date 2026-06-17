@@ -1,3 +1,18 @@
+# NeoTinkersConstruct
+
+A community effort to port **Tinkers' Construct** to **Minecraft 1.21.1 / NeoForge**, so it can
+run alongside Create 6.x and Create Aeronautics on modern packs (built for the Tinkreate pack).
+
+**Status:** planning and scaffolding. This is a long-running port, not a finished mod. The jump
+from 1.20.1 Forge to 1.21.1 NeoForge crosses the 1.20.5 data-components rework, a full
+Forge-to-NeoForge API migration, and a Mantle port. See [`PORTING.md`](PORTING.md) for the
+roadmap and order of operations.
+
+This fork is a derivative work of Tinkers' Construct by SlimeKnights; full credit to them. The
+upstream README follows.
+
+---
+
 # [Tinkers' Construct](https://slimeknights.github.io/projects/#tinkers-construct)
 
 Modify all the things, then do it again!   
