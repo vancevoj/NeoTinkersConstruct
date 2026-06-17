@@ -115,6 +115,31 @@ IItemHandler h = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, side);
 - `LazyOptional<T>` is gone. Capabilities return `@Nullable T`.
 - Define custom caps with `BlockCapability.createSided(...)` / `ItemCapability.createVoid(...)`.
 
+### Data attachments (replaces capabilities used for per-entity/-stack DATA)
+
+Forge capabilities were also abused to *store mutable data* on entities/stacks
+(e.g. Mantle's `OffhandCooldownTracker` via `AttachCapabilitiesEvent` +
+`LazyOptional` + `CapabilityToken`). In NeoForge 1.21 that pattern is a **data
+attachment**, not a capability:
+
+```java
+DeferredRegister<AttachmentType<?>> ATTACHMENTS =
+    DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MOD_ID);
+DeferredHolder<AttachmentType<?>, AttachmentType<OffhandCooldown>> OFFHAND =
+    ATTACHMENTS.register("offhand_cooldown", () -> AttachmentType
+        .builder(() -> new OffhandCooldown())
+        .serialize(OffhandCooldown.CODEC)   // omit for non-persistent
+        .build());
+// access (no LazyOptional, no AttachCapabilitiesEvent):
+OffhandCooldown d = player.getData(OFFHAND);
+player.setData(OFFHAND, d);
+```
+Delete `ICapabilityProvider`, `getCapability`, `AttachCapabilitiesEvent`,
+`CapabilityManager.get(new CapabilityToken<>(){})`. Register the
+`DeferredRegister` on the mod bus. Note `OffhandCooldownTracker` also depends on
+the ported `slimeknights.mantle.network` layer (SwingArmPacket), so do networking
+first.
+
 ### Networking (full rework)
 
 ```java
