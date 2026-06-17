@@ -62,6 +62,19 @@ before/after snippets are in [`docs/forge-to-neoforge.md`](docs/forge-to-neoforg
 Milestone: `./gradlew :Mantle:build` green, then a dedicated-server smoke
 (`./gradlew :Mantle:runServer`, expect "Done", stop it).
 
+**Exact next files** (Mantle, highest error count first - this is the dependency
+root, port as one batch then recompile to watch the ~1630 total drop):
+1. `registration/adapter/RegistryAdapter.java` (57) - base of the adapter layer
+2. `registration/deferred/BlockDeferredRegister.java` (29),
+   `FluidDeferredRegister.java` (22), `EntityTypeDeferredRegister.java` (10),
+   and the rest of `registration/deferred/*` and `registration/adapter/*`
+3. `util/CombatHelper.java` (40), `util/OffhandCooldownTracker.java` (23) -
+   note `MobType` was REMOVED in 1.21; these use it. Replace MobType checks with
+   entity type tags (`EntityTypeTags`) / `LivingEntity` accessors.
+4. `util/JsonHelper.java` (9), `RegistrationHelper.java` (4), then `Mantle.java`
+   (entangled: needs predicates, conditions, network, MobType all done first).
+Recompile after each batch: `./gradlew compileJava -I /tmp/maxerrs.init.gradle`.
+
 ### TConstruct code port (blocked on Mantle)
 545/1854 files import Forge (1446 imports). After Mantle compiles:
 run `scripts/migrate-forge-imports.sh` here too, then the **data-components**
