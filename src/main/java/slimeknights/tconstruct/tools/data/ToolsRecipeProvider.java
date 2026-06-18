@@ -221,7 +221,7 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
                        .pattern("cl")
                        .pattern("lc")
                        .define('l', Tags.Items.LEATHERS)
-                       .define('c', MaterialValueIngredient.of(new MaterialStatTypePredicate(StatlessMaterialStats.SHIELD_CORE.getIdentifier()), 1))
+                       .define('c', MaterialValueIngredient.of(new MaterialStatTypePredicate(StatlessMaterialStats.SHIELD_CORE.getIdentifier()), 1).toVanilla())
                        .unlockedBy("has_item", has(Tags.Items.LEATHERS))
                        .save(shapedMaterial, location(travelersFolder + "shield"));
 

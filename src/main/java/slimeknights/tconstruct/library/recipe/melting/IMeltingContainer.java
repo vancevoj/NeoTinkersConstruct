@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.library.recipe.melting;
 
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import slimeknights.mantle.recipe.container.ISingleStackContainer;
@@ -11,6 +12,12 @@ public interface IMeltingContainer extends ISingleStackContainer, RecipeInput {
    * @return  Nuggets per ore
    */
   IOreRate getOreRate();
+
+  /** Resolves the clash between {@link RecipeInput#getItem(int)} and the legacy container */
+  @Override
+  default ItemStack getItem(int index) {
+    return index == 0 ? getStack() : ItemStack.EMPTY;
+  }
 
   /** Implements {@link RecipeInput#size()} using the legacy container size */
   @Override

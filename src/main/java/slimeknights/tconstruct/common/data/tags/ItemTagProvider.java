@@ -782,6 +782,7 @@ public class ItemTagProvider extends ItemTagsProvider {
       case LEGGINGS -> LEGGINGS;
       case CHESTPLATE -> CHESTPLATES;
       case HELMET -> HELMETS;
+      default -> throw new IllegalArgumentException("No tconstruct armor tag for slot type " + slotType);
     };
   }
 
@@ -791,6 +792,7 @@ public class ItemTagProvider extends ItemTagsProvider {
       case LEGGINGS -> ItemTags.LEG_ARMOR;
       case CHESTPLATE -> ItemTags.CHEST_ARMOR;
       case HELMET -> ItemTags.HEAD_ARMOR;
+      default -> throw new IllegalArgumentException("No armor tag for slot type " + slotType);
     };
   }
 

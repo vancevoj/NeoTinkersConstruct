@@ -2,6 +2,7 @@ package slimeknights.tconstruct.library.recipe.casting.material;
 
 import com.google.common.collect.Streams;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -105,12 +106,12 @@ public class ToolCastingRecipe extends PartSwapCastingRecipe implements IMultiRe
   }
 
   @Override
-  public ItemStack getResultItem(RegistryAccess access) {
+  public ItemStack getResultItem(HolderLookup.Provider access) {
     return new ItemStack(result);
   }
 
   @Override
-  public ItemStack assemble(ICastingContainer inv, RegistryAccess access) {
+  public ItemStack assemble(ICastingContainer inv, HolderLookup.Provider access) {
     // if the cast is the result, we are part swapping, replace the last material
     ItemStack cast = inv.getStack();
     if (cast.getItem() == result) {
