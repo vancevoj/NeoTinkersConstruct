@@ -15,8 +15,10 @@ import slimeknights.tconstruct.library.client.materials.MaterialRenderInfo;
 import slimeknights.tconstruct.library.client.materials.MaterialRenderInfoLoader;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
+import slimeknights.tconstruct.library.tools.nbt.MaterialIdNBT;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -147,9 +149,10 @@ public abstract class MaterialArmorTextureSupplier implements ArmorTextureSuppli
 
     @Override
     protected String getMaterial(ItemStack stack) {
-      CompoundTag tag = stack.getTag();
-      if (tag != null && tag.contains(ToolStack.TAG_MATERIALS, Tag.TAG_LIST)) {
-        return tag.getList(ToolStack.TAG_MATERIALS, Tag.TAG_STRING).getString(index);
+      // 1.21: tool data lives in a data component; MaterialIdNBT reads it
+      List<MaterialVariantId> materials = MaterialIdNBT.from(stack).getMaterials();
+      if (index < materials.size()) {
+        return materials.get(index).toString();
       }
       return "";
     }

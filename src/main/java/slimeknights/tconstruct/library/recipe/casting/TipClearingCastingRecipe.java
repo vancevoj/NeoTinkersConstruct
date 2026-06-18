@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.library.recipe.casting;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -8,7 +9,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import slimeknights.mantle.data.loadable.Loadables;
 import slimeknights.mantle.data.loadable.field.ContextKey;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
@@ -48,7 +48,7 @@ public class TipClearingCastingRecipe extends PotionCastingRecipe {
   }
 
   @Override
-  public ItemStack assemble(ICastingContainer inv, RegistryAccess access) {
+  public ItemStack assemble(ICastingContainer inv, HolderLookup.Provider access) {
     ItemStack result = inv.getStack().copy();
     ToolStack.from(result).getPersistentData().remove(modifier);
     return result;
@@ -65,10 +65,10 @@ public class TipClearingCastingRecipe extends PotionCastingRecipe {
         .map(stack -> IDisplayModifierRecipe.withModifiers(IModifiableDisplay.getDisplayStack(stack), List.of(new ModifierEntry(modifier, 1))))
         .toList();
       // list of tools with the potion set
-      List<ItemStack> toolWithPotion = BuiltInRegistries.POTION.stream()
-        .filter(potion -> potion != Potions.EMPTY)
+      List<ItemStack> toolWithPotion = BuiltInRegistries.POTION.holders()
+        .filter(potion -> !potion.is(Potions.WATER))
         .flatMap(potion -> {
-          String id = Loadables.POTION.getString(potion);
+          String id = Loadables.POTION.getString(potion.value());
           return tools.stream().map(stack -> {
             ToolStack tool = ToolStack.copyFrom(stack);
             tool.getPersistentData().putString(modifier, id);
@@ -76,8 +76,8 @@ public class TipClearingCastingRecipe extends PotionCastingRecipe {
           });
         }).toList();
       // list of tools without the potion set, want the sizes to match
-      List<ItemStack> toolWithoutPotion = ForgeRegistries.POTIONS.getValues().stream()
-        .filter(potion -> potion != Potions.EMPTY)
+      List<ItemStack> toolWithoutPotion = BuiltInRegistries.POTION.holders()
+        .filter(potion -> !potion.is(Potions.WATER))
         .flatMap(i -> tools.stream()).toList();
       displayRecipes = List.of(new DisplayCastingRecipe(getId(), getType(), toolWithPotion, fluid.getFluids(), toolWithoutPotion, coolingTime, true));
     }

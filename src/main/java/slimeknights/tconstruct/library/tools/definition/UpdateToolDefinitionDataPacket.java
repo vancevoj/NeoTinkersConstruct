@@ -5,8 +5,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.NetworkEvent.Context;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import slimeknights.mantle.network.packet.ISimplePacket;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
 import slimeknights.tconstruct.TConstruct;
 
@@ -16,6 +19,9 @@ import java.util.Map.Entry;
 /** Packet to sync tool definitions to the client */
 @RequiredArgsConstructor
 public class UpdateToolDefinitionDataPacket implements IThreadsafePacket {
+  public static final Type<UpdateToolDefinitionDataPacket> TYPE = new Type<>(TConstruct.getResource("update_tool_definition_data"));
+  public static final StreamCodec<RegistryFriendlyByteBuf,UpdateToolDefinitionDataPacket> STREAM_CODEC = ISimplePacket.codec(UpdateToolDefinitionDataPacket::new);
+
   @Getter(AccessLevel.PROTECTED)
   private final Map<ResourceLocation, ToolDefinitionData> dataMap;
 
@@ -51,7 +57,12 @@ public class UpdateToolDefinitionDataPacket implements IThreadsafePacket {
   }
 
   @Override
-  public void handleThreadsafe(Context context) {
+  public Type<UpdateToolDefinitionDataPacket> type() {
+    return TYPE;
+  }
+
+  @Override
+  public void handleThreadsafe(IPayloadContext context) {
     ToolDefinitionLoader.getInstance().updateDataFromServer(dataMap);
   }
 }

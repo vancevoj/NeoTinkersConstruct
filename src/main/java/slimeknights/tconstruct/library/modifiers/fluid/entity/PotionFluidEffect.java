@@ -30,6 +30,7 @@ public record PotionFluidEffect(float scale, TagPredicate predicate) implements 
 
   @Override
   public float apply(FluidStack fluid, EffectLevel level, FluidEffectContext.Entity context, FluidAction action) {
+    // TODO(neoport): FluidStack is component-backed in 1.21 (no getTag()); potion data now lives in DataComponents.POTION_CONTENTS and PotionUtils is replaced by PotionContents. The potion-on-fluid representation and how TagPredicate (still Predicate<CompoundTag>) filters component fluids is owned by the unported `fluids` package (PotionFluidType). Resolve once that model is decided.
     LivingEntity target = context.getLivingTarget();
     // must match the tag predicate
     if (target != null && predicate.test(fluid.getTag())) {

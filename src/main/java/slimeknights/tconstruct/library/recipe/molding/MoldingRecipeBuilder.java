@@ -1,22 +1,18 @@
 package slimeknights.tconstruct.library.recipe.molding;
 
-import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import slimeknights.mantle.recipe.data.AbstractRecipeBuilder;
 import slimeknights.mantle.recipe.helper.ItemOutput;
 import slimeknights.mantle.recipe.helper.TypeAwareRecipeSerializer;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
-
-import javax.annotation.Nullable;
-import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 @RequiredArgsConstructor(staticName = "molding")
@@ -84,39 +80,16 @@ public class MoldingRecipeBuilder extends AbstractRecipeBuilder<MoldingRecipeBui
   /* Building */
 
   @Override
-  public void save(Consumer<FinishedRecipe> consumer) {
-    save(consumer, BuiltInRegistries.ITEM.getKey(output.get().getItem()));
+  public void save(RecipeOutput output) {
+    save(output, BuiltInRegistries.ITEM.getKey(this.output.get().getItem()));
   }
 
   @Override
-  public void save(Consumer<FinishedRecipe> consumer, ResourceLocation id) {
+  public void save(RecipeOutput recipeOutput, ResourceLocation id) {
     if (material == Ingredient.EMPTY) {
       throw new IllegalStateException("Missing material for molding recipe");
     }
-    ResourceLocation advancementId = buildOptionalAdvancement(id, "molding");
-    consumer.accept(new LoadableFinishedRecipe<>(new MoldingRecipe(serializer, id, material, pattern, patternConsumed, output), MoldingRecipe.LOADER, advancementId));
-  }
-
-  private class Finished extends AbstractFinishedRecipe {
-    public Finished(ResourceLocation ID, @Nullable ResourceLocation advancementID) {
-      super(ID, advancementID);
-    }
-
-    @Override
-    public void serializeRecipeData(JsonObject json) {
-      json.add("material", material.toJson());
-      if (pattern != Ingredient.EMPTY) {
-        json.add("pattern", pattern.toJson());
-        if (patternConsumed) {
-          json.addProperty("pattern_consumed", true);
-        }
-      }
-      json.add("result", output.serialize(false));
-    }
-
-    @Override
-    public RecipeSerializer<?> getType() {
-      return serializer;
-    }
+    AdvancementHolder advancement = buildOptionalAdvancement(id, "molding");
+    recipeOutput.accept(id, new MoldingRecipe(serializer, id, material, pattern, patternConsumed, output), advancement);
   }
 }

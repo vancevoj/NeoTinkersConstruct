@@ -1,5 +1,9 @@
 package slimeknights.tconstruct.library.client.book;
 
+import com.google.gson.JsonDeserializer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import slimeknights.mantle.client.book.BookLoader;
@@ -62,7 +66,13 @@ public class TinkerBook extends BookData {
    * Initializes the books
    */
   public static void initBook() {
-    BookLoader.registerGsonTypeAdapter(Component.class, new Component.Serializer());
+    // 1.21: Component.Serializer is no longer instantiable; deserialize via the level's registry access (or empty access if unavailable)
+    BookLoader.registerGsonTypeAdapter(Component.class, (JsonDeserializer<Component>) (json, type, context) -> {
+      HolderLookup.Provider provider = Minecraft.getInstance().level != null
+        ? Minecraft.getInstance().level.registryAccess()
+        : RegistryAccess.EMPTY;
+      return Component.Serializer.fromJson(json, provider);
+    });
 
     // register page types
     BookLoader.registerPageType(MeleeHarvestMaterialContent.ID, MeleeHarvestMaterialContent.class);

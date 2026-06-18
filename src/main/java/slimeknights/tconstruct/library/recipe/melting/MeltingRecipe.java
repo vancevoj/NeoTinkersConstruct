@@ -125,7 +125,7 @@ public class MeltingRecipe implements IMeltingRecipe {
       // boost for foundry rate, this method is used for the foundry only
       OreRateType rate = getOreType();
       if (rate != null) {
-        return new FluidStack(output.get(), Config.COMMON.foundryOreRate.applyOreBoost(rate, output.getAmount()));
+        return output.get().copyWithAmount(Config.COMMON.foundryOreRate.applyOreBoost(rate, output.getAmount()));
       }
       return output.get();
     });

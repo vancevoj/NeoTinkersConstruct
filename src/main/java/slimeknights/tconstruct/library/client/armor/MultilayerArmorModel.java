@@ -37,7 +37,12 @@ public class MultilayerArmorModel extends AbstractArmorModel {
   }
 
   @Override
-  public void renderToBuffer(PoseStack matrices, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+  public void renderToBuffer(PoseStack matrices, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int color) {
+    // 1.21: vanilla now passes a packed ARGB color instead of separate float channels; unpack for our float-based texture pipeline
+    float alpha = (color >> 24 & 0xFF) / 255.0F;
+    float red = (color >> 16 & 0xFF) / 255.0F;
+    float green = (color >> 8 & 0xFF) / 255.0F;
+    float blue = (color & 0xFF) / 255.0F;
     if (this.base != null && buffer != null) {
       boolean armorGlint = hasGlint;
       boolean wingGlint = hasGlint;

@@ -44,7 +44,8 @@ public interface OnAttackedModifierHook {
 
   /** Checks if the damage source is caused directly by another entity, as opposed to indirectly by a projectile */
   static boolean isDirectDamage(DamageSource source) {
-    return source.getEntity() != null && !source.isIndirect() && !source.is(DamageTypeTags.AVOIDS_GUARDIAN_THORNS);
+    // 1.21: DamageSource#isIndirect was removed; indirect == the direct entity (e.g. a projectile) differs from the causing entity
+    return source.getEntity() != null && source.getDirectEntity() == source.getEntity() && !source.is(DamageTypeTags.AVOIDS_GUARDIAN_THORNS);
   }
 
   /**

@@ -37,6 +37,7 @@ import slimeknights.tconstruct.library.tools.helper.TooltipUtil;
 import slimeknights.tconstruct.library.tools.item.IModifiable;
 import slimeknights.tconstruct.library.tools.nbt.MaterialIdNBT;
 import slimeknights.tconstruct.library.tools.nbt.MaterialNBT;
+import slimeknights.tconstruct.library.tools.nbt.ToolDataComponents;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 
 import javax.annotation.Nullable;
@@ -239,7 +240,7 @@ public class PartSwapCastingRecipe extends AbstractMaterialCastingRecipe impleme
                   results.add(withMaterial(tool, output).copy());
                   // mark input as display so tooltip does not show useless stats
                   ItemStack input = withMaterial(tool, MaterialVariant.of(ToolBuildHandler.getRenderMaterial(0)));
-                  input.getOrCreateTag().putBoolean(TooltipUtil.KEY_DISPLAY, true);
+                  ToolDataComponents.update(input, t -> t.putBoolean(TooltipUtil.KEY_DISPLAY, true));
                   inputs.add(input);
                 }
               }

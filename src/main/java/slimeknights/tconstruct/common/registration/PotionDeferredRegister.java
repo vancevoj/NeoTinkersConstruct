@@ -1,5 +1,7 @@
 package slimeknights.tconstruct.common.registration;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -19,7 +21,7 @@ public class PotionDeferredRegister extends DeferredRegisterWrapper<Potion> {
   }
 
   /** Registers a standalone potion */
-  public DeferredHolder<?, Potion> register(String name, Supplier<Potion> potion) {
+  public DeferredHolder<? super Potion, Potion> register(String name, Supplier<Potion> potion) {
     return register.register(name, potion);
   }
 
@@ -29,12 +31,12 @@ public class PotionDeferredRegister extends DeferredRegisterWrapper<Potion> {
   }
 
   /** Registers a group of potions with the same effect */
-  public Builder registerTypes(DeferredHolder<?, ? extends MobEffect> effect, int duration, int amplifier) {
+  public Builder registerTypes(DeferredHolder<? super MobEffect, ? extends MobEffect> effect, int duration, int amplifier) {
     return new Builder(effect.getId().getPath(), effect, duration, amplifier);
   }
 
   /** Registers a group of potions with the same effect starting at level 1 and a duration of 3 minutes */
-  public Builder registerTypes(DeferredHolder<?, ? extends MobEffect> effect) {
+  public Builder registerTypes(DeferredHolder<? super MobEffect, ? extends MobEffect> effect) {
     return registerTypes(effect, 3 * 60 * 20, 0);
   }
 
@@ -65,7 +67,10 @@ public class PotionDeferredRegister extends DeferredRegisterWrapper<Potion> {
     /** Adds the given potion type */
     private Builder with(PotionType type, int duration, int amplifier) {
       String prefix = type == PotionType.NORMAL ? "" : type.toString().toLowerCase(Locale.ROOT);
-      builder.put(type, register(prefix + '_' + name, () -> new Potion(modID + "." + name, new MobEffectInstance(effect.get(), duration, amplifier))));
+      builder.put(type, register(prefix + '_' + name, () -> {
+        Holder<MobEffect> holder = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect.get());
+        return new Potion(modID + "." + name, new MobEffectInstance(holder, duration, amplifier));
+      }));
       return this;
     }
 

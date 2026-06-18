@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.ForgeI18n;
+import net.minecraft.locale.Language;
 import net.neoforged.neoforge.fluids.FluidStack;
 import slimeknights.mantle.client.book.HTMLUtils;
 import slimeknights.mantle.client.book.data.BookData;
@@ -64,10 +64,10 @@ public class FluidEffectContent extends PageContent {
     // load in missing data
     String key = Util.makeTranslationKey("fluid", name);
     if (title.isBlank()) {
-      title = ForgeI18n.getPattern(key);
+      title = Language.getInstance().getOrDefault(key);
     }
     if (text.isBlank()) {
-      text = ForgeI18n.getPattern(key + ".fluid_effect");
+      text = Language.getInstance().getOrDefault(key + ".fluid_effect");
     }
     // if we didn't set either effects list, fetch those
     if (effects.hasEffects()) {

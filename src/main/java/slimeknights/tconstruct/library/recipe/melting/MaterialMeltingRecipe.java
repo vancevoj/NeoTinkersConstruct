@@ -83,7 +83,7 @@ public class MaterialMeltingRecipe implements IMeltingRecipe, IMultiRecipe<Melti
   @Override
   public FluidStack getOutput(IMeltingContainer inv) {
     int cost = MaterialCastingLookup.getItemCost(inv.getStack().getItem());
-    return new FluidStack(result.get(), result.getAmount() * cost);
+    return result.get().copyWithAmount(result.getAmount() * cost);
   }
 
   @Override
@@ -91,7 +91,7 @@ public class MaterialMeltingRecipe implements IMeltingRecipe, IMultiRecipe<Melti
     if (!byproducts.isEmpty()) {
       int cost = MaterialCastingLookup.getItemCost(inv.getStack().getItem());
       for (FluidOutput byproduct : byproducts) {
-        handler.fill(new FluidStack(byproduct.get(), byproduct.getAmount() * cost), FluidAction.EXECUTE);
+        handler.fill(byproduct.get().copyWithAmount(byproduct.getAmount() * cost), FluidAction.EXECUTE);
       }
     }
   }
@@ -122,10 +122,10 @@ public class MaterialMeltingRecipe implements IMeltingRecipe, IMultiRecipe<Melti
             int cost = entry.getIntValue();
             // if the part cost is 1, can skip messing with the output size
             if (cost != 1) {
-              output = FluidOutput.fromStack(new FluidStack(output.get(), output.getAmount() * cost));
+              output = FluidOutput.fromStack(output.get().copyWithAmount(output.getAmount() * cost));
               // skip streaming the byproducts if empty
               if (!byproducts.isEmpty()) {
-                byproducts = byproducts.stream().map(fluid -> FluidOutput.fromStack(new FluidStack(fluid.get(), fluid.getAmount() * cost))).toList();
+                byproducts = byproducts.stream().map(fluid -> FluidOutput.fromStack(fluid.get().copyWithAmount(fluid.getAmount() * cost))).toList();
               }
             }
             return new MeltingRecipe(id, "", MaterialIngredient.of(entry.getKey(), inputId), output, temperature,

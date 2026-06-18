@@ -27,6 +27,7 @@ public record CureEffectsFluidEffect(ItemStack stack) implements FluidEffect<Flu
   public float apply(FluidStack fluid, EffectLevel level, Entity context, FluidAction action) {
     LivingEntity target = context.getLivingTarget();
     if (target != null && level.isFull()) {
+      // TODO(neoport): MobEffectInstance#isCurativeItem and LivingEntity#curePotionEffects(ItemStack) were removed in 1.21; item-based curing is replaced by NeoForge EffectCure tokens (Item#getEffectCures + LivingEntity#removeEffectsCuredBy(EffectCure)). Mapping the cure stack (e.g. milk bucket) to an EffectCure is a cross-package decision shared with CureOnRemovalModule/RevengeModifier (still on the legacy API).
       // when simulating, search the effects list directly for curative effects
       // may still be wrong if the event cancels things though, no way to safely simulate it
       if (action.simulate()) {

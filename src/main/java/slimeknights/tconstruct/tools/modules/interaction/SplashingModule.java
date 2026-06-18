@@ -195,7 +195,7 @@ public record SplashingModule(LevelingValue strength) implements ModifierModule,
               // damage the tool, we charge for the multiplier and for the number of targets hit
               ItemStack stack = context.getItemInHand();
               if (ToolDamageUtil.damage(tool, Mth.ceil(numTargets * level), player, stack, modifier.getId()) && player != null) {
-                player.broadcastBreakEvent(source.getSlot(context.getHand()));
+                player.onEquippedItemBroken(tool.getItem(), source.getSlot(context.getHand()));
               }
             }
           }

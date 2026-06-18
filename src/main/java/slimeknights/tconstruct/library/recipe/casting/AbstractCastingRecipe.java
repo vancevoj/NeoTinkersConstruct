@@ -3,6 +3,7 @@ package slimeknights.tconstruct.library.recipe.casting;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import slimeknights.mantle.data.loadable.common.IngredientLoadable;
@@ -20,6 +21,12 @@ public abstract class AbstractCastingRecipe implements ICastingRecipe {
 
   @Getter @Nonnull
   private final RecipeType<?> type;
+  /**
+   * Recipe ID. In 1.21 vanilla recipes are keyed by their {@link net.minecraft.world.item.crafting.RecipeHolder},
+   * but casting recipes still carry their own ID for JEI display purposes.
+   */
+  @Getter
+  private final ResourceLocation id;
   @Getter
   private final String group;
   /** 'cast' item for recipe (doesn't have to be an actual 'cast') */
@@ -30,8 +37,9 @@ public abstract class AbstractCastingRecipe implements ICastingRecipe {
   @Getter @Accessors(fluent = true)
   private final boolean switchSlots;
 
-  protected AbstractCastingRecipe(RecipeType<?> type, String group, Ingredient cast, boolean consumed, boolean switchSlots) {
+  protected AbstractCastingRecipe(RecipeType<?> type, ResourceLocation id, String group, Ingredient cast, boolean consumed, boolean switchSlots) {
     this.type = type;
+    this.id = id;
     this.group = group;
     this.cast = cast;
     this.consumed = consumed;

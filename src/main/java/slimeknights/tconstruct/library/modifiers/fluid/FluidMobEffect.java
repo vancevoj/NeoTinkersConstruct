@@ -1,13 +1,14 @@
 package slimeknights.tconstruct.library.modifiers.fluid;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import slimeknights.mantle.data.loadable.Loadables;
 import slimeknights.mantle.data.loadable.primitive.IntLoadable;
@@ -19,7 +20,6 @@ import slimeknights.tconstruct.library.modifiers.fluid.entity.MobEffectFluidEffe
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 /**
  * Common logic for effects between {@link slimeknights.tconstruct.library.modifiers.fluid.entity.MobEffectFluidEffect} and {@link slimeknights.tconstruct.library.modifiers.fluid.block.MobEffectCloudFluidEffect}
@@ -28,16 +28,18 @@ import java.util.stream.Collectors;
  * @param time    Potion time in ticks, scales with fluid amount. Set to {@link MobEffectInstance#INFINITE_DURATION} for infinite.
  * @param curativeItems  Items allowed to cure the effect
  */
-public record FluidMobEffect(MobEffect effect, int time, int level, @Nullable List<Item> curativeItems) {
+public record FluidMobEffect(Holder<MobEffect> effect, int time, int level, @Nullable List<Item> curativeItems) {
   private static final String TRANSLATION_ROOT = TConstruct.makeTranslationKey("fluid_effect", "mob_effect.");
+  /** 1.21: MobEffectInstance and LivingEntity#getEffect take Holder<MobEffect>, so we store the holder. Loadable still resolves raw MobEffect then wraps. */
+  @SuppressWarnings("deprecation")
   public static final RecordLoadable<FluidMobEffect> LOADABLE = RecordLoadable.create(
-    Loadables.MOB_EFFECT.requiredField("effect", e -> e.effect),
+    Loadables.MOB_EFFECT.<Holder<MobEffect>>xmap((effect, error) -> BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), (holder, error) -> holder.value()).requiredField("effect", e -> e.effect),
     IntLoadable.FROM_ONE.defaultField("time", -1, false, e -> e.time),
     IntLoadable.FROM_ONE.defaultField("level", 1, true, e -> e.level),
     Loadables.ITEM.list(0).nullableField("curative_items", e -> e.curativeItems),
     FluidMobEffect::new);
 
-  public FluidMobEffect(MobEffect effect, int time, int level) {
+  public FluidMobEffect(Holder<MobEffect> effect, int time, int level) {
     this(effect, time, level, null);
   }
 
@@ -53,11 +55,8 @@ public record FluidMobEffect(MobEffect effect, int time, int level, @Nullable Li
 
   /** Creates the final effect */
   public MobEffectInstance effectWithTime(int time) {
-    MobEffectInstance instance = new MobEffectInstance(effect, time, this.level - 1);
-    if (curativeItems != null) {
-      instance.setCurativeItems(curativeItems.stream().map(ItemStack::new).collect(Collectors.toList()));
-    }
-    return instance;
+    // TODO(neoport): per-instance curative items removed in 1.21 (MobEffectInstance#setCurativeItems gone); curativeItems is retained on the record for datagen but no longer applied to the live effect. Cure customization now uses effect cure tags, a cross-package decision.
+    return new MobEffectInstance(effect, time, this.level - 1);
   }
 
   /** Creates the final effect */
@@ -132,7 +131,7 @@ public record FluidMobEffect(MobEffect effect, int time, int level, @Nullable Li
   /** Gets the display name for this effect */
   public Component getDisplayName(TimeAction action) {
     // level display based on PotionUtils#addPotionTooltip
-    Component component = effect.getDisplayName();
+    Component component = effect.value().getDisplayName();
     // add level if above 1
     if (level > 1) {
       component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + (level - 1)));
@@ -154,19 +153,19 @@ public record FluidMobEffect(MobEffect effect, int time, int level, @Nullable Li
     private Builder() {}
 
     /** Adds an effect to the builder with the passed cures. If none are passed, effect will have no cure*/
-    public Builder effectCure(MobEffect effect, int time, int level, Item... curativeItems) {
+    public Builder effectCure(Holder<MobEffect> effect, int time, int level, Item... curativeItems) {
       effects.add(new FluidMobEffect(effect, time, level, List.of(curativeItems)));
       return this;
     }
 
     /** Adds an effect to the builder with default cures */
-    public Builder effect(MobEffect effect, int time, int level) {
+    public Builder effect(Holder<MobEffect> effect, int time, int level) {
       effects.add(new FluidMobEffect(effect, time, level, null));
       return this;
     }
 
     /** Adds an effect to the builder */
-    public Builder effect(MobEffect effect, int time) {
+    public Builder effect(Holder<MobEffect> effect, int time) {
       return effect(effect, time, 1);
     }
 

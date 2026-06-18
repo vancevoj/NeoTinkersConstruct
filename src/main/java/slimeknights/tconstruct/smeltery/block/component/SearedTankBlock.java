@@ -1,7 +1,5 @@
 package slimeknights.tconstruct.smeltery.block.component;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -42,7 +40,6 @@ public class SearedTankBlock extends SearedBlock implements ITankBlock, EntityBl
   public static final IntegerProperty LIGHT = IntegerProperty.create("light", 0, 15);
   public static final ToIntFunction<BlockState> LIGHT_GETTER = state -> state.getValue(SearedTankBlock.LIGHT);
 
-  @Getter
   private final int capacity;
   private final PushReaction pushReaction;
   public SearedTankBlock(Properties properties, int capacity, PushReaction pushReaction) {
@@ -50,6 +47,11 @@ public class SearedTankBlock extends SearedBlock implements ITankBlock, EntityBl
     this.capacity = capacity;
     this.pushReaction = pushReaction;
     registerDefaultState(defaultBlockState().setValue(LIGHT, 0));
+  }
+
+  @Override
+  public int getCapacity() {
+    return capacity;
   }
 
   public SearedTankBlock(Properties properties, int capacity) {
@@ -131,15 +133,21 @@ public class SearedTankBlock extends SearedBlock implements ITankBlock, EntityBl
     return stack;
   }
 
-  @AllArgsConstructor
   public enum TankType implements StringRepresentable {
     FUEL_TANK(TankBlockEntity.DEFAULT_CAPACITY),
     FUEL_GAUGE(TankBlockEntity.DEFAULT_CAPACITY),
     INGOT_TANK(FluidValues.INGOT * 48),
     INGOT_GAUGE(FluidValues.INGOT * 48);
 
-    @Getter
     private final int capacity;
+
+    TankType(int capacity) {
+      this.capacity = capacity;
+    }
+
+    public int getCapacity() {
+      return capacity;
+    }
 
     @Override
     public String getSerializedName() {

@@ -136,7 +136,7 @@ public class ModifierManager extends SimpleJsonResourceReloadListener {
 
   /** Fires the modifier registry event */
   private void fireRegistryEvent() {
-    ModLoader.runEventGenerator(ModifierRegistrationEvent::new);
+    ModLoader.runEventGenerator(container -> new ModifierRegistrationEvent(container));
     modifiersRegistered = true;
   }
 

@@ -9,6 +9,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
@@ -109,7 +110,7 @@ public enum MinimapModule implements ModifierModule, EquipmentChangeModifierHook
           holder.setItemInHand(InteractionHand.OFF_HAND, held);
           if (holder instanceof ServerPlayer player) {
             MapItemSavedData mapData = MapItem.getSavedData(map, world);
-            MapId id = MapItem.getMapId(map);
+            MapId id = map.get(DataComponents.MAP_ID);
             if (mapData != null && id != null) {
               Packet<?> packet = mapData.getUpdatePacket(id, player);
               if (packet != null) {
@@ -129,7 +130,7 @@ public enum MinimapModule implements ModifierModule, EquipmentChangeModifierHook
 
   @Override
   public void onInventorySelect(IToolStackView tool, ModifierEntry modifier, Player player, int newIndex, ItemStack stack) {
-    MapId mapId = MapItem.getMapId(stack);
+    MapId mapId = stack.get(DataComponents.MAP_ID);
     player.displayClientMessage(Component.translatable(SELECTED, stack.getHoverName(), mapId != null ? mapId.id() : -1, newIndex + 1), true);
   }
 

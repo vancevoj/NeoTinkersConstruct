@@ -52,7 +52,7 @@ public class DamageableMeltingRecipe extends MeltingRecipe {
         amount -= remainder;
       }
     }
-    return new FluidStack(fluid, amount);
+    return fluid.copyWithAmount(amount);
   }
 
   @Override

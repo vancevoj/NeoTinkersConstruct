@@ -181,7 +181,7 @@ public class PotionCastingRecipeBuilder extends AbstractRecipeBuilder<PotionCast
     if (modifier != null) {
       output.accept(id, new TippingCastingRecipe(recipeSerializer, id, group, bottle, fluid, coolingTime, modifier), advancement);
     } else {
-      output.accept(id, new PotionCastingRecipe(recipeSerializer, group, bottle, fluid, result, coolingTime), advancement);
+      output.accept(id, new PotionCastingRecipe(recipeSerializer, id, group, bottle, fluid, result, coolingTime), advancement);
     }
   }
 }

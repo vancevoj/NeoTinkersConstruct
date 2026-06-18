@@ -1,6 +1,5 @@
 package slimeknights.tconstruct.smeltery.block;
 
-import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -29,12 +28,16 @@ import javax.annotation.Nullable;
 import static slimeknights.tconstruct.smeltery.block.component.SearedTankBlock.LIGHT;
 
 public class SearedLanternBlock extends LanternBlock implements ITankBlock, EntityBlock {
-  @Getter
   private final int capacity;
   public SearedLanternBlock(Properties properties, int capacity) {
     super(properties);
     this.capacity = capacity;
     registerDefaultState(defaultBlockState().setValue(LIGHT, 0));
+  }
+
+  @Override
+  public int getCapacity() {
+    return capacity;
   }
 
   @Override

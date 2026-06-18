@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
@@ -12,6 +13,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.BreakSpeed;
 import org.jetbrains.annotations.ApiStatus.Internal;
@@ -74,13 +76,22 @@ public sealed interface BreakSpeedContext {
       }
     }
     // water
-    if (entity.isEyeInFluid(FluidTags.WATER) && !EnchantmentHelper.hasAquaAffinity(entity)) {
+    // 1.21: EnchantmentHelper.hasAquaAffinity was removed; aqua affinity is a data-driven enchantment, so resolve its holder from the registry and check the worn level
+    if (entity.isEyeInFluid(FluidTags.WATER) && !hasAquaAffinity(entity)) {
       modifier /= 5.0F;
     }
     if (!entity.onGround()) {
       modifier /= 5.0F;
     }
     return modifier;
+  }
+
+  /** {@return true if the entity has the aqua affinity enchantment, resolved from the data-driven enchantment registry} */
+  private static boolean hasAquaAffinity(LivingEntity entity) {
+    return entity.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT)
+      .get(Enchantments.AQUA_AFFINITY)
+      .map(holder -> EnchantmentHelper.getEnchantmentLevel(holder, entity) > 0)
+      .orElse(false);
   }
 
 

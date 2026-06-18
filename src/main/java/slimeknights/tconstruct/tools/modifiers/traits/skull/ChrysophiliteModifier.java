@@ -77,7 +77,7 @@ public class ChrysophiliteModifier extends NoLevelsModifier implements Equipment
   public void onEquipmentChange(IToolStackView tool, ModifierEntry modifier, EquipmentChangeContext context, EquipmentSlot slotType) {
     // adding a helmet? activate bonus
     EquipmentSlot changed = context.getChangedSlot();
-    if (slotType == EquipmentSlot.HEAD && changed.getType() == Type.ARMOR) {
+    if (slotType == EquipmentSlot.HEAD && changed.getType() == Type.HUMANOID_ARMOR) {
       boolean hasGold = ChrysophiliteModifier.hasGold(context, changed);
       // 1.21: tinker data moved from a capability to a data attachment, accessed via the non-Optional Holder
       TinkerDataCapability.Holder data = context.getDataHolder();
@@ -155,7 +155,7 @@ public class ChrysophiliteModifier extends NoLevelsModifier implements Equipment
      * @param value     New value
      */
     protected boolean setGold(EquipmentSlot slotType, boolean value) {
-      if (slotType.getType() == Type.ARMOR) {
+      if (slotType.getType() == Type.HUMANOID_ARMOR) {
         int index = slotType.getIndex();
         if (hasGold[index] != value) {
           hasGold[index] = value;

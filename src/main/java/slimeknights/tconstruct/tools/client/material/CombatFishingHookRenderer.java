@@ -17,8 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ItemAbilities;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.armor.texture.ArmorTextureSupplier;
 import slimeknights.tconstruct.library.client.armor.texture.TintedArmorTexture;
@@ -108,12 +106,10 @@ public class CombatFishingHookRenderer extends EntityRenderer<CombatFishingHook>
 
       // render bobber
       PoseStack.Pose lastPose = poseStack.last();
-      Matrix4f pose = lastPose.pose();
-      Matrix3f normal = lastPose.normal();
-      texture.vertex(consumer, pose, normal, bobberLight, 0f, 0, 0, 1);
-      texture.vertex(consumer, pose, normal, bobberLight, 1f, 0, 1, 1);
-      texture.vertex(consumer, pose, normal, bobberLight, 1f, 1, 1, 0);
-      texture.vertex(consumer, pose, normal, bobberLight, 0f, 1, 0, 0);
+      texture.vertex(consumer, lastPose, bobberLight, 0f, 0, 0, 1);
+      texture.vertex(consumer, lastPose, bobberLight, 1f, 0, 1, 1);
+      texture.vertex(consumer, lastPose, bobberLight, 1f, 1, 1, 0);
+      texture.vertex(consumer, lastPose, bobberLight, 0f, 1, 0, 0);
       poseStack.popPose();
 
       // handle hand side
@@ -189,14 +185,13 @@ public class CombatFishingHookRenderer extends EntityRenderer<CombatFishingHook>
     }
 
     /** Draws a vertex using this texture. */
-    public void vertex(VertexConsumer consumer, Matrix4f pose, Matrix3f normal, int lightmap, float pX, int pY, int pU, int pV) {
-      consumer.vertex(pose, pX - 0.5f, pY - 0.5f, 0f)
-        .color(red, green, blue, alpha)
-        .uv(pU, pV)
-        .overlayCoords(OverlayTexture.NO_OVERLAY)
-        .uv2(lightmap)
-        .normal(normal, 0.0F, 1.0F, 0.0F)
-        .endVertex();
+    public void vertex(VertexConsumer consumer, PoseStack.Pose pose, int lightmap, float pX, int pY, int pU, int pV) {
+      consumer.addVertex(pose, pX - 0.5f, pY - 0.5f, 0f)
+        .setColor(red, green, blue, alpha)
+        .setUv(pU, pV)
+        .setOverlay(OverlayTexture.NO_OVERLAY)
+        .setLight(lightmap)
+        .setNormal(pose, 0.0F, 1.0F, 0.0F);
     }
   }
 }

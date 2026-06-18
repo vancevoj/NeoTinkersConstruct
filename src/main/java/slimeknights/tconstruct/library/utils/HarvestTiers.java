@@ -7,10 +7,12 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
+import net.minecraft.world.level.block.state.BlockState;
 import slimeknights.mantle.client.ResourceColorManager;
 import slimeknights.mantle.data.listener.ISafeManagerReloadListener;
 import slimeknights.tconstruct.TConstruct;
 
+import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Map;
 
@@ -36,6 +38,45 @@ public class HarvestTiers {
       return ResourceLocation.fromNamespaceAndPath("minecraft", vanilla.name().toLowerCase(Locale.ROOT));
     }
     return TConstruct.getResource("unknown");
+  }
+
+  /**
+   * Gets the ID for the given tier, replacement for {@code TierSortingRegistry.getName}.
+   * <p>
+   * TODO(neoport): TierSortingRegistry removed in 1.21; only vanilla tiers have a stable ID. Returns null for unknown tiers.
+   */
+  @Nullable
+  public static ResourceLocation getName(Tier tier) {
+    if (tier instanceof Tiers vanilla) {
+      return ResourceLocation.fromNamespaceAndPath("minecraft", vanilla.name().toLowerCase(Locale.ROOT));
+    }
+    return null;
+  }
+
+  /**
+   * Gets the tier for the given ID, replacement for {@code TierSortingRegistry.byName}.
+   * <p>
+   * TODO(neoport): TierSortingRegistry removed in 1.21; only vanilla tiers are resolvable by ID. Returns null otherwise.
+   */
+  @Nullable
+  public static Tier byName(ResourceLocation id) {
+    if ("minecraft".equals(id.getNamespace())) {
+      for (Tiers vanilla : Tiers.values()) {
+        if (vanilla.name().toLowerCase(Locale.ROOT).equals(id.getPath())) {
+          return vanilla;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Checks if the given tier can harvest the given block for drops, replacement for {@code TierSortingRegistry.isCorrectTierForDrops}.
+   * <p>
+   * TODO(neoport): TierSortingRegistry removed in 1.21; cross mod tier ordering is gone. We use the vanilla incorrect-blocks tag.
+   */
+  public static boolean isCorrectTierForDrops(Tier tier, BlockState state) {
+    return !state.is(tier.getIncorrectBlocksForDrops());
   }
 
   /**

@@ -258,11 +258,11 @@ public class ItemCastingRecipeBuilder extends AbstractRecipeBuilder<ItemCastingR
       if (consumed) {
         throw new IllegalStateException("Cannot consume cast on a duplication recipe");
       }
-      output.accept(id, new CastDuplicationRecipe(recipeSerializer, group, cast, fluid, coolingTime), advancement);
+      output.accept(id, new CastDuplicationRecipe(recipeSerializer, id, group, cast, fluid, coolingTime), advancement);
     } else {
       // yeah, retextured recipes have their own constructor, does not matter as long as we pass the right serializer in
       // you can use this for your custom recipe extensions too if you don't change the JSON :)
-      output.accept(id, new ItemCastingRecipe(recipeSerializer, group, cast, fluid, result, coolingTime, consumed && cast != Ingredient.EMPTY, switchSlots), advancement);
+      output.accept(id, new ItemCastingRecipe(recipeSerializer, id, group, cast, fluid, result, coolingTime, consumed && cast != Ingredient.EMPTY, switchSlots), advancement);
     }
   }
 }

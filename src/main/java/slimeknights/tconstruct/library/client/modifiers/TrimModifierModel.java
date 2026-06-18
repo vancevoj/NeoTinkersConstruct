@@ -33,7 +33,7 @@ public enum TrimModifierModel implements IBakedModifierModel {
   public static final ResourceLocation[] TRIM_TEXTURES = new ResourceLocation[4];
   static {
     for (Armor type : Armor.values()) {
-      TRIM_TEXTURES[type.ordinal()] = type.getRoot();
+      TRIM_TEXTURES[type.ordinal()] = type.getRoot(false);
     }
   }
 

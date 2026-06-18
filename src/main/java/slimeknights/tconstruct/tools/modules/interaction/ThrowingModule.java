@@ -109,7 +109,7 @@ public enum ThrowingModule implements ModifierModule, GeneralInteractionModifier
 
         // don't run projectile hooks, as the projectile has the tool already for that. Throwing runs melee hooks
         level.addFreshEntity(thrown);
-        level.playSound(null, thrown.blockPosition(), SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0F, 1.0F);
+        level.playSound(null, thrown.blockPosition(), SoundEvents.TRIDENT_THROW.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
         if (!player.getAbilities().instabuild) {
           player.getInventory().removeItem(stack);
         }

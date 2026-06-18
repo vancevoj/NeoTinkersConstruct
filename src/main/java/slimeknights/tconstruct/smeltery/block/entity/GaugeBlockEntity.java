@@ -6,15 +6,18 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.EmptyFluidHandler;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 
+import javax.annotation.Nullable;
+
 /** This class exists simply to allow us to have a block entity renderer for obsidian gauges. Though it is useful as a cache for the capability to render. */
 public class GaugeBlockEntity extends BlockEntity {
-  private LazyOptional<IFluidHandler> neighbor;
+  @Nullable
+  private IFluidHandler neighbor;
+  private boolean fetchedNeighbor = false;
   public GaugeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
     super(type, pos, state);
   }
@@ -29,16 +32,12 @@ public class GaugeBlockEntity extends BlockEntity {
       return EmptyFluidHandler.INSTANCE;
     }
     // if we have not fetched the neighbor, fetch it
-    if (neighbor == null) {
+    if (!fetchedNeighbor) {
       Direction side = getBlockState().getValue(BlockStateProperties.FACING);
-      BlockEntity te = level.getBlockEntity(getBlockPos().relative(side.getOpposite()));
-      if (te != null) {
-        neighbor = te.getCapability(ForgeCapabilities.FLUID_HANDLER, side);
-      } else {
-        neighbor = LazyOptional.empty();
-      }
+      neighbor = level.getCapability(Capabilities.FluidHandler.BLOCK, getBlockPos().relative(side.getOpposite()), side);
+      fetchedNeighbor = true;
     }
     // return tank or empty tank
-    return neighbor.orElse(EmptyFluidHandler.INSTANCE);
+    return neighbor != null ? neighbor : EmptyFluidHandler.INSTANCE;
   }
 }

@@ -2,6 +2,7 @@ package slimeknights.tconstruct.library.modifiers.fluid.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -13,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
@@ -86,7 +88,13 @@ public record BreakBlockFluidEffect(float hardness, Map<Enchantment,Integer> enc
         ItemStack fakeTool = ItemStack.EMPTY;
         if (!enchantments.isEmpty()) {
           fakeTool = new ItemStack(Items.STICK);
-          EnchantmentHelper.setEnchantments(enchantments, fakeTool);
+          // 1.21: enchantments live in the ItemEnchantments component keyed by Holder<Enchantment>; wrap each raw enchantment via the datapack enchantment registry
+          var enchantmentRegistry = server.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+          ItemEnchantments.Mutable builder = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+          for (Map.Entry<Enchantment,Integer> entry : enchantments.entrySet()) {
+            builder.set(enchantmentRegistry.wrapAsHolder(entry.getKey()), entry.getValue());
+          }
+          EnchantmentHelper.setEnchantments(fakeTool, builder.toImmutable());
         }
 
         // ensures tile entity is fetched so its around for afterBlockBreak
@@ -141,7 +149,8 @@ public record BreakBlockFluidEffect(float hardness, Map<Enchantment,Integer> enc
       translationKey += ".enchanted";
       Component enchantments = enchantments().entrySet().stream().<Component>map(entry -> {
         Enchantment enchantment = entry.getKey();
-        MutableComponent component = Component.translatable(enchantment.getDescriptionId());
+        // 1.21: Enchantment#getDescriptionId removed; description() returns the display Component directly
+        MutableComponent component = enchantment.description().copy();
         if (enchantment.getMaxLevel() != 1) {
           component.append(CommonComponents.SPACE).append(Component.translatable("enchantment.level." + entry.getValue()));
         }

@@ -1,8 +1,9 @@
 package slimeknights.tconstruct.library.recipe.alloying;
 
 import lombok.RequiredArgsConstructor;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
@@ -15,7 +16,6 @@ import slimeknights.tconstruct.library.recipe.alloying.AlloyRecipe.AlloyIngredie
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static slimeknights.tconstruct.library.recipe.melting.IMeltingRecipe.getTemperature;
 

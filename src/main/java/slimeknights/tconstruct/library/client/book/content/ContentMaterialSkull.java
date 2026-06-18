@@ -67,6 +67,7 @@ public class ContentMaterialSkull extends AbstractMaterialContent {
     Level world = Minecraft.getInstance().level;
     if (!searchedSkullRecipe && world != null) {
       skullRecipe = world.getRecipeManager().getAllRecipesFor(TinkerRecipeTypes.CASTING_BASIN.get()).stream()
+												 .map(net.minecraft.world.item.crafting.RecipeHolder::value)
 												 .filter(recipe -> recipe instanceof IDisplayableCastingRecipe)
 												 .map(recipe -> (IDisplayableCastingRecipe)recipe)
 												 .filter(recipe -> {

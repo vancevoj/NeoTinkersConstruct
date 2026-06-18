@@ -12,9 +12,10 @@ import slimeknights.mantle.data.loadable.primitive.StringLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.tconstruct.library.client.materials.MaterialRenderInfoLoader;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
-import slimeknights.tconstruct.library.tools.nbt.ToolStack;
+import slimeknights.tconstruct.library.tools.nbt.MaterialIdNBT;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -59,9 +60,10 @@ public class MaterialHasFallbackTextureSupplier implements ArmorTextureSupplier,
 
   @Override
   public ArmorTexture getArmorTexture(ItemStack stack, TextureType type, RegistryAccess access) {
-    CompoundTag tag = stack.getTag();
-    if (tag != null && tag.contains(ToolStack.TAG_MATERIALS, Tag.TAG_LIST)) {
-      String material = tag.getList(ToolStack.TAG_MATERIALS, Tag.TAG_STRING).getString(index);
+    // 1.21: tool data lives in a data component; MaterialIdNBT reads it
+    List<MaterialVariantId> materials = MaterialIdNBT.from(stack).getMaterials();
+    if (index < materials.size()) {
+      String material = materials.get(index).toString();
       if (!material.isEmpty() && cache.computeIfAbsent(material, this)) {
         return apply.getArmorTexture(stack, type, access);
       }

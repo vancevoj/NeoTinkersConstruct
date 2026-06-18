@@ -2,17 +2,13 @@ package slimeknights.tconstruct.tools.modifiers.loot;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.BinomialWithBonusCount;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.Formula;
-import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.FormulaType;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.OreDrops;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.UniformBonusCount;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
@@ -28,14 +24,8 @@ import java.util.Set;
 
 /** Loot modifier to boost drops based on teh chrysophilite amount */
 public class ChrysophiliteBonusFunction extends LootItemConditionalFunction {
-  /** Codec for the {@link Formula} dispatch, mirrors the package-private codec in {@link ApplyBonusCount} using the widened FORMULAS map */
-  static final MapCodec<Formula> FORMULA_CODEC = ExtraCodecs.dispatchOptionalValue(
-    "formula", "parameters",
-    ResourceLocation.CODEC.comapFlatMap(id -> {
-      FormulaType type = ApplyBonusCount.FORMULAS.get(id);
-      return type != null ? DataResult.success(type) : DataResult.error(() -> "No formula type with id: '" + id + "'");
-    }, FormulaType::id),
-    Formula::getType, FormulaType::codec);
+  /** Codec for the {@link Formula} dispatch, reuses the package-private codec in {@link ApplyBonusCount} (widened via access transformer) */
+  static final MapCodec<Formula> FORMULA_CODEC = ApplyBonusCount.FORMULA_CODEC;
 
   /** Codec for this function */
   public static final MapCodec<ChrysophiliteBonusFunction> CODEC = RecordCodecBuilder.mapCodec(inst -> commonFields(inst).and(inst.group(

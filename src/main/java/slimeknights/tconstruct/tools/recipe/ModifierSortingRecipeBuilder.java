@@ -1,12 +1,11 @@
 package slimeknights.tconstruct.tools.recipe;
 
 import lombok.RequiredArgsConstructor;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import slimeknights.tconstruct.library.recipe.worktable.AbstractSizedIngredientRecipeBuilder;
-
-import java.util.function.Consumer;
 
 /** Builder for modifier sorting recipes */
 @RequiredArgsConstructor(staticName = "sorting")

@@ -66,7 +66,7 @@ public record MobEquipment(EquipmentSlot slot, IJsonPredicate<Item> match, ItemO
 
   /** Applies this replacement to the target mob */
   @SuppressWarnings({"deprecation", "OverrideOnly"})  // in that event, I can't call the event method, or I'll get a stack overflow
-  public static boolean apply(List<MobEquipment> replace, Mob mob, FinalizeSpawn event) {
+  public static boolean apply(List<MobEquipment> replace, Mob mob, FinalizeSpawnEvent event) {
     // first, figure out which slots are going to apply. This is because we take over mob finalizing only if at least one applies
     RandomSource random = mob.getRandom();
     List<MobEquipment> apply = new ArrayList<>(replace.size());

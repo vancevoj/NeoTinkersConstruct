@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
@@ -118,14 +119,15 @@ public record ArmorStatModule(TinkerDataKey<Float> key, LevelingValue amount, bo
    * @param amount   Amount to add
    */
   public static void addStat(EquipmentChangeContext context, TinkerDataKey<Float> key, float amount) {
-    context.getTinkerData().ifPresent(data -> {
+    TinkerDataCapability.Holder data = context.getDataHolder();
+    if (data != null) {
       float totalLevels = data.get(key, 0f) + amount;
       if (totalLevels <= 0.005f) {
         data.remove(key);
       } else {
         data.put(key, totalLevels);
       }
-    });
+    }
   }
 
   /**
@@ -149,7 +151,16 @@ public record ArmorStatModule(TinkerDataKey<Float> key, LevelingValue amount, bo
    * @return  Level from the key
    */
   public static float getStat(Entity living, TinkerDataKey<Float> key) {
-    return living.getCapability(TinkerDataCapability.CAPABILITY).resolve().map(data -> data.get(key)).orElse(0f);
+    if (living instanceof LivingEntity livingEntity) {
+      TinkerDataCapability.Holder data = TinkerDataCapability.getData(livingEntity);
+      if (data != null) {
+        Float value = data.get(key);
+        if (value != null) {
+          return value;
+        }
+      }
+    }
+    return 0f;
   }
 
 

@@ -1,6 +1,5 @@
 package slimeknights.tconstruct.smeltery.client.screen.module;
 
-import lombok.AllArgsConstructor;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -16,7 +15,6 @@ import slimeknights.tconstruct.smeltery.block.entity.module.MeltingModuleInvento
 import java.util.function.IntSupplier;
 import java.util.function.Predicate;
 
-@AllArgsConstructor
 public class GuiMeltingModule {
   // progress bar tooltips
   private static final Component TOOLTIP_NO_HEAT = Component.translatable(TConstruct.makeTranslationKey("gui", "melting.no_heat"));
@@ -29,6 +27,15 @@ public class GuiMeltingModule {
   private final IntSupplier temperature;
   private final Predicate<Slot> slotPredicate;
   private final ProgressBars progressBars;
+
+  public GuiMeltingModule(AbstractContainerScreen<?> screen, MeltingModuleInventory inventory, int indexOffset, IntSupplier temperature, Predicate<Slot> slotPredicate, ProgressBars progressBars) {
+    this.screen = screen;
+    this.inventory = inventory;
+    this.indexOffset = indexOffset;
+    this.temperature = temperature;
+    this.slotPredicate = slotPredicate;
+    this.progressBars = progressBars;
+  }
 
   public GuiMeltingModule(AbstractContainerScreen<?> screen, MeltingModuleInventory inventory, int indexOffset, IntSupplier temperature, Predicate<Slot> slotPredicate, ResourceLocation background) {
     this(screen, inventory, indexOffset, temperature, slotPredicate, makeProgressBars(background));

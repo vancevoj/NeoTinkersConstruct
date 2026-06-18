@@ -1,9 +1,12 @@
 package slimeknights.tconstruct.library.modifiers.fluid;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.NetworkEvent.Context;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.ApiStatus.Internal;
+import slimeknights.mantle.network.packet.ISimplePacket;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
 import slimeknights.tconstruct.TConstruct;
 
@@ -13,6 +16,8 @@ import java.util.List;
 /** Packet to sync fluid predicates to the client */
 @Internal
 public record UpdateFluidEffectsPacket(List<FluidEffects.Entry> fluids) implements IThreadsafePacket {
+  public static final Type<UpdateFluidEffectsPacket> TYPE = new Type<>(TConstruct.getResource("update_fluid_effects"));
+  public static final StreamCodec<RegistryFriendlyByteBuf,UpdateFluidEffectsPacket> STREAM_CODEC = ISimplePacket.codec(UpdateFluidEffectsPacket::decode);
   /** Clientside constructor, reading from the buffer */
   public static UpdateFluidEffectsPacket decode(FriendlyByteBuf buffer) {
     int size = buffer.readVarInt();
@@ -47,7 +52,12 @@ public record UpdateFluidEffectsPacket(List<FluidEffects.Entry> fluids) implemen
   }
 
   @Override
-  public void handleThreadsafe(Context context) {
+  public Type<UpdateFluidEffectsPacket> type() {
+    return TYPE;
+  }
+
+  @Override
+  public void handleThreadsafe(IPayloadContext context) {
     FluidEffectManager.INSTANCE.updateFromServer(fluids);
   }
 }
