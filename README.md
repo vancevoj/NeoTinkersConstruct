@@ -1,7 +1,6 @@
-# NeoTinkersConstruct
+# Neo Tinkers' Construct
 
-A community effort to port **Tinkers' Construct** to **Minecraft 1.21.1 / NeoForge**, so it can
-run alongside Create 6.x and Create Aeronautics on modern packs (built for the Tinkreate pack).
+A community effort to port **Tinkers' Construct** to **Minecraft 1.21.1 / NeoForge**.
 
 **Status:** planning and scaffolding. This is a long-running port, not a finished mod. The jump
 from 1.20.1 Forge to 1.21.1 NeoForge crosses the 1.20.5 data-components rework, a full
@@ -12,12 +11,6 @@ This fork is a derivative work of Tinkers' Construct by SlimeKnights; full credi
 upstream README follows.
 
 ---
-
-# [Tinkers' Construct](https://slimeknights.github.io/projects/#tinkers-construct)
-
-Modify all the things, then do it again!   
-Melt down any metals you find. 	 
-Power the world with spinning wind!
 
 ## Documentation
 
@@ -35,8 +28,8 @@ Note: Git MUST be installed and in the system path to use our scripts.
 Please include the following:
 
 * Minecraft version
-* Tinkers' Construct version
-* Forge version/build
+* Neo Tinkers' Construct version
+* NeoForge version/build
 * Versions of any mods potentially related to the issue 
 * Any relevant screenshots are greatly appreciated.
 * For crashes:
