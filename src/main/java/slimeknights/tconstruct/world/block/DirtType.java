@@ -29,8 +29,12 @@ public enum DirtType implements StringRepresentable {
   private final Tiers harvestTier;
   /** Color for this block on maps */
   private final MapColor mapColor;
-  @Getter
   private final String serializedName = this.name().toLowerCase(Locale.ROOT);
+
+  @Override
+  public String getSerializedName() {
+    return serializedName;
+  }
 
   /* Tags */
   /** Tag for dirt blocks of this type, including blocks with grass on top */

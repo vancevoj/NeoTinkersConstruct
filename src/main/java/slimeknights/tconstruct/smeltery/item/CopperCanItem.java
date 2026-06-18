@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.smeltery.item;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -10,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -62,25 +64,29 @@ public class CopperCanItem extends Item {
 
   /** Removes the fluid from the given stack */
   public static void removeFluid(ItemStack stack) {
-    CompoundTag nbt = stack.getTag();
-    if (nbt != null) {
+    CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+    if (data != null) {
+      CompoundTag nbt = data.copyTag();
       nbt.remove(TAG_FLUID);
       nbt.remove(TAG_FLUID_TAG);
       if (nbt.isEmpty()) {
-        stack.setTag(null);
+        stack.remove(DataComponents.CUSTOM_DATA);
+      } else {
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
       }
     }
   }
 
   /** Sets the fluid on the given stack whether or not its valiid */
   private static void setFluidInternal(ItemStack stack, ResourceLocation fluid, @Nullable CompoundTag fluidTag) {
-    CompoundTag nbt = stack.getOrCreateTag();
-    nbt.putString(TAG_FLUID, fluid.toString());
-    if (fluidTag != null) {
-      nbt.put(TAG_FLUID_TAG, fluidTag.copy());
-    } else {
-      nbt.remove(TAG_FLUID_TAG);
-    }
+    CustomData.update(DataComponents.CUSTOM_DATA, stack, nbt -> {
+      nbt.putString(TAG_FLUID, fluid.toString());
+      if (fluidTag != null) {
+        nbt.put(TAG_FLUID_TAG, fluidTag.copy());
+      } else {
+        nbt.remove(TAG_FLUID_TAG);
+      }
+    });
   }
 
 
@@ -109,18 +115,22 @@ public class CopperCanItem extends Item {
 
   /** Sets the fluid on the given stack */
   public static ItemStack setFluid(ItemStack stack, FluidStack fluid) {
-    return setFluid(stack, fluid.getFluid(), fluid.getTag());
+    // TODO(neoport): FluidStack component data not preserved on copper can (was NBT tag); revisit if component fluids need it
+    return setFluid(stack, fluid.getFluid(), null);
   }
 
   /** Gets the fluid from the given stack */
   public static Fluid getFluid(ItemStack stack) {
-    CompoundTag nbt = stack.getTag();
-    if (nbt != null && nbt.contains(TAG_FLUID, Tag.TAG_STRING)) {
-      ResourceLocation location = ResourceLocation.tryParse(nbt.getString(TAG_FLUID));
-      if (location != null && ForgeRegistries.FLUIDS.containsKey(location)) {
-        Fluid fluid = ForgeRegistries.FLUIDS.getValue(location);
-        if (fluid != null) {
-          return fluid;
+    CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+    if (data != null) {
+      CompoundTag nbt = data.copyTag();
+      if (nbt.contains(TAG_FLUID, Tag.TAG_STRING)) {
+        ResourceLocation location = ResourceLocation.tryParse(nbt.getString(TAG_FLUID));
+        if (location != null && BuiltInRegistries.FLUID.containsKey(location)) {
+          Fluid fluid = BuiltInRegistries.FLUID.get(location);
+          if (fluid != null) {
+            return fluid;
+          }
         }
       }
     }
@@ -141,9 +151,12 @@ public class CopperCanItem extends Item {
   /** Gets the fluid NBT from the given stack */
   @Nullable
   public static CompoundTag getFluidTag(ItemStack stack) {
-    CompoundTag nbt = stack.getTag();
-    if (nbt != null && nbt.contains(TAG_FLUID_TAG, Tag.TAG_COMPOUND)) {
-      return nbt.getCompound(TAG_FLUID_TAG);
+    CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+    if (data != null) {
+      CompoundTag nbt = data.copyTag();
+      if (nbt.contains(TAG_FLUID_TAG, Tag.TAG_COMPOUND)) {
+        return nbt.getCompound(TAG_FLUID_TAG);
+      }
     }
     return null;
   }
@@ -154,9 +167,9 @@ public class CopperCanItem extends Item {
    * @return  String variant name
    */
   public static String getSubtype(ItemStack stack) {
-    CompoundTag nbt = stack.getTag();
-    if (nbt != null) {
-      return nbt.getString(TAG_FLUID);
+    CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+    if (data != null) {
+      return data.copyTag().getString(TAG_FLUID);
     }
     return "";
   }

@@ -1,6 +1,5 @@
 package slimeknights.tconstruct.smeltery.item;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -16,8 +15,12 @@ import javax.annotation.Nonnull;
 @RequiredArgsConstructor
 public class TankItemFluidHandler implements IFluidHandlerItem {
   private final TankItem tankItem;
-  @Getter
   private final ItemStack container;
+
+  @Override
+  public ItemStack getContainer() {
+    return container;
+  }
 
   /** Gets the tank on the stack */
   private FluidTank getTank() {

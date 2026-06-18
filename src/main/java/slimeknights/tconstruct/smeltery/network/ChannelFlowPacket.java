@@ -4,13 +4,20 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent.Context;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import slimeknights.mantle.network.packet.ISimplePacket;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
 import slimeknights.mantle.util.BlockEntityHelper;
+import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.smeltery.block.entity.ChannelBlockEntity;
 
 /** Packet for when the flowing state changes on a channel side */
 public class ChannelFlowPacket implements IThreadsafePacket {
+	public static final Type<ChannelFlowPacket> TYPE = new Type<>(TConstruct.getResource("channel_flow"));
+	public static final StreamCodec<RegistryFriendlyByteBuf,ChannelFlowPacket> STREAM_CODEC = ISimplePacket.codec(ChannelFlowPacket::new);
+
 	private final BlockPos pos;
 	private final Direction side;
 	private final boolean flow;
@@ -34,7 +41,12 @@ public class ChannelFlowPacket implements IThreadsafePacket {
 	}
 
 	@Override
-	public void handleThreadsafe(Context context) {
+	public Type<ChannelFlowPacket> type() {
+		return TYPE;
+	}
+
+	@Override
+	public void handleThreadsafe(IPayloadContext context) {
 		HandleClient.handle(this);
 	}
 

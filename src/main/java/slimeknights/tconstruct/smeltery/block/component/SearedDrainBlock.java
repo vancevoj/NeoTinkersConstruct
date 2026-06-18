@@ -16,11 +16,9 @@ public class SearedDrainBlock extends RetexturedOrientableSmelteryBlock {
     super(properties, DrainBlockEntity::new);
   }
 
-  @SuppressWarnings("deprecation")
-  @Deprecated
   @Override
-  public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-    if (FluidTransferHelper.interactWithTank(world, pos, player, hand, hit.getDirection(), state.getValue(FACING).getOpposite())) {
+  protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+    if (FluidTransferHelper.interactWithTank(world, pos, player, InteractionHand.MAIN_HAND, hit.getDirection(), state.getValue(FACING).getOpposite())) {
       return InteractionResult.SUCCESS;
     }
     return InteractionResult.PASS;

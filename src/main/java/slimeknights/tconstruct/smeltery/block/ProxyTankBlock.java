@@ -75,9 +75,8 @@ public class ProxyTankBlock extends Block implements EntityBlock {
 
   /* Inventory */
 
-  @Deprecated
   @Override
-  public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+  protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
     if (world.getBlockEntity(pos) instanceof ProxyTankBlockEntity tank) {
       boolean clickedTank;
       Direction direction = hit.getDirection();
@@ -96,7 +95,7 @@ public class ProxyTankBlock extends Block implements EntityBlock {
           clickedTank = y > 0.25f;
         }
       }
-      tank.interact(player, hand, clickedTank);
+      tank.interact(player, InteractionHand.MAIN_HAND, clickedTank);
     }
     return InteractionResult.SUCCESS;
   }

@@ -1,7 +1,6 @@
 package slimeknights.tconstruct.tools.stats;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
@@ -12,7 +11,6 @@ import javax.annotation.Nullable;
 import java.util.Locale;
 
 /** Helper for registering the different effects for modifiers that change behavior based on the tool type */
-@RequiredArgsConstructor
 @Getter
 public enum ToolType implements StringRepresentable {
   /** Held melee weapons such as swords, does not include unarmed. */
@@ -31,7 +29,12 @@ public enum ToolType implements StringRepresentable {
   public static final ToolType[] NO_MELEE = {HARVEST, RANGED, ARMOR};
 
   private final TagKey<Item> tag;
-  private final String serializedName = name().toLowerCase(Locale.ROOT);
+  @Getter
+  private final String serializedName = this.name().toLowerCase(Locale.ROOT);
+
+  ToolType(TagKey<Item> tag) {
+    this.tag = tag;
+  }
 
   @Nullable
   public static ToolType from(Item item, ToolType... types) {

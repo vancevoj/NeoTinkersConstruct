@@ -1,7 +1,6 @@
 package slimeknights.tconstruct.smeltery.item;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -14,8 +13,12 @@ import javax.annotation.Nonnull;
 /** Capability handler instance for the copper can item */
 @AllArgsConstructor
 public class CopperCanFluidHandler implements IFluidHandlerItem {
-  @Getter
   private final ItemStack container;
+
+  @Override
+  public ItemStack getContainer() {
+    return container;
+  }
 
 
   /* Tank properties */

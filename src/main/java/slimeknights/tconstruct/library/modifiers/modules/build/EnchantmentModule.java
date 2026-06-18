@@ -20,7 +20,6 @@ import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.mantle.data.predicate.IJsonPredicate;
 import slimeknights.mantle.data.predicate.block.BlockPredicate;
 import slimeknights.mantle.data.predicate.entity.LivingEntityPredicate;
-import slimeknights.mantle.util.LogicHelper;
 import slimeknights.tconstruct.library.json.LevelingInt;
 import slimeknights.tconstruct.library.json.TinkerLoadables;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
@@ -216,8 +215,10 @@ public interface EnchantmentModule extends ModifierModule, LevelingIntModule, Co
       if (condition().matches(tool, modifier)) {
         int subtractLevel = getLevel(modifier);
         Enchantment enchantment = enchantment();
-        if (subtractLevel > 0 && LogicHelper.isInList(enchantment.slots, slotType) && !source.is(DamageTypeTags.BYPASSES_ENCHANTMENTS)) {
-          modifierValue -= enchantment.getDamageProtection(subtractLevel, source);
+        if (subtractLevel > 0 && !source.is(DamageTypeTags.BYPASSES_ENCHANTMENTS)) {
+          // TODO(neoport): enchantment damage-protection is data-driven in 1.21; needs cross-package redesign with ProtectionModifierHook
+          // Enchantment.slots and Enchantment.getDamageProtection(int, DamageSource) are gone, so we can no longer subtract
+          // the vanilla protection contribution here. Preserve the modifier value unchanged until the redesign lands.
         }
       }
       return modifierValue;

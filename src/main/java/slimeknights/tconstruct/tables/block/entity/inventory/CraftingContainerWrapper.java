@@ -1,7 +1,6 @@
 package slimeknights.tconstruct.tables.block.entity.inventory;
 
 import com.google.common.base.Preconditions;
-import lombok.Getter;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
@@ -17,15 +16,23 @@ import java.util.List;
  */
 public class CraftingContainerWrapper implements CraftingContainer {
   private final Container crafter;
-  @Getter
   private final int width;
-  @Getter
   private final int height;
   public CraftingContainerWrapper(Container crafter, int width, int height) {
     Preconditions.checkArgument(crafter.getContainerSize() == width * height, "Invalid width and height for inventroy size");
     this.crafter = crafter;
     this.width = width;
     this.height = height;
+  }
+
+  @Override
+  public int getWidth() {
+    return width;
+  }
+
+  @Override
+  public int getHeight() {
+    return height;
   }
 
   /** Inventory redirection */

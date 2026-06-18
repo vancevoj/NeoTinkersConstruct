@@ -4,6 +4,7 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -12,7 +13,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.storage.loot.LootContext.EntityTarget;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyExplosionDecay;
-import net.minecraft.world.level.storage.loot.functions.LootingEnchantFunction;
+import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
@@ -42,11 +43,13 @@ import slimeknights.tconstruct.tools.modifiers.loot.ChrysophiliteLootCondition;
 import slimeknights.tconstruct.tools.modifiers.loot.HasModifierLootCondition;
 import slimeknights.tconstruct.tools.modifiers.loot.ModifierBonusLootFunction;
 
+import java.util.concurrent.CompletableFuture;
+
 import static slimeknights.mantle.Mantle.commonResource;
 
 public class GlobalLootModifiersProvider extends GlobalLootModifierProvider {
   public GlobalLootModifiersProvider(PackOutput output) {
-    super(output, TConstruct.MOD_ID);
+    super(output, CompletableFuture.completedFuture(VanillaRegistries.createLookup()), TConstruct.MOD_ID);
   }
 
   @SuppressWarnings("removal")
@@ -70,7 +73,7 @@ public class GlobalLootModifiersProvider extends GlobalLootModifierProvider {
       // 25% chance to drop
       .addFunction(SetItemCountFunction.setCount(UniformGenerator.between(-2, 1)).build())
       // each looting adds a chance of +1
-      .addFunction(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0, 1)).build())
+      .addFunction(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0, 1)).build())
       .build());
 
     // chrysophilite modifier hook

@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.tools.modifiers.traits.skull;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -29,7 +30,8 @@ public class WitheredModifier extends NoLevelsModifier implements DamageDealtMod
     // drink milk for more power, but less duration
     if (isDirectDamage && !source.is(DamageTypeTags.IS_PROJECTILE)) {
       LivingEntity attacker = context.getEntity();
-      boolean isCalcified = attacker.hasEffect(TinkerModifiers.calcifiedEffect);
+      // calcifiedEffect is a DeferredHolder with a wildcard registry type, so wrap the effect as a Holder<MobEffect>
+      boolean isCalcified = attacker.hasEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(TinkerModifiers.calcifiedEffect.value()));
       target.addEffect(new MobEffectInstance(MobEffects.WITHER, isCalcified ? 100 : 200, isCalcified ? 1 : 0), attacker);
     }
   }

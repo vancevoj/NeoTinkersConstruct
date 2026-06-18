@@ -1,18 +1,14 @@
 package slimeknights.tconstruct.tools.modifiers.loot;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.BinomialWithBonusCount;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.Formula;
-import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.FormulaDeserializer;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.OreDrops;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.UniformBonusCount;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
@@ -20,15 +16,25 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import slimeknights.mantle.util.JsonHelper;
 import slimeknights.tconstruct.library.modifiers.ModifierId;
 import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 
+import java.util.List;
 import java.util.Set;
 
 /** Boosts drop rates based on modifier level */
 public class ModifierBonusLootFunction extends LootItemConditionalFunction {
+  /** Codec for the modifier ID field, stored as a resource location to match the legacy JSON */
+  private static final Codec<ModifierId> MODIFIER_CODEC = ResourceLocation.CODEC.xmap(ModifierId::new, id -> id);
+
+  /** Codec for this function */
+  public static final MapCodec<ModifierBonusLootFunction> CODEC = RecordCodecBuilder.mapCodec(inst -> commonFields(inst).and(inst.group(
+    MODIFIER_CODEC.fieldOf("modifier").forGetter(f -> f.modifier),
+    ChrysophiliteBonusFunction.FORMULA_CODEC.forGetter(f -> f.formula),
+    Codec.BOOL.optionalFieldOf("include_base", true).forGetter(f -> f.includeBase)
+  )).apply(inst, ModifierBonusLootFunction::new));
+
   /** Modifier ID to use for multiplier bonus */
   private final ModifierId modifier;
   /** Formula to apply */
@@ -36,7 +42,7 @@ public class ModifierBonusLootFunction extends LootItemConditionalFunction {
   /** If true, considers level 1 as bonus, if false considers level 1 as no bonus */
   private final boolean includeBase;
 
-  protected ModifierBonusLootFunction(LootItemCondition[] conditions, ModifierId modifier, Formula formula, boolean includeBase) {
+  protected ModifierBonusLootFunction(List<LootItemCondition> conditions, ModifierId modifier, Formula formula, boolean includeBase) {
     super(conditions);
     this.modifier = modifier;
     this.formula = formula;
@@ -64,7 +70,7 @@ public class ModifierBonusLootFunction extends LootItemConditionalFunction {
   }
 
   @Override
-  public LootItemFunctionType getType() {
+  public LootItemFunctionType<ModifierBonusLootFunction> getType() {
     return TinkerModifiers.modifierBonusFunction.get();
   }
 
@@ -83,40 +89,5 @@ public class ModifierBonusLootFunction extends LootItemConditionalFunction {
       stack.setCount(formula.calculateNewCount(context.getRandom(), stack.getCount(), level));
     }
     return stack;
-  }
-
-  /** Serializer class */
-  public static class Serializer extends LootItemConditionalFunction.Serializer<ModifierBonusLootFunction> {
-    @Override
-    public void serialize(JsonObject json, ModifierBonusLootFunction loot, JsonSerializationContext context) {
-      super.serialize(json, loot, context);
-      json.addProperty("modifier", loot.modifier.toString());
-      json.addProperty("formula", loot.formula.getType().toString());
-      JsonObject parameters = new JsonObject();
-      loot.formula.serializeParams(parameters, context);
-      if (parameters.size() > 0) {
-        json.add("parameters", parameters);
-      }
-      json.addProperty("include_base", loot.includeBase);
-    }
-
-    @Override
-    public ModifierBonusLootFunction deserialize(JsonObject json, JsonDeserializationContext context, LootItemCondition[] conditions) {
-      ModifierId modifier = new ModifierId(JsonHelper.getResourceLocation(json, "modifier"));
-      ResourceLocation id = JsonHelper.getResourceLocation(json, "formula");
-      FormulaDeserializer deserializer = ApplyBonusCount.FORMULAS.get(id);
-      if (deserializer == null) {
-        throw new JsonParseException("Invalid formula id: " + id);
-      }
-      JsonObject parameters;
-      if (json.has("parameters")) {
-        parameters = GsonHelper.getAsJsonObject(json, "parameters");
-      } else {
-        parameters = new JsonObject();
-      }
-      Formula formula = deserializer.deserialize(parameters, context);
-      boolean includeBase = GsonHelper.getAsBoolean(json, "include_base", true);
-      return new ModifierBonusLootFunction(conditions, modifier, formula, includeBase);
-    }
   }
 }

@@ -5,8 +5,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -14,6 +17,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.entity.ProjectileWithKnockback;
 import slimeknights.tconstruct.library.modifiers.entity.ReusableProjectile;
 import slimeknights.tconstruct.library.modifiers.hook.build.ConditionalStatModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.ranged.ScheduledProjectileTaskModifierHook;
@@ -31,7 +35,7 @@ import slimeknights.tconstruct.tools.TinkerTools;
 import javax.annotation.Nullable;
 
 /** Arrow with material variants */
-public class ModifiableArrow extends AbstractArrow implements ToolProjectile, ReusableProjectile {
+public class ModifiableArrow extends AbstractArrow implements ToolProjectile, ReusableProjectile, ProjectileWithKnockback {
   /** Key to sync the stack to the client */
   protected static final EntityDataAccessor<ItemStack> STACK = SynchedEntityData.defineId(ModifiableArrow.class, EntityDataSerializers.ITEM_STACK);
   /** Movement speed in water */
@@ -41,6 +45,8 @@ public class ModifiableArrow extends AbstractArrow implements ToolProjectile, Re
   private IToolStackView tool = null;
   private boolean reclaim = false;
   private boolean dealtDamage = false;
+  /** Extra knockback applied by the punch modifier, scaled like vanilla arrow knockback */
+  private float knockback = 0;
   /** Tasks queued by modifiers */
   private Schedule tasks = Schedule.EMPTY;
 
@@ -144,8 +150,22 @@ public class ModifiableArrow extends AbstractArrow implements ToolProjectile, Re
   // need to replace some setters with adders so vanilla bows work with our logic
 
   @Override
-  public void setKnockback(int knockback) {
-    super.setKnockback(getKnockback() + knockback);
+  public void addKnockback(float amount) {
+    this.knockback += amount;
+  }
+
+  @Override
+  protected void doKnockback(LivingEntity entity, DamageSource damageSource) {
+    // run vanilla enchantment-driven knockback first
+    super.doKnockback(entity, damageSource);
+    // then apply our modifier knockback on top, scaled like vanilla arrow knockback (see AbstractArrow#doKnockback)
+    if (knockback > 0 && this.level() instanceof ServerLevel) {
+      double resistance = Math.max(0, 1 - entity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
+      Vec3 push = this.getDeltaMovement().multiply(1, 0, 1).normalize().scale(knockback * 0.6 * resistance);
+      if (push.lengthSqr() > 0) {
+        entity.push(push.x, 0.1, push.z);
+      }
+    }
   }
 
   @Override
@@ -231,6 +251,7 @@ public class ModifiableArrow extends AbstractArrow implements ToolProjectile, Re
   private static final String KEY_STACK = "stack";
   private static final String KEY_WATER_INERTIA = "water_inertia";
   private static final String KEY_DEALT_DAMAGE = "dealt_damage";
+  private static final String KEY_KNOCKBACK = "knockback";
   private static final String KEY_TASKS = "tasks";
 
   @Override
@@ -239,6 +260,7 @@ public class ModifiableArrow extends AbstractArrow implements ToolProjectile, Re
     tag.put(KEY_STACK, this.stack.saveOptional(this.registryAccess()));
     tag.putFloat(KEY_WATER_INERTIA, this.entityData.get(WATER_INERTIA));
     tag.putBoolean(KEY_DEALT_DAMAGE, dealtDamage);
+    tag.putFloat(KEY_KNOCKBACK, knockback);
     if (!this.tasks.isEmpty()) {
       tag.put(KEY_TASKS, this.tasks.serialize());
     }
@@ -252,6 +274,7 @@ public class ModifiableArrow extends AbstractArrow implements ToolProjectile, Re
     }
     this.entityData.set(WATER_INERTIA, tag.getFloat(KEY_WATER_INERTIA));
     this.dealtDamage = tag.getBoolean(KEY_DEALT_DAMAGE);
+    this.knockback = tag.getFloat(KEY_KNOCKBACK);
     if (tag.contains(KEY_TASKS, CompoundTag.TAG_LIST)) {
       this.tasks = Schedule.deserialize(tag.getList(KEY_TASKS, CompoundTag.TAG_COMPOUND));
     }

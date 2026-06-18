@@ -7,10 +7,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.event.ForgeEventFactory;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.event.EventHooks;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.recipe.RecipeResult;
@@ -68,7 +67,6 @@ public class ModifierWorktableBlockEntity extends RetexturedTableBlockEntity imp
   public ModifierWorktableBlockEntity(BlockPos pos, BlockState state) {
     super(TinkerTables.modifierWorktableTile.get(), pos, state, NAME, 3);
     this.itemHandler = new ConfigurableInvWrapperCapability(this, false, false);
-    this.itemHandlerCap = LazyOptional.of(() -> this.itemHandler);
     this.inventoryWrapper = new ModifierWorktableContainerWrapper(this);
     this.craftingResult = new LazyResultContainer(this);
   }
@@ -178,7 +176,7 @@ public class ModifierWorktableBlockEntity extends RetexturedTableBlockEntity imp
     ItemStack original = getItem(slot);
     super.setItem(slot, stack);
     // if the stack changed, clear everything
-    if (original.getCount() != stack.getCount() || !ItemStack.isSameItemSameTags(original, stack)) {
+    if (original.getCount() != stack.getCount() || !ItemStack.isSameItemSameComponents(original, stack)) {
       onSlotChanged(slot);
     }
   }

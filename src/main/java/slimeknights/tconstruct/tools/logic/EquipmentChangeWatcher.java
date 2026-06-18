@@ -1,27 +1,18 @@
 package slimeknights.tconstruct.tools.logic;
 
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.event.AttachCapabilitiesEvent;
-import net.neoforged.neoforge.event.TickEvent.Phase;
-import net.neoforged.neoforge.event.TickEvent.PlayerTickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.fml.loading.FMLEnvironment;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.events.ToolEquipmentChangeEvent;
@@ -31,33 +22,36 @@ import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
 import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * Capability to make it easy for modifiers to store common data on the player, primarily used for armor
+ * Logic to make it easy for modifiers to respond to equipment changes, primarily used for armor.
+ * <p>
+ * In NeoForge 1.21 the old Forge capability that stored the last-known equipment (used to poll changes client-side) is replaced
+ * with a transient {@link AttachmentType data attachment}. The serverside hook still relies on {@link LivingEquipmentChangeEvent}.
  */
 public class EquipmentChangeWatcher {
   private EquipmentChangeWatcher() {}
 
-  /** Capability ID */
-  private static final ResourceLocation ID = TConstruct.getResource("equipment_watcher");
-  /** Capability type */
-  public static final Capability<PlayerLastEquipment> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+  /** Deferred register for the attachment type. Must be registered on the mod bus during construction via {@link #register(IEventBus)}. */
+  private static final DeferredRegister<AttachmentType<?>> ATTACHMENTS = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, TConstruct.MOD_ID);
 
-  /** Registers this capability */
-  public static void register() {
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.NORMAL, false, RegisterCapabilitiesEvent.class, event -> event.register(PlayerLastEquipment.class));
+  /** Attachment holding the last known equipment for a client player. Transient: it is rebuilt every tick and never needs saving. */
+  public static final DeferredHolder<AttachmentType<?>, AttachmentType<PlayerLastEquipment>> LAST_EQUIPMENT =
+    ATTACHMENTS.register("equipment_watcher", () -> AttachmentType.builder(PlayerLastEquipment::new).build());
+
+  /** Registers the attachment type and the equipment change listeners. Call during mod construction with the mod bus. */
+  public static void register(IEventBus modBus) {
+    ATTACHMENTS.register(modBus);
 
     // equipment change is used on both sides
     NeoForge.EVENT_BUS.addListener(EquipmentChangeWatcher::onEquipmentChange);
 
-    // only need to use the cap and the player tick on the client
+    // only need to poll equipment via the player tick on the client (server gets the change event directly)
     if (FMLEnvironment.dist == Dist.CLIENT) {
       NeoForge.EVENT_BUS.addListener(EquipmentChangeWatcher::onPlayerTick);
-      NeoForge.EVENT_BUS.addGenericListener(Entity.class, EquipmentChangeWatcher::attachCapability);
     }
   }
 
@@ -69,21 +63,12 @@ public class EquipmentChangeWatcher {
     runModifierHooks(event.getEntity(), event.getSlot(), event.getFrom(), event.getTo());
   }
 
-  /** Event listener to attach the capability */
-  private static void attachCapability(AttachCapabilitiesEvent<Entity> event) {
-    Entity entity = event.getObject();
-    if (entity.getCommandSenderWorld().isClientSide && entity instanceof Player) {
-      PlayerLastEquipment provider = new PlayerLastEquipment((Player) entity);
-      event.addCapability(ID, provider);
-      event.addListener(provider);
-    }
-  }
-
   /** Client side modifier hooks */
-  private static void onPlayerTick(PlayerTickEvent event) {
-    // only run for client side players every 5 ticks
-    if (event.phase == Phase.END && event.side == LogicalSide.CLIENT) {
-      event.player.getCapability(CAPABILITY).ifPresent(PlayerLastEquipment::update);
+  private static void onPlayerTick(PlayerTickEvent.Post event) {
+    // only run for client side players
+    Player player = event.getEntity();
+    if (player.level().isClientSide) {
+      player.getData(LAST_EQUIPMENT).update(player);
     }
   }
 
@@ -127,24 +112,22 @@ public class EquipmentChangeWatcher {
 
   /* Required methods */
 
-  /** Data class that runs actual update logic */
-  protected static class PlayerLastEquipment implements ICapabilityProvider, Runnable {
+  /** Data class that runs actual update logic, stored as a transient data attachment on client players */
+  protected static class PlayerLastEquipment {
     @Nullable
     private final Player player;
     private final Map<EquipmentSlot,ItemStack> lastItems = new EnumMap<>(EquipmentSlot.class);
-    private LazyOptional<PlayerLastEquipment> capability;
 
-    private PlayerLastEquipment(@Nullable Player player) {
-      this.player = player;
+    /** Attachment factory constructor; the holder is the player the attachment is attached to */
+    private PlayerLastEquipment(net.neoforged.neoforge.attachment.IAttachmentHolder holder) {
+      this.player = holder instanceof Player p ? p : null;
       for (EquipmentSlot slot : EquipmentSlot.values()) {
         lastItems.put(slot, ItemStack.EMPTY);
       }
-      this.capability = LazyOptional.of(() -> this);
     }
 
     /** Called on player tick to update the stacks and run the event */
-    public void update() {
-      // run twice a second, should be plenty fast enough
+    public void update(Player player) {
       if (player != null) {
         for (EquipmentSlot slot : EquipmentSlot.values()) {
           ItemStack newStack = player.getItemBySlot(slot);
@@ -155,19 +138,6 @@ public class EquipmentChangeWatcher {
           }
         }
       }
-    }
-
-    /** Called on capability invalidate to invalidate */
-    @Override
-    public void run() {
-      capability.invalidate();
-      capability = LazyOptional.of(() -> this);
-    }
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-      return CAPABILITY.orEmpty(cap, capability);
     }
   }
 }

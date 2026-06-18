@@ -57,9 +57,8 @@ public class FluidCannonBlock extends SearedTankBlock implements IFluidCannon, E
     builder.add(FACING, TRIGGERED);
   }
 
-  @Deprecated
   @Override
-  public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+  protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
     if (world.getBlockEntity(pos) instanceof FluidCannonBlockEntity cannon) {
       Vec3 location = hit.getLocation();
       boolean clickedTank = location.y - pos.getY() > 0.5;
@@ -69,7 +68,7 @@ public class FluidCannonBlock extends SearedTankBlock implements IFluidCannon, E
         double z = location.z - pos.getZ();
         clickedTank = 0.25 > x || x > 0.75 || 0.25 > z || z > 0.75;
       }
-      cannon.interact(player, hand, clickedTank);
+      cannon.interact(player, InteractionHand.MAIN_HAND, clickedTank);
     }
     return InteractionResult.SUCCESS;
   }

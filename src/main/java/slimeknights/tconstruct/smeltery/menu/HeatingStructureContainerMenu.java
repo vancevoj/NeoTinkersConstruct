@@ -35,7 +35,7 @@ public class HeatingStructureContainerMenu extends TriggeringMultiModuleContaine
   private final SideInventoryContainer<HeatingStructureBlockEntity> sideInventory;
   @Getter
   private final Container bucketContainer;
-  @Getter
+  /** Current transfer direction. Explicit getter below (instead of lombok @Getter) so the TransferDirectionSupplier override is always recognized even if lombok skips generation. */
   private TransferDirection transferDirection = TransferDirection.AUTO;
   private final Slot bucketResultSlot;
   public HeatingStructureContainerMenu(int id, @Nullable Inventory inv, @Nullable HeatingStructureBlockEntity structure) {
@@ -75,6 +75,12 @@ public class HeatingStructureContainerMenu extends TriggeringMultiModuleContaine
   @Override
   protected int getInventoryYOffset() {
     return 138;
+  }
+
+  /** Gets the current transfer direction */
+  @Override
+  public TransferDirection getTransferDirection() {
+    return transferDirection;
   }
 
   /** Updates the bucket inventory */

@@ -4,9 +4,13 @@ import lombok.AllArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent.Context;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import slimeknights.mantle.network.packet.ISimplePacket;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
 import slimeknights.mantle.util.BlockEntityHelper;
+import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.smeltery.block.entity.controller.HeatingStructureBlockEntity;
 
 import java.util.ArrayList;
@@ -17,6 +21,9 @@ import java.util.List;
  */
 @AllArgsConstructor
 public class StructureUpdatePacket implements IThreadsafePacket {
+  public static final Type<StructureUpdatePacket> TYPE = new Type<>(TConstruct.getResource("structure_update"));
+  public static final StreamCodec<RegistryFriendlyByteBuf,StructureUpdatePacket> STREAM_CODEC = ISimplePacket.codec(StructureUpdatePacket::new);
+
   private final BlockPos pos;
   private final BlockPos minPos;
   private final BlockPos maxPos;
@@ -45,7 +52,12 @@ public class StructureUpdatePacket implements IThreadsafePacket {
   }
 
   @Override
-  public void handleThreadsafe(Context context) {
+  public Type<StructureUpdatePacket> type() {
+    return TYPE;
+  }
+
+  @Override
+  public void handleThreadsafe(IPayloadContext context) {
     HandleClient.handle(this);
   }
 

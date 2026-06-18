@@ -37,8 +37,12 @@ public enum FoliageType implements StringRepresentable {
   private final MapColor mapColor;
   /** If true, this block type has fungus foliage instead of grass */
   private final boolean nether;
-  @Getter
   private final String serializedName = this.name().toLowerCase(Locale.ROOT);
+
+  @Override
+  public String getSerializedName() {
+    return serializedName;
+  }
 
   /* Tags */
   /** Tag for grass blocks with this foliage type */

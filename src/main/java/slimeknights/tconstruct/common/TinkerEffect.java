@@ -1,5 +1,8 @@
 package slimeknights.tconstruct.common;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -26,8 +29,8 @@ public class TinkerEffect extends MobEffect {
 
   // override to change return type
   @Override
-  public TinkerEffect addAttributeModifier(Attribute pAttribute, String pUuid, double pAmount, Operation pOperation) {
-    super.addAttributeModifier(pAttribute, pUuid, pAmount, pOperation);
+  public TinkerEffect addAttributeModifier(Holder<Attribute> pAttribute, ResourceLocation pId, double pAmount, Operation pOperation) {
+    super.addAttributeModifier(pAttribute, pId, pAmount, pOperation);
     return this;
   }
 
@@ -86,9 +89,18 @@ public class TinkerEffect extends MobEffect {
    */
   @Deprecated
   public MobEffectInstance apply(LivingEntity entity, int duration, int amplifier, boolean showIcon) {
-    MobEffectInstance effect = new MobEffectInstance(this, duration, amplifier, false, false, showIcon);
+    MobEffectInstance effect = new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this), duration, amplifier, false, false, showIcon);
     entity.addEffect(effect);
     return effect;
+  }
+
+  /**
+   * Gets the level of the effect on the entity starting from 1, or 0 if not active
+   * @param entity  Entity to check
+   * @return  Level, or 0 if inactive
+   */
+  public static int getLevel(LivingEntity entity, Holder<MobEffect> effect) {
+    return getAmplifier(entity, effect) + 1;
   }
 
   /**
@@ -114,12 +126,21 @@ public class TinkerEffect extends MobEffect {
    * @param entity  Entity to check
    * @return  Amplifier, or -1 if inactive
    */
-  public static int getAmplifier(LivingEntity entity, MobEffect effect) {
+  public static int getAmplifier(LivingEntity entity, Holder<MobEffect> effect) {
     MobEffectInstance instance = entity.getEffect(effect);
     if (instance != null) {
       return instance.getAmplifier();
     }
     return -1;
+  }
+
+  /**
+   * Gets the amplifier of the effect on the entity starting from 0, or -1 if not active
+   * @param entity  Entity to check
+   * @return  Amplifier, or -1 if inactive
+   */
+  public static int getAmplifier(LivingEntity entity, MobEffect effect) {
+    return getAmplifier(entity, BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect));
   }
 
   /** @deprecated use {@link #getAmplifier(LivingEntity, MobEffect)} which is better named or {@link #getLevel(LivingEntity, MobEffect)} which gives a more useful return */

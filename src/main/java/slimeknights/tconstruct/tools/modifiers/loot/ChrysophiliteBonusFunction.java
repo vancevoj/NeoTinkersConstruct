@@ -1,18 +1,18 @@
 package slimeknights.tconstruct.tools.modifiers.loot;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.BinomialWithBonusCount;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.Formula;
-import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.FormulaDeserializer;
+import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.FormulaType;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.OreDrops;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.UniformBonusCount;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
@@ -20,21 +20,34 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import slimeknights.mantle.util.JsonHelper;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 import slimeknights.tconstruct.tools.modifiers.traits.skull.ChrysophiliteModifier;
 
+import java.util.List;
 import java.util.Set;
 
 /** Loot modifier to boost drops based on teh chrysophilite amount */
 public class ChrysophiliteBonusFunction extends LootItemConditionalFunction {
-  public static final Serializer SERIALIZER = new Serializer();
+  /** Codec for the {@link Formula} dispatch, mirrors the package-private codec in {@link ApplyBonusCount} using the widened FORMULAS map */
+  static final MapCodec<Formula> FORMULA_CODEC = ExtraCodecs.dispatchOptionalValue(
+    "formula", "parameters",
+    ResourceLocation.CODEC.comapFlatMap(id -> {
+      FormulaType type = ApplyBonusCount.FORMULAS.get(id);
+      return type != null ? DataResult.success(type) : DataResult.error(() -> "No formula type with id: '" + id + "'");
+    }, FormulaType::id),
+    Formula::getType, FormulaType::codec);
+
+  /** Codec for this function */
+  public static final MapCodec<ChrysophiliteBonusFunction> CODEC = RecordCodecBuilder.mapCodec(inst -> commonFields(inst).and(inst.group(
+    FORMULA_CODEC.forGetter(f -> f.formula),
+    Codec.BOOL.optionalFieldOf("include_base", true).forGetter(f -> f.includeBase)
+  )).apply(inst, ChrysophiliteBonusFunction::new));
 
   /** Formula to apply */
   private final Formula formula;
   /** If true, the includes the helmet in the level, if false level is just gold pieces */
   private final boolean includeBase;
-  protected ChrysophiliteBonusFunction(LootItemCondition[] conditions, Formula formula, boolean includeBase) {
+  protected ChrysophiliteBonusFunction(List<LootItemCondition> conditions, Formula formula, boolean includeBase) {
     super(conditions);
     this.formula = formula;
     this.includeBase = includeBase;
@@ -78,40 +91,7 @@ public class ChrysophiliteBonusFunction extends LootItemConditionalFunction {
   }
 
   @Override
-  public LootItemFunctionType getType() {
+  public LootItemFunctionType<ChrysophiliteBonusFunction> getType() {
     return TinkerModifiers.chrysophiliteBonusFunction.get();
-  }
-
-  /** Serializer class */
-  private static class Serializer extends LootItemConditionalFunction.Serializer<ChrysophiliteBonusFunction> {
-    @Override
-    public void serialize(JsonObject json, ChrysophiliteBonusFunction loot, JsonSerializationContext context) {
-      super.serialize(json, loot, context);
-      json.addProperty("formula", loot.formula.getType().toString());
-      JsonObject parameters = new JsonObject();
-      loot.formula.serializeParams(parameters, context);
-      if (parameters.size() > 0) {
-        json.add("parameters", parameters);
-      }
-      json.addProperty("include_base", loot.includeBase);
-    }
-
-    @Override
-    public ChrysophiliteBonusFunction deserialize(JsonObject json, JsonDeserializationContext context, LootItemCondition[] conditions) {
-      ResourceLocation id = JsonHelper.getResourceLocation(json, "formula");
-      FormulaDeserializer deserializer = ApplyBonusCount.FORMULAS.get(id);
-      if (deserializer == null) {
-        throw new JsonParseException("Invalid formula id: " + id);
-      }
-      JsonObject parameters;
-      if (json.has("parameters")) {
-        parameters = GsonHelper.getAsJsonObject(json, "parameters");
-      } else {
-        parameters = new JsonObject();
-      }
-      Formula formula = deserializer.deserialize(parameters, context);
-      boolean includeBase = GsonHelper.getAsBoolean(json, "include_base", true);
-      return new ChrysophiliteBonusFunction(conditions, formula, includeBase);
-    }
   }
 }

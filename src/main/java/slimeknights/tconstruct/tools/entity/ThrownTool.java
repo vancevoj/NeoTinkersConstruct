@@ -126,7 +126,7 @@ public class ThrownTool extends ThrownTrident implements ToolProjectile {
     return entityData.get(WATER_INERTIA);
   }
 
-  @Override
+  // note: ThrownTrident#isChanneling was removed in 1.21 (channeling is now enchantment-driven); kept as our own helper
   public boolean isChanneling() {
     return !getPickupItemStackOrigin().isEmpty() && getTool().getModifiers().getLevel(ModifierIds.channeling) > 0;
   }

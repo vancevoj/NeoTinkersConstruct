@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlot.Type;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
@@ -44,14 +45,16 @@ public class ChrysophiliteModifier extends NoLevelsModifier implements Equipment
   public void onEquip(IToolStackView tool, ModifierEntry modifier, EquipmentChangeContext context) {
     // adding a helmet? activate bonus
     if (context.getChangedSlot() == EquipmentSlot.HEAD) {
-      context.getTinkerData().ifPresent(data -> {
+      // 1.21: tinker data moved from a capability to a data attachment, accessed via the non-Optional Holder
+      TinkerDataCapability.Holder data = context.getDataHolder();
+      if (data != null) {
         TotalGold gold = data.get(TOTAL_GOLD);
         if (gold == null) {
           data.computeIfAbsent(TOTAL_GOLD).initialize(context);
         } else {
           gold.setGold(EquipmentSlot.HEAD, tool.getVolatileData().getBoolean(ModifiableArmorItem.PIGLIN_NEUTRAL));
         }
-      });
+      }
     }
   }
 
@@ -61,7 +64,11 @@ public class ChrysophiliteModifier extends NoLevelsModifier implements Equipment
       IToolStackView newTool = context.getReplacementTool();
       // when replacing with a helmet that lacks this modifier, remove bonus
       if (newTool == null || newTool.getModifierLevel(this) == 0) {
-        context.getTinkerData().ifPresent(data -> data.remove(TOTAL_GOLD));
+        // 1.21: tinker data moved from a capability to a data attachment, accessed via the non-Optional Holder
+        TinkerDataCapability.Holder data = context.getDataHolder();
+        if (data != null) {
+          data.remove(TOTAL_GOLD);
+        }
       }
     }
   }
@@ -72,7 +79,11 @@ public class ChrysophiliteModifier extends NoLevelsModifier implements Equipment
     EquipmentSlot changed = context.getChangedSlot();
     if (slotType == EquipmentSlot.HEAD && changed.getType() == Type.ARMOR) {
       boolean hasGold = ChrysophiliteModifier.hasGold(context, changed);
-      context.getTinkerData().ifPresent(data -> data.computeIfAbsent(TOTAL_GOLD).setGold(changed, hasGold));
+      // 1.21: tinker data moved from a capability to a data attachment, accessed via the non-Optional Holder
+      TinkerDataCapability.Holder data = context.getDataHolder();
+      if (data != null) {
+        data.computeIfAbsent(TOTAL_GOLD).setGold(changed, hasGold);
+      }
     }
   }
 
@@ -89,11 +100,17 @@ public class ChrysophiliteModifier extends NoLevelsModifier implements Equipment
 
   /** Gets the level of the modifier on an entity */
   public static int getTotalGold(@Nullable Entity entity) {
-    return Optional.ofNullable(entity)
-                   .flatMap(e -> e.getCapability(TinkerDataCapability.CAPABILITY).resolve())
-                   .map(data -> data.get(ChrysophiliteModifier.TOTAL_GOLD))
-                   .map(TotalGold::getTotalGold)
-                   .orElse(0);
+    // 1.21: tinker data moved from a capability to a data attachment, accessed via the non-Optional Holder
+    if (entity instanceof LivingEntity living) {
+      TinkerDataCapability.Holder data = TinkerDataCapability.getData(living);
+      if (data != null) {
+        TotalGold gold = data.get(ChrysophiliteModifier.TOTAL_GOLD);
+        if (gold != null) {
+          return gold.getTotalGold();
+        }
+      }
+    }
+    return 0;
   }
 
   /** Causes more gold armor to drop */
@@ -110,7 +127,8 @@ public class ChrysophiliteModifier extends NoLevelsModifier implements Equipment
           RandomSource random = target.getRandom();
           // if the stack is gold, and it drops, we get it
           // don't have to worry about checking if it already dropped, the stacks are removed on drop
-          if (!stack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(stack) && stack.makesPiglinsNeutral(target) && random.nextFloat() < extraChance) {
+          // 1.21: vanishing curse check is now the prevent-equipment-drop enchantment component
+          if (!stack.isEmpty() && !EnchantmentHelper.has(stack, EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP) && stack.makesPiglinsNeutral(target) && random.nextFloat() < extraChance) {
             // mobs damage items, its kinda weird
             if (stack.isDamageableItem()) {
               stack.setDamageValue(stack.getMaxDamage() - random.nextInt(1 + random.nextInt(Math.max(stack.getMaxDamage() - 3, 1))));

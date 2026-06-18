@@ -1,6 +1,9 @@
 package slimeknights.tconstruct.tools.modifiers.traits.melee;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -55,7 +58,9 @@ public class LaceratingModifier extends Modifier implements ProjectileHitModifie
   /** Applies the effect to the target */
   private static void applyEffect(LivingEntity target, int level, int looting, @Nullable Entity cause) {
     int duration = level * 2 * 20;
-    MobEffectInstance existing = target.getEffect(TinkerEffects.bleeding.get());
+    // bleeding is a DeferredHolder with a wildcard registry type, so wrap the effect as a Holder<MobEffect>
+    Holder<MobEffect> bleeding = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(TinkerEffects.bleeding.value());
+    MobEffectInstance existing = target.getEffect(bleeding);
     if (existing != null && existing.getAmplifier() == looting) {
       duration += existing.getDuration();
     } else {
@@ -63,7 +68,7 @@ public class LaceratingModifier extends Modifier implements ProjectileHitModifie
       // skip when already present so we continue on the same clock and don't repeat a damage
       duration += 19;
     }
-    target.addEffect(new MobEffectInstance(TinkerEffects.bleeding.get(), duration, looting), cause);
+    target.addEffect(new MobEffectInstance(bleeding, duration, looting), cause);
   }
 
 

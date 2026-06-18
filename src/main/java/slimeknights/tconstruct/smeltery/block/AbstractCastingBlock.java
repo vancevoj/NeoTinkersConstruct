@@ -46,18 +46,17 @@ public abstract class AbstractCastingBlock extends TableBlock {
     return null;
   }
 
-  @Deprecated
   @Override
-  public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
+  protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult rayTraceResult) {
     if (player.isShiftKeyDown()) {
       return InteractionResult.PASS;
     }
     BlockEntity te = world.getBlockEntity(pos);
     if (te instanceof CastingBlockEntity) {
-      ((CastingBlockEntity) te).interact(player, hand);
+      ((CastingBlockEntity) te).interact(player, InteractionHand.MAIN_HAND);
       return InteractionResult.SUCCESS;
     }
-    return super.use(state, world, pos, player, hand, rayTraceResult);
+    return super.useWithoutItem(state, world, pos, player, rayTraceResult);
   }
 
   @SuppressWarnings("deprecation")

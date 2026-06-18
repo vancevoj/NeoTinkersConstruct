@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.tools.modifiers.traits.skull;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -57,7 +58,8 @@ public class StrongBonesModifier extends NoLevelsModifier {
       }
     }
     if (ArmorLevelModule.getLevel(living, CALCIFIABLE) > 0) {
-      MobEffectInstance effect = new MobEffectInstance(TinkerModifiers.calcifiedEffect, duration, 0);
+      // calcifiedEffect is a DeferredHolder with a wildcard registry type, so wrap the effect as a Holder<MobEffect>
+      MobEffectInstance effect = new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(TinkerModifiers.calcifiedEffect.value()), duration, 0);
       didSomething |= action.execute() ? living.addEffect(effect) : living.canBeAffected(effect);
     }
     return didSomething;

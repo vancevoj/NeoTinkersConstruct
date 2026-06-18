@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.tools.modifiers.traits.skull;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -29,7 +30,8 @@ public class FrosttouchModifier extends NoLevelsModifier implements DamageDealtM
   public void onDamageDealt(IToolStackView tool, ModifierEntry modifier, EquipmentContext context, EquipmentSlot slotType, LivingEntity target, DamageSource source, float amount, boolean isDirectDamage) {
     // must drink milk to melee slowness. Always can range slowness
     if (isDirectDamage) {
-      boolean isCalcified = context.getEntity().hasEffect(TinkerModifiers.calcifiedEffect);
+      // calcifiedEffect is a DeferredHolder with a wildcard registry type, so wrap the effect as a Holder<MobEffect>
+      boolean isCalcified = context.getEntity().hasEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(TinkerModifiers.calcifiedEffect.value()));
       if (isCalcified || source.is(DamageTypeTags.IS_PROJECTILE)) {
         target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 300, isCalcified ? 1 : 0), context.getEntity());
       }

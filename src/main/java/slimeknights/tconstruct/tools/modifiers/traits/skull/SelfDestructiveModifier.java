@@ -1,6 +1,9 @@
 package slimeknights.tconstruct.tools.modifiers.traits.skull;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,14 +43,19 @@ public class SelfDestructiveModifier extends NoLevelsModifier implements Keybind
     return false;
   }
 
+  /** Self destructing is a DeferredHolder with a wildcard registry type, so wrap the effect as a Holder<MobEffect> */
+  private static Holder<MobEffect> selfDestructing() {
+    return BuiltInRegistries.MOB_EFFECT.wrapAsHolder(TinkerEffects.selfDestructing.value());
+  }
+
   @Override
   public void stopInteract(IToolStackView tool, ModifierEntry modifier, Player player, EquipmentSlot slot) {
-    player.removeEffect(TinkerEffects.selfDestructing);
+    player.removeEffect(selfDestructing());
   }
 
   @Override
   public void onUnequip(IToolStackView tool, ModifierEntry modifier, EquipmentChangeContext context) {
-    context.getEntity().removeEffect(TinkerEffects.selfDestructing);
+    context.getEntity().removeEffect(selfDestructing());
   }
 
   /** Internal potion effect handling the explosion */
