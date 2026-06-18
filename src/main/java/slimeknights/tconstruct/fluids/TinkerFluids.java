@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.neoforged.neoforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
@@ -90,7 +90,7 @@ import static slimeknights.tconstruct.fluids.block.MobEffectLiquidBlock.createEf
 @SuppressWarnings("unused")
 public final class TinkerFluids extends TinkerModule {
   public TinkerFluids() {
-    ForgeMod.enableMilkFluid();
+    NeoForgeMod.enableMilkFluid();
   }
 
   /** Creative tab for general items, or those that lack another tab */

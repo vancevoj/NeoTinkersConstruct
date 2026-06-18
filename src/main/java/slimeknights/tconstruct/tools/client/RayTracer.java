@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForgeMod;
 
 // TOOD: can this be removed?
 public class RayTracer {
@@ -84,7 +84,7 @@ public class RayTracer {
    * @return the block reach distance from the server
    */
   private static double getBlockReachDistanceServer(ServerPlayer player) {
-    return player.getAttributeValue(ForgeMod.BLOCK_REACH.get());
+    return player.getAttributeValue(NeoForgeMod.BLOCK_REACH.get());
   }
 
   private static class ClientOnly {
