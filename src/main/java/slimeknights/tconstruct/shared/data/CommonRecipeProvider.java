@@ -48,17 +48,6 @@ public class CommonRecipeProvider extends BaseRecipeProvider implements ICommonR
     return "Tinkers' Construct Common Recipes";
   }
 
-  /* Resolve the clash between RecipeProvider's static has(...) and ICommonRecipeHelper's instance has(...) */
-  @Override
-  public Criterion<InventoryChangeTrigger.TriggerInstance> has(ItemLike item) {
-    return inventoryTrigger(ItemPredicate.Builder.item().of(item).build());
-  }
-
-  @Override
-  public Criterion<InventoryChangeTrigger.TriggerInstance> has(TagKey<Item> tag) {
-    return inventoryTrigger(ItemPredicate.Builder.item().of(tag).build());
-  }
-
   @Override
   protected void buildRecipes(RecipeOutput consumer) {
     this.addCommonRecipes(consumer);
