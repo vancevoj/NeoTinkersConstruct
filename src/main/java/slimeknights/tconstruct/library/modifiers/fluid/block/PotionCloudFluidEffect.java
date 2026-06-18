@@ -1,10 +1,9 @@
 package slimeknights.tconstruct.library.modifiers.fluid.block;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import slimeknights.mantle.data.loadable.primitive.FloatLoadable;
@@ -14,6 +13,7 @@ import slimeknights.tconstruct.library.modifiers.fluid.FluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffectContext;
 import slimeknights.tconstruct.library.recipe.TagPredicate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /** Effect to create a lingering cloud at the hit block */
@@ -30,11 +30,11 @@ public record PotionCloudFluidEffect(float scale, TagPredicate predicate) implem
 
   @Override
   public float apply(FluidStack fluid, EffectLevel level, FluidEffectContext.Block context, FluidAction action) {
-    // TODO(neoport): FluidStack is component-backed in 1.21 (no getTag()); potion data now lives in DataComponents.POTION_CONTENTS and PotionUtils is replaced by PotionContents. The potion-on-fluid representation and how TagPredicate (still Predicate<CompoundTag>) filters component fluids is owned by the unported `fluids` package (PotionFluidType). Resolve once that model is decided.
-    CompoundTag tag = fluid.getTag();
-    if (predicate.test(tag) && context.isOffsetReplaceable()) {
-      Potion potion = PotionUtils.getPotion(fluid.getTag());
-      List<MobEffectInstance> effects = potion.getEffects();
+    // TODO(neoport): TagPredicate (Predicate<CompoundTag>) no longer applies to component-backed fluids; potion is read from DataComponents.POTION_CONTENTS. Predicate filtering dropped pending the potion-fluid model decision.
+    PotionContents contents = fluid.get(DataComponents.POTION_CONTENTS);
+    if (contents != null && context.isOffsetReplaceable()) {
+      List<MobEffectInstance> effects = new ArrayList<>();
+      contents.getAllEffects().forEach(effects::add);
       if (!effects.isEmpty()) {
         float scale = level.value();
         if (action.execute()) {

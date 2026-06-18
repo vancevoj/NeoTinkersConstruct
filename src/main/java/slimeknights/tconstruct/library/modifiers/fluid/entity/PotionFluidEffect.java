@@ -4,7 +4,8 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import slimeknights.mantle.data.loadable.primitive.FloatLoadable;
@@ -14,6 +15,7 @@ import slimeknights.tconstruct.library.modifiers.fluid.FluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffectContext;
 import slimeknights.tconstruct.library.recipe.TagPredicate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /** Spilling effect that pulls the potion from a NBT potion fluid and applies it */
@@ -30,11 +32,12 @@ public record PotionFluidEffect(float scale, TagPredicate predicate) implements 
 
   @Override
   public float apply(FluidStack fluid, EffectLevel level, FluidEffectContext.Entity context, FluidAction action) {
-    // TODO(neoport): FluidStack is component-backed in 1.21 (no getTag()); potion data now lives in DataComponents.POTION_CONTENTS and PotionUtils is replaced by PotionContents. The potion-on-fluid representation and how TagPredicate (still Predicate<CompoundTag>) filters component fluids is owned by the unported `fluids` package (PotionFluidType). Resolve once that model is decided.
+    // TODO(neoport): TagPredicate (Predicate<CompoundTag>) no longer applies to component-backed fluids; potion is read from DataComponents.POTION_CONTENTS. Predicate filtering dropped pending the potion-fluid model decision.
     LivingEntity target = context.getLivingTarget();
-    // must match the tag predicate
-    if (target != null && predicate.test(fluid.getTag())) {
-      List<MobEffectInstance> effects = PotionUtils.getPotion(fluid.getTag()).getEffects();
+    PotionContents contents = fluid.get(DataComponents.POTION_CONTENTS);
+    if (target != null && contents != null) {
+      List<MobEffectInstance> effects = new ArrayList<>();
+      contents.getAllEffects().forEach(effects::add);
       if (!effects.isEmpty()) {
         LivingEntity attacker = context.getEntity();
         Entity directSource = context.getDirectSource();

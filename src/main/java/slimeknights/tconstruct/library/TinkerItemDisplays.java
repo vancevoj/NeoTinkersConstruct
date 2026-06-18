@@ -2,9 +2,8 @@ package slimeknights.tconstruct.library;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.neoforged.neoforge.registries.ForgeRegistries;
-import net.neoforged.neoforge.registries.IForgeRegistry;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import slimeknights.tconstruct.TConstruct;
 
@@ -14,8 +13,8 @@ import java.util.Locale;
 public class TinkerItemDisplays {
   private TinkerItemDisplays() {}
 
-  public static void init() {
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(TinkerItemDisplays::registerDisplay);
+  public static void init(IEventBus bus) {
+    bus.addListener(TinkerItemDisplays::registerDisplay);
   }
 
   /** Used by the melter and smeltery for display of items its melting */
@@ -42,19 +41,18 @@ public class TinkerItemDisplays {
 
   /** Registers all item display types */
   private static void registerDisplay(RegisterEvent event) {
-    if (event.getRegistryKey() == ForgeRegistries.Keys.DISPLAY_CONTEXTS) {
-      IForgeRegistry<ItemDisplayContext> registry = ForgeRegistries.DISPLAY_CONTEXTS.get();
-      register(registry, MELTER);
-      register(registry, TABLE);
-      register(registry, CASTING_TABLE);
-      register(registry, CASTING_BASIN);
-      register(registry, FLUID_CANNON);
-      register(registry, THROWN);
-    }
+    event.register(NeoForgeRegistries.Keys.DISPLAY_CONTEXTS, helper -> {
+      register(helper, MELTER);
+      register(helper, TABLE);
+      register(helper, CASTING_TABLE);
+      register(helper, CASTING_BASIN);
+      register(helper, FLUID_CANNON);
+      register(helper, THROWN);
+    });
   }
 
   /** Registers a display type */
-  private static void register(IForgeRegistry<ItemDisplayContext> registry, ItemDisplayContext context) {
-    registry.register(new ResourceLocation(context.getSerializedName()), context);
+  private static void register(RegisterEvent.RegisterHelper<ItemDisplayContext> registry, ItemDisplayContext context) {
+    registry.register(ResourceLocation.parse(context.getSerializedName()), context);
   }
 }

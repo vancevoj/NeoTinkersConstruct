@@ -81,7 +81,7 @@ public class HelmetChargingEffect extends MobEffect {
   /** Starts using the helmet with the charge time rendering */
   public static int startUsingHelmet(IToolStackView tool, LivingEntity living, float speedFactor) {
     int time = GeneralInteractionModifierHook.startDrawing(tool, living, speedFactor);
-    // helmetCharging is a DeferredHolder<?, HelmetChargingEffect> (wildcard), so wrap the effect instance as a Holder<MobEffect>
+    // helmetCharging is a DeferredHolder<? super HelmetChargingEffect, HelmetChargingEffect> (wildcard), so wrap the effect instance as a Holder<MobEffect>
     living.addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(TinkerModifiers.helmetCharging.get()), time + 20, 0, true, false, true));
     return time;
   }

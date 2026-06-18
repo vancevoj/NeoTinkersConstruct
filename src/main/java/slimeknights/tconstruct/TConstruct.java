@@ -99,7 +99,7 @@ public class TConstruct {
     instance = this;
 
     Config.init(container);
-    TinkerItemDisplays.init();
+    TinkerItemDisplays.init(bus);
     MaterialRegistry.init();
 
     // NeoForge 1.21: register the tool data component + entity data attachments on the mod bus
@@ -175,7 +175,7 @@ public class TConstruct {
 
     // other datagen
     generator.addProvider(server, new TConstructLootTableProvider(packOutput));
-    generator.addProvider(server, new AdvancementsProvider(packOutput));
+    generator.addProvider(server, new AdvancementsProvider(packOutput, lookupProvider));
     generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));
     generator.addProvider(server, new LootTableInjectionProvider(packOutput));
     generator.addProvider(server, new ConfigurationDataProvider(packOutput));

@@ -1,13 +1,11 @@
 package slimeknights.tconstruct.common.data;
 
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
 import slimeknights.mantle.recipe.data.IRecipeHelper;
 import slimeknights.tconstruct.TConstruct;
-
-import java.util.function.Consumer;
 
 /**
  * Shared logic for each module's recipe provider
@@ -19,7 +17,7 @@ public abstract class BaseRecipeProvider extends RecipeProvider implements ICond
   }
 
   @Override
-  protected abstract void buildRecipes(Consumer<FinishedRecipe> consumer);
+  protected abstract void buildRecipes(RecipeOutput consumer);
 
   @Override
   public abstract String getName();
