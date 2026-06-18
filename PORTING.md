@@ -7,14 +7,6 @@ on modern NeoForge packs (the Tinkreate pack in particular).
 This is a large, long-running effort, not a drop-in update. The notes below scope the work
 and fix the order of operations so progress stays incremental and testable.
 
-## Reality check
-
-Tinkers' Construct is one of the largest Forge mods in existence. The 1.20.1 to 1.21.1 jump
-crosses Minecraft's **1.20.5 data-components** rework, plus a full **Forge to NeoForge** API
-migration, and it depends on **Mantle**, which has to be ported first. Upstream SlimeKnights
-has not shipped 1.21 as of this writing. Plan for this to be measured in months of work, not
-days, and expect long stretches where nothing runs in game yet.
-
 ## Order of operations
 
 Port bottom-up. Each phase should compile and launch before the next one starts.
