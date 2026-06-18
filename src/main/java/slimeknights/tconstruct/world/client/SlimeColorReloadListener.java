@@ -27,7 +27,7 @@ public class SlimeColorReloadListener extends SimplePreparableReloadListener<int
    */
   @Override
   protected int[] prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
-    if (!ModLoader.isLoadingStateValid()) {
+    if (ModLoader.hasErrors()) {
       return new int[0];
     }
     try {

@@ -1,8 +1,7 @@
 package slimeknights.tconstruct.tools.recipe.severing;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -34,7 +33,7 @@ public class PlayerBeheadingRecipe extends SeveringRecipe {
     ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
     if (entity instanceof Player) {
       GameProfile gameprofile = ((Player)entity).getGameProfile();
-      stack.getOrCreateTag().put("SkullOwner", NbtUtils.writeGameProfile(new CompoundTag(), gameprofile));
+      stack.set(DataComponents.PROFILE, new net.minecraft.world.item.component.ResolvableProfile(gameprofile));
     }
     return stack;
   }

@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
-import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import slimeknights.mantle.registration.object.FenceBuildingBlockObject;
@@ -75,10 +74,9 @@ public final class TinkerMaterials extends TinkerModule {
    */
   @SubscribeEvent
   void registerSerializers(RegisterEvent event) {
+    // TODO(neoport): MaterialIngredient / MaterialValueIngredient register on NeoForgeRegistries.Keys.INGREDIENT_TYPES
+    // via a DeferredRegister now (their classes expose TYPE); CraftingHelper.register is gone. Cross-package wiring.
     if (event.getRegistryKey() == Registries.RECIPE_SERIALIZER) {
-      CraftingHelper.register(MaterialIngredient.Serializer.ID, MaterialIngredient.Serializer.INSTANCE);
-      CraftingHelper.register(MaterialValueIngredient.Serializer.ID, MaterialValueIngredient.Serializer.INSTANCE);
-
       MaterialPredicate.LOADER.register(getResource("variant"), MaterialVariantPredicate.LOADER);
       MaterialPredicate.LOADER.register(getResource("id"), MaterialIdPredicate.LOADER);
       MaterialPredicate.LOADER.register(getResource("has_part"), MaterialHasPartPredicate.LOADER);

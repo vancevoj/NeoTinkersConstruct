@@ -3,6 +3,7 @@ package slimeknights.tconstruct.smeltery.block.entity;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
@@ -19,12 +20,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
-import net.neoforged.neoforge.items.IItemHandler;
 import slimeknights.mantle.fluid.FluidTransferHelper;
 import slimeknights.mantle.inventory.SingleItemHandler;
 import slimeknights.tconstruct.common.network.InventorySlotSyncPacket;
@@ -51,7 +48,6 @@ public class FluidCannonBlockEntity extends TankBlockEntity implements ITankInve
   private final IFluidCannon block;
   @Getter
   private final FluidCannonItemHandler itemHandler = new FluidCannonItemHandler();
-  private final LazyOptional<IItemHandler> itemCapability = LazyOptional.of(() -> itemHandler);
 
   public FluidCannonBlockEntity(BlockPos pos, BlockState state) {
     this(pos, state, state.getBlock() instanceof IFluidCannon tank
@@ -139,7 +135,7 @@ public class FluidCannonBlockEntity extends TankBlockEntity implements ITankInve
         if (!targetState.isFaceSturdy(level, target, facing.getOpposite())) {
           // setup projectile
           int amount = Math.min(fluid.getAmount(), (int)(recipe.getAmount(fluid.getFluid()) * power));
-          FluidEffectProjectile projectile = new FluidEffectProjectile(level, worldPosition, facing, new FluidStack(fluid, amount), power);
+          FluidEffectProjectile projectile = new FluidEffectProjectile(level, worldPosition, facing, fluid.copyWithAmount(amount), power);
 
           // setup projectile target - numbers based on arrow dispenser behavior
           projectile.shoot(facing.getStepX(), facing.getStepY() + 0.1f, facing.getStepZ(), block.getVelocity(), block.getInaccuracy());
@@ -166,34 +162,19 @@ public class FluidCannonBlockEntity extends TankBlockEntity implements ITankInve
   /* Inventory */
   private static final String TAG_ITEM = "item";
 
-  @Nonnull
   @Override
-  public <C> LazyOptional<C> getCapability(Capability<C> capability, @Nullable Direction facing) {
-    if (capability == ForgeCapabilities.ITEM_HANDLER) {
-      return itemCapability.cast();
-    }
-    return super.getCapability(capability, facing);
-  }
-
-  @Override
-  public void invalidateCaps() {
-    super.invalidateCaps();
-    itemCapability.invalidate();
-  }
-
-  @Override
-  public void load(CompoundTag tag) {
-    super.load(tag);
-    tank.readFromNBT(tag.getCompound(NBTTags.TANK));
+  public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+    super.loadAdditional(tag, registries);
+    tank.readFromNBT(registries, tag.getCompound(NBTTags.TANK));
     if (tag.contains(TAG_ITEM, Tag.TAG_COMPOUND)) {
-      itemHandler.readFromNBT(tag.getCompound(TAG_ITEM));
+      itemHandler.readFromNBT(tag.getCompound(TAG_ITEM), registries);
     }
   }
 
   @Override
-  public void saveSynced(CompoundTag tag) {
-    super.saveSynced(tag);
-    tag.put(TAG_ITEM, itemHandler.writeToNBT());
+  public void saveSynced(CompoundTag tag, HolderLookup.Provider registries) {
+    super.saveSynced(tag, registries);
+    tag.put(TAG_ITEM, itemHandler.writeToNBT(registries));
   }
 
 

@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.smeltery.block.entity.module;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -9,7 +10,6 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 import slimeknights.mantle.block.entity.MantleBlockEntity;
 import slimeknights.tconstruct.library.recipe.melting.IMeltingContainer.IOreRate;
 import slimeknights.tconstruct.library.recipe.melting.IMeltingRecipe;
@@ -224,9 +224,9 @@ public class MeltingModuleInventory implements IItemHandlerModifiable {
     MeltingModule module = getModule(slot);
     boolean canInsert = module.getStack().isEmpty();
     if (!simulate && canInsert) {
-      setStackInSlot(slot, ItemHandlerHelper.copyStackWithSize(stack, 1));
+      setStackInSlot(slot, stack.copyWithCount(1));
     }
-    return canInsert ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1) : stack;
+    return canInsert ? stack.copyWithCount(stack.getCount() - 1) : stack;
   }
 
   @Nonnull
@@ -311,12 +311,12 @@ public class MeltingModuleInventory implements IItemHandlerModifiable {
    * Writes this module to Tag
    * @return  Module in Tag
    */
-  public CompoundTag writeToTag() {
+  public CompoundTag writeToTag(HolderLookup.Provider registries) {
     CompoundTag nbt = new CompoundTag();
     ListTag list = new ListTag();
     for (int i = 0; i < modules.length; i++) {
       if (modules[i] != null && !modules[i].getStack().isEmpty()) {
-        CompoundTag moduleTag = modules[i].writeToTag();
+        CompoundTag moduleTag = modules[i].writeToTag(registries);
         moduleTag.putByte(TAG_SLOT, (byte)i);
         list.add(moduleTag);
       }
@@ -332,7 +332,7 @@ public class MeltingModuleInventory implements IItemHandlerModifiable {
    * Reads this inventory from Tag
    * @param nbt  Tag compound
    */
-  public void readFromTag(CompoundTag nbt) {
+  public void readFromTag(HolderLookup.Provider registries, CompoundTag nbt) {
     if (!strictSize) {
       int newSize = nbt.getByte(TAG_SIZE) & 255;
       if (newSize != modules.length) {
@@ -352,7 +352,7 @@ public class MeltingModuleInventory implements IItemHandlerModifiable {
       if (item.contains(TAG_SLOT, Tag.TAG_BYTE)) {
         int slot = item.getByte(TAG_SLOT) & 255;
         if (validSlot(slot)) {
-          getModule(slot).readFromTag(item);
+          getModule(slot).readFromTag(registries, item);
         }
       }
     }

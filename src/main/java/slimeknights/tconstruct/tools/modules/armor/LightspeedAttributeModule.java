@@ -55,13 +55,17 @@ public record LightspeedAttributeModule(String unique, ResourceLocation id, Attr
 
   /** Convenience constructor: derives the ResourceLocation id from the unique string (e.g. "tconstruct.modifier.lightspeed" -> "tconstruct:modifier/lightspeed") */
   public LightspeedAttributeModule(String unique, Attribute attribute, Operation operation, LightLayer lightLayer, int minLight, float amount, float damageChance) {
-    // The unique string is formatted as "namespace.modifier.path"; convert to a valid ResourceLocation
+    // The unique string is formatted as "namespace.modifier.path"; convert to a valid ResourceLocation.
+    // In a record's non-canonical constructor the first statement must be a this(...) delegation, so derive the id inline.
+    this(unique, deriveId(unique), attribute, operation, lightLayer, minLight, amount, damageChance);
+  }
+
+  /** Derives a ResourceLocation id from a unique string formatted as "namespace.modifier.path" */
+  private static ResourceLocation deriveId(String unique) {
     int dot = unique.indexOf('.');
-    ResourceLocation derivedId = dot > 0
+    return dot > 0
       ? ResourceLocation.fromNamespaceAndPath(unique.substring(0, dot), unique.substring(dot + 1).replace('.', '/'))
       : ResourceLocation.withDefaultNamespace(unique);
-    //noinspection ThisEscapedInObjectConstruction
-    this(unique, derivedId, attribute, operation, lightLayer, minLight, amount, damageChance);
   }
 
   @Override

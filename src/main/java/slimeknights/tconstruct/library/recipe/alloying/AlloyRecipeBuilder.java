@@ -1,7 +1,6 @@
 package slimeknights.tconstruct.library.recipe.alloying;
 
 import lombok.RequiredArgsConstructor;
-import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -112,19 +111,15 @@ public class AlloyRecipeBuilder extends AbstractRecipeBuilder<AlloyRecipeBuilder
   /* Building */
 
   @Override
-  public void save(Consumer<FinishedRecipe> consumer) {
+  public void save(RecipeOutput consumer) {
     save(consumer, BuiltInRegistries.FLUID.getKey(output.get().getFluid()));
   }
 
   @Override
-  public void save(Consumer<FinishedRecipe> consumer, ResourceLocation id) {
+  public void save(RecipeOutput consumer, ResourceLocation id) {
     if (inputs.size() < 2) {
       throw new IllegalStateException("Invalid alloying recipe " + id + ", must have at least two inputs");
     }
-    consumer.accept(new LoadableFinishedRecipe<>(
-      new AlloyRecipe(id, inputs, output, temperature),
-      AlloyRecipe.LOADER,
-      this.buildOptionalAdvancement(id, "alloys")
-    ));
+    consumer.accept(id, new AlloyRecipe(id, inputs, output, temperature), this.buildOptionalAdvancement(id, "alloys"));
   }
 }

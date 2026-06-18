@@ -19,7 +19,7 @@ public class ClearStainedGlassPaneBlock extends ClearGlassPaneBlock {
 
   @Nullable
   @Override
-  public float[] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
-    return this.glassColor.getRgb();
+  public Integer getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
+    return 0xFF000000 | this.glassColor.getColor();
   }
 }

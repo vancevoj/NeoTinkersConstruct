@@ -8,12 +8,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 import slimeknights.mantle.data.loadable.common.IngredientLoadable;
 import slimeknights.mantle.data.loadable.field.ContextKey;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.mantle.recipe.ICustomOutputRecipe;
-import slimeknights.mantle.recipe.container.ISingleStackContainer;
 import slimeknights.mantle.recipe.helper.ItemOutput;
 import slimeknights.mantle.recipe.helper.LoadableRecipeSerializer;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
@@ -29,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * Recipe to get the material from an ingredient
  */
-public class MaterialRecipe implements ICustomOutputRecipe<ISingleStackContainer>, IMaterialValue {
+public class MaterialRecipe implements ICustomOutputRecipe<IMaterialRecipeContainer>, IMaterialValue {
   /** Empty material instance for the cache */
   @SuppressWarnings("removal")
   public static final MaterialRecipe EMPTY = new MaterialRecipe(ResourceLocation.parse("missingno"), "", Ingredient.EMPTY, 0, 0, IMaterial.UNKNOWN_ID, ItemOutput.EMPTY);
@@ -112,7 +110,7 @@ public class MaterialRecipe implements ICustomOutputRecipe<ISingleStackContainer
   /* Material methods */
 
   @Override
-  public boolean matches(ISingleStackContainer inv, Level worldIn) {
+  public boolean matches(IMaterialRecipeContainer inv, Level worldIn) {
     return !material.isUnknown() && this.ingredient.test(inv.getStack());
   }
 
@@ -129,7 +127,7 @@ public class MaterialRecipe implements ICustomOutputRecipe<ISingleStackContainer
     if (displayItems == null) {
       if (needed > 1) {
         displayItems = Arrays.stream(ingredient.getItems())
-                             .map(stack -> ItemHandlerHelper.copyStackWithSize(stack, needed))
+                             .map(stack -> stack.copyWithCount(needed))
                              .collect(Collectors.toList());
       } else {
         displayItems = Arrays.asList(ingredient.getItems());

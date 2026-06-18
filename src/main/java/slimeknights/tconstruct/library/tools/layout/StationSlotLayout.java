@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -92,7 +92,7 @@ public class StationSlotLayout {
   /* Buffers */
 
   /** Reads a slot from the packet buffer */
-  public static StationSlotLayout read(FriendlyByteBuf buffer) {
+  public static StationSlotLayout read(RegistryFriendlyByteBuf buffer) {
     ResourceLocation name = buffer.readResourceLocation();
     String translationKey = buffer.readUtf(Short.MAX_VALUE);
     LayoutIcon icon = LayoutIcon.read(buffer);
@@ -112,7 +112,7 @@ public class StationSlotLayout {
   }
 
   /** Writes a slot to the packet buffer */
-  public void write(FriendlyByteBuf buffer) {
+  public void write(RegistryFriendlyByteBuf buffer) {
     buffer.writeResourceLocation(name);
     buffer.writeUtf(getTranslationKey());
     icon.write(buffer);

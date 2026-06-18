@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.ForgeHooks;
+import net.neoforged.neoforge.common.CommonHooks;
 import slimeknights.tconstruct.common.Sounds;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 import slimeknights.tconstruct.tools.data.material.MaterialIds;
@@ -33,7 +33,7 @@ public class SkySlimeEntity extends TravelersPlateSlimeEntity {
     if (isSuppressingBounce()) {
       return super.causeFallDamage(distance, damageMultiplier * 0.2f, source);
     }
-    float[] ret = ForgeHooks.onLivingFall(this, distance, damageMultiplier);
+    float[] ret = CommonHooks.onLivingFall(this, distance, damageMultiplier);
     if (ret == null) {
       return false;
     }

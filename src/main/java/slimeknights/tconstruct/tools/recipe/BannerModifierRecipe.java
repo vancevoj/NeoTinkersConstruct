@@ -2,16 +2,16 @@ package slimeknights.tconstruct.tools.recipe;
 
 import lombok.Getter;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BannerItem;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
@@ -99,12 +99,8 @@ public class BannerModifierRecipe implements ITinkerStationRecipe, IMultiRecipe<
       return RecipeResult.pass();
     }
 
-    // get the banner data
-    CompoundTag bannerData = BlockItem.getBlockEntityData(banner);
-    ListTag patterns = new ListTag();
-    if (bannerData != null) {
-      patterns = bannerData.getList("Patterns", Tag.TAG_COMPOUND);
-    }
+    // get the banner data: convert the BANNER_PATTERNS component back into the legacy ListTag format BannerModule consumes
+    ListTag patterns = bannerPatternsToListTag(banner.get(DataComponents.BANNER_PATTERNS));
 
     // apply the pattern
     BannerModule.copyPatterns(tool.getPersistentData(), key, dye, patterns);
@@ -114,6 +110,24 @@ public class BannerModifierRecipe implements ITinkerStationRecipe, IMultiRecipe<
       tool.addModifier(key, 1);
     }
     return ITinkerStationRecipe.success(tool, inv);
+  }
+
+  /**
+   * Converts the 1.21 {@link BannerPatternLayers} component into the legacy banner {@link ListTag} format
+   * (entries with {@code Pattern} and {@code Color}) consumed by {@link BannerModule#copyPatterns}.
+   */
+  private static ListTag bannerPatternsToListTag(@Nullable BannerPatternLayers layers) {
+    ListTag patterns = new ListTag();
+    if (layers != null) {
+      for (BannerPatternLayers.Layer layer : layers.layers()) {
+        CompoundTag tag = new CompoundTag();
+        // store the pattern as its registry path, matching the convention used for the base pattern in BannerModule
+        tag.putString("Pattern", layer.pattern().unwrapKey().map(key -> key.location().getPath()).orElse(""));
+        tag.putInt("Color", layer.color().getId());
+        patterns.add(tag);
+      }
+    }
+    return patterns;
   }
 
   @Override

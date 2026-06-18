@@ -28,9 +28,9 @@ public class UpdateTinkerStationRecipePacket implements IThreadsafePacket {
 
   private final BlockPos pos;
   private final ResourceLocation recipe;
-  public UpdateTinkerStationRecipePacket(BlockPos pos, ITinkerStationRecipe recipe) {
+  public UpdateTinkerStationRecipePacket(BlockPos pos, ResourceLocation recipe) {
     this.pos = pos;
-    this.recipe = recipe.getId();
+    this.recipe = recipe;
   }
 
   public UpdateTinkerStationRecipePacket(FriendlyByteBuf buffer) {
@@ -66,14 +66,14 @@ public class UpdateTinkerStationRecipePacket implements IThreadsafePacket {
         if (Minecraft.getInstance().screen instanceof TinkerStationScreen stationScreen) {
           TinkerStationBlockEntity te = stationScreen.getTileEntity();
           if (te.getBlockPos().equals(packet.pos)) {
-            recipe.ifPresent(te::updateRecipe);
+            recipe.ifPresent(r -> te.updateRecipe(packet.recipe, r));
             stationScreen.updateDisplay();
             handled = true;
           }
         }
         // if the wrong screen is open or no screen, use the tile directly
         if (!handled) {
-          recipe.ifPresent(r -> BlockEntityHelper.get(TinkerStationBlockEntity.class, world, packet.pos).ifPresent(te -> te.updateRecipe(r)));
+          recipe.ifPresent(r -> BlockEntityHelper.get(TinkerStationBlockEntity.class, world, packet.pos).ifPresent(te -> te.updateRecipe(packet.recipe, r)));
         }
       }
     }

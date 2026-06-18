@@ -104,7 +104,7 @@ public class DuctTankWrapper implements IFluidHandler {
     if (fluid.isEmpty()) {
       return FluidStack.EMPTY;
     }
-    return parent.drain(new FluidStack(fluid, maxDrain), action);
+    return parent.drain(fluid.copyWithAmount(maxDrain), action);
   }
 
   @Override

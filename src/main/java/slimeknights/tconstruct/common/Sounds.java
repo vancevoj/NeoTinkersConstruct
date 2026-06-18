@@ -93,7 +93,7 @@ public enum Sounds {
   public static void registerSounds(RegisterEvent event) {
     if (event.getRegistryKey() == Registries.SOUND_EVENT) {
       for (Sounds sound : values()) {
-        Registry.register(BuiltInRegistries.SOUND_EVENT, sound.sound.getLocation(), sound.getSound());
+        Registry.register(BuiltInRegistries.SOUND_EVENT, sound.sound.getLocation(), sound.sound);
       }
     }
   }

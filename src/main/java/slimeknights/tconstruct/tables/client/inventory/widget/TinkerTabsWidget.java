@@ -80,7 +80,7 @@ public class TinkerTabsWidget implements Renderable, GuiEventListener, Narratabl
       for (Pair<BlockPos, BlockState> pair : menu.stationBlocks) {
         BlockState state = pair.getRight();
         BlockPos blockPos = pair.getLeft();
-        ItemStack stack = state.getBlock().getCloneItemStack(state, null, level, blockPos, minecraft.player);
+        ItemStack stack = state.getBlock().getCloneItemStack(level, blockPos, state);
         tabs.add(Pair.of(stack, blockPos));
       }
     }

@@ -93,7 +93,7 @@ public class ToolTierStat implements IToolStat<Tier> {
 
   @Override
   public JsonElement serialize(Tier value) {
-    return new JsonPrimitive(Objects.requireNonNull(HarvestTiers.getName(value)).toString());
+    return new JsonPrimitive(Objects.requireNonNull(HarvestTiers.getId(value)).toString());
   }
 
   @Override
@@ -108,7 +108,7 @@ public class ToolTierStat implements IToolStat<Tier> {
 
   @Override
   public void toNetwork(FriendlyByteBuf buffer, Tier value) {
-    buffer.writeResourceLocation(Objects.requireNonNull(HarvestTiers.getName(value)));
+    buffer.writeResourceLocation(Objects.requireNonNull(HarvestTiers.getId(value)));
   }
 
   @Override

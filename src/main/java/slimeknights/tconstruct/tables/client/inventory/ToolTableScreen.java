@@ -3,7 +3,6 @@ package slimeknights.tconstruct.tables.client.inventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag.Default;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import slimeknights.mantle.client.SafeClientAccess;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.GuiUtil;
@@ -92,11 +92,15 @@ public abstract class ToolTableScreen<T extends BlockEntity, C extends TabbedCon
    * Renders the armor stand
    * @param graphics  Graphics instance
    */
+  /** Base armor stand orientation, matching vanilla {@code SmithingScreen.ARMOR_STAND_ANGLE} (private in 1.21) */
+  private static final Quaternionf ARMOR_STAND_ANGLE = new Quaternionf().rotationXYZ(0.43633232f, 0.0f, 3.1415927f);
+  /** Base armor stand translation, matching vanilla {@code SmithingScreen.ARMOR_STAND_TRANSLATION} (private in 1.21) */
+  private static final Vector3f ARMOR_STAND_TRANSLATION = new Vector3f();
+
   protected void renderArmorStand(GuiGraphics graphics) {
     if (this.armorStandPreview != null) {
-      Quaternionf pose = new Quaternionf();
-      SmithingScreen.ARMOR_STAND_ANGLE.rotateY(this.armorStandAngle, pose);
-      InventoryScreen.renderEntityInInventory(graphics, this.armorStandX, this.armorStandY, this.armorStandScale, pose, null, this.armorStandPreview);
+      Quaternionf pose = new Quaternionf(ARMOR_STAND_ANGLE).rotateY(this.armorStandAngle);
+      InventoryScreen.renderEntityInInventory(graphics, this.armorStandX, this.armorStandY, this.armorStandScale, ARMOR_STAND_TRANSLATION, pose, null, this.armorStandPreview);
 
       graphics.blit(ICON_TEXTURE, armorStandX - 16, armorStandY - 16, 0, 184, 32, 32);
     }
@@ -145,7 +149,7 @@ public abstract class ToolTableScreen<T extends BlockEntity, C extends TabbedCon
       ItemStack result = lazyToolStack.getStack();
       tinkerInfo.setCaption(result.getHoverName());
       List<Component> list = new ArrayList<>();
-      result.getItem().appendHoverText(result, Minecraft.getInstance().level, list, Default.NORMAL);
+      result.getItem().appendHoverText(result, Item.TooltipContext.of(Minecraft.getInstance().level), list, Default.NORMAL);
       tinkerInfo.setText(list);
     }
   }

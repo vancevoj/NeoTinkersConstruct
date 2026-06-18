@@ -37,7 +37,7 @@ import java.util.List;
 public record ToolActionTransformModule(ItemAbility action, SoundEvent sound, boolean requireGround, int eventId, ModifierCondition<IToolStackView> condition) implements BlockTransformModule, ToolActionModifierHook, ConditionalModule<IToolStackView> {
   private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<ToolActionTransformModule>defaultHooks(ModifierHooks.BLOCK_INTERACT, ModifierHooks.TOOL_ACTION, ModifierHooks.AOE_HIGHLIGHT);
   public static final RecordLoadable<ToolActionTransformModule> LOADER = RecordLoadable.create(
-    Loadables.TOOL_ACTION.requiredField("tool_action", ToolActionTransformModule::action),
+    Loadables.ITEM_ABILITY.requiredField("tool_action", ToolActionTransformModule::action),
     Loadables.SOUND_EVENT.requiredField("sound", ToolActionTransformModule::sound),
     BooleanLoadable.INSTANCE.requiredField("require_ground", ToolActionTransformModule::requireGround),
     IntLoadable.FROM_MINUS_ONE.defaultField("event_id", -1, ToolActionTransformModule::eventId),

@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.tools.part;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -8,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.component.CustomData;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.materials.MaterialTooltipCache;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
@@ -49,7 +50,9 @@ public class MaterialItem extends Item implements IMaterialItem {
 
   @Override
   public MaterialVariantId getMaterial(ItemStack stack) {
-    return getMaterialId(stack.getTag());
+    // 1.21: read the material string from the CUSTOM_DATA component compound instead of item NBT
+    CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+    return getMaterialId(data == null ? null : data.copyTag());
   }
 
   @Nullable
@@ -112,7 +115,7 @@ public class MaterialItem extends Item implements IMaterialItem {
   }
 
   @Override
-  public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flag) {
+  public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
     appendHoverText(this, stack, tooltip, flag);
   }
 
@@ -130,7 +133,6 @@ public class MaterialItem extends Item implements IMaterialItem {
     return BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace();
   }
 
-  @Nullable
   @Override
   public String getCreatorModId(ItemStack stack) {
     return getCreatorModId(this, stack);
@@ -162,7 +164,8 @@ public class MaterialItem extends Item implements IMaterialItem {
     }
   }
 
-  @Override
+  // TODO(neoport): Item#verifyTagAfterLoad was removed in 1.21 (no per-load NBT validation hook). Material remapping on load
+  // needs a different home (e.g. a DataComponent validation step or a tick handler). Helper kept for explicit callers.
   public void verifyTagAfterLoad(CompoundTag nbt) {
     verifyTag(nbt);
   }

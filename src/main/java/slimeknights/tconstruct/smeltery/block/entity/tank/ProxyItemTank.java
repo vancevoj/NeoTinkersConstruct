@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
@@ -33,7 +33,7 @@ public class ProxyItemTank<T extends MantleBlockEntity & IFluidTankUpdater> exte
     Item craftRemainingItem = stack.getItem().getCraftingRemainingItem();
     return !stack.is(TinkerTags.Items.PROXY_TANK_BLACKLIST)
       && (craftRemainingItem == null || !RegistryHelper.contains(TinkerTags.Items.PROXY_TANK_BLACKLIST, craftRemainingItem))
-      && (stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent());
+      && (stack.getCapability(Capabilities.FluidHandler.ITEM) != null);
   }
 
   /** Used by the fluid handler logic to sync changes as we directly mutate the internal stack */
@@ -55,7 +55,7 @@ public class ProxyItemTank<T extends MantleBlockEntity & IFluidTankUpdater> exte
       itemTank = null;
       if (needsUpdate) {
         // both stacks being empty means our stack shrunk by 1 and is being replaced with ItemStack.EMPTY
-        needsUpdate = (oldStack.isEmpty() && newStack.isEmpty()) || !ItemStack.isSameItemSameTags(oldStack, newStack);
+        needsUpdate = (oldStack.isEmpty() && newStack.isEmpty()) || !ItemStack.isSameItemSameComponents(oldStack, newStack);
       }
     } else if (needsUpdate) {
       needsUpdate = syncSame;
@@ -77,7 +77,8 @@ public class ProxyItemTank<T extends MantleBlockEntity & IFluidTankUpdater> exte
   private IFluidHandlerItem getItemTank() {
     if (itemTank == null) {
       ItemStack stack = getStack();
-      itemTank = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).orElseGet(() -> new EmptyFluidHandlerItem(stack));
+      IFluidHandlerItem handler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+      itemTank = handler != null ? handler : new EmptyFluidHandlerItem(stack);
     }
     return itemTank;
   }

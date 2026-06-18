@@ -46,7 +46,7 @@ import java.util.List;
 public record ToolActionWalkerTransformModule(ItemAbility action, SoundEvent sound, LevelingValue radius, ModifierCondition<IToolStackView> condition) implements ModifierModule, ArmorWalkRadiusModule<MutableUseOnContext>, ToolActionModifierHook, ConditionalModule<IToolStackView> {
   private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<ToolActionWalkerTransformModule>defaultHooks(ModifierHooks.BOOT_WALK, ModifierHooks.TOOL_ACTION);
   public static final RecordLoadable<ToolActionWalkerTransformModule> LOADER = RecordLoadable.create(
-    Loadables.TOOL_ACTION.requiredField("tool_action", ToolActionWalkerTransformModule::action),
+    Loadables.ITEM_ABILITY.requiredField("tool_action", ToolActionWalkerTransformModule::action),
     Loadables.SOUND_EVENT.requiredField("sound", ToolActionWalkerTransformModule::sound),
     LevelingValue.LOADABLE.requiredField("radius", ToolActionWalkerTransformModule::radius),
     ModifierCondition.TOOL_FIELD,

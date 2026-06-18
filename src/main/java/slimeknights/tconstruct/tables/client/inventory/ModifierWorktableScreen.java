@@ -321,18 +321,18 @@ public class ModifierWorktableScreen extends ToolTableScreen<ModifierWorktableBl
   }
 
   @Override
-  public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-    if (this.tinkerInfo.handleMouseScrolled(mouseX, mouseY, delta)
-        || this.modifierInfo.handleMouseScrolled(mouseX, mouseY, delta)) {
+  public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+    if (this.tinkerInfo.handleMouseScrolled(mouseX, mouseY, scrollY)
+        || this.modifierInfo.handleMouseScrolled(mouseX, mouseY, scrollY)) {
       return false;
     }
-    if (super.mouseScrolled(mouseX, mouseY, delta)) {
+    if (super.mouseScrolled(mouseX, mouseY, scrollX, scrollY)) {
       return true;
     }
 
     if (this.canScroll()) {
       int hidden = this.getHiddenRows();
-      this.sliderProgress = Mth.clamp((float) (this.sliderProgress - delta / hidden), 0, 1);
+      this.sliderProgress = Mth.clamp((float) (this.sliderProgress - scrollY / hidden), 0, 1);
       this.modifierIndexOffset = Math.round(this.sliderProgress * hidden) * 4;
       return true;
     }

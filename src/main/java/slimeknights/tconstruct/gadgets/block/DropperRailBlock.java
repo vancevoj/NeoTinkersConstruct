@@ -2,6 +2,7 @@ package slimeknights.tconstruct.gadgets.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -9,10 +10,12 @@ import net.minecraft.world.level.block.RailBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.Hopper;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import slimeknights.mantle.inventory.EmptyItemHandler;
+
+import javax.annotation.Nullable;
 
 public class DropperRailBlock extends RailBlock {
 
@@ -20,19 +23,24 @@ public class DropperRailBlock extends RailBlock {
     super(properties);
   }
 
+  @SuppressWarnings("deprecation")
   @Override
-  public void onMinecartPass(BlockState state, Level world, BlockPos pos, AbstractMinecart cart) {
-    if (!cart.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN).isPresent() || !(cart instanceof Hopper)) {
+  protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+    super.entityInside(state, world, pos, entity);
+    if (!(entity instanceof AbstractMinecart cart) || !(cart instanceof Hopper)) {
+      return;
+    }
+    // NeoForge 1.21: capabilities return null when absent rather than an empty optional
+    if (Capabilities.ItemHandler.ENTITY.getCapability(cart, null) == null) {
       return;
     }
     BlockEntity tileEntity = world.getBlockEntity(pos.below());
-    if (tileEntity == null || !tileEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN).isPresent()) {
+    if (tileEntity == null || world.getCapability(Capabilities.ItemHandler.BLOCK, pos.below(), Direction.DOWN) == null) {
       return;
     }
 
-    // todo: fix this optional usage
-    IItemHandler itemHandlerCart = cart.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP).orElse(EmptyItemHandler.INSTANCE);
-    IItemHandler itemHandlerTE = tileEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP).orElse(EmptyItemHandler.INSTANCE);
+    IItemHandler itemHandlerCart = orEmpty(Capabilities.ItemHandler.ENTITY.getCapability(cart, null));
+    IItemHandler itemHandlerTE = orEmpty(world.getCapability(Capabilities.ItemHandler.BLOCK, pos.below(), Direction.UP));
 
     for (int i = 0; i < itemHandlerCart.getSlots(); i++) {
       ItemStack itemStack = itemHandlerCart.extractItem(i, 1, true);
@@ -45,6 +53,11 @@ public class DropperRailBlock extends RailBlock {
         break;
       }
     }
+  }
+
+  /** Returns the given handler, or the empty handler if null */
+  private static IItemHandler orEmpty(@Nullable IItemHandler handler) {
+    return handler == null ? EmptyItemHandler.INSTANCE : handler;
   }
 
 }

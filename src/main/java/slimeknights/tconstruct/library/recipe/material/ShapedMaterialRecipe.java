@@ -1,20 +1,19 @@
 package slimeknights.tconstruct.library.recipe.material;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.CraftingContainer;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.Level;
-import slimeknights.mantle.data.loadable.Loadable;
-import slimeknights.mantle.data.loadable.field.LoadableField;
+import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import slimeknights.mantle.recipe.helper.LoggingRecipeSerializer;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
@@ -32,19 +31,13 @@ import java.util.List;
 public class ShapedMaterialRecipe extends ShapedRecipe {
   private MaterialValueIngredient material;
   private final List<MaterialVariantId> extraMaterials;
-  public ShapedMaterialRecipe(ResourceLocation id, String group, CraftingBookCategory category, int width, int height, NonNullList<Ingredient> ingredients, ItemStack result, boolean showNotification, List<MaterialVariantId> extraMaterials) {
-    super(id, group, category, width, height, ingredients, result, showNotification);
+  public ShapedMaterialRecipe(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack result, boolean showNotification, List<MaterialVariantId> extraMaterials) {
+    super(group, category, pattern, result, showNotification);
     this.extraMaterials = extraMaterials;
   }
 
   public ShapedMaterialRecipe(ShapedRecipe recipe, List<MaterialVariantId> extraMaterials) {
-    this(recipe.getId(), recipe.getGroup(), recipe.category(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), recipe.getIngredients(), recipe.result, recipe.showNotification(), extraMaterials);
-  }
-
-  /** @deprecated use {@link #ShapedMaterialRecipe(ResourceLocation,String,CraftingBookCategory,int,int,NonNullList,ItemStack,boolean,List)} */
-  @Deprecated(forRemoval = true)
-  public ShapedMaterialRecipe(ResourceLocation id, String group, CraftingBookCategory category, int width, int height, NonNullList<Ingredient> ingredients, ItemStack result, boolean showNotification) {
-    this(id, group, category, width, height, ingredients, result, showNotification, List.of());
+    this(recipe.getGroup(), recipe.category(), recipe.pattern, recipe.result, recipe.showNotification(), extraMaterials);
   }
 
   /** @deprecated use {@link #ShapedMaterialRecipe(ShapedRecipe,List)} */
@@ -60,7 +53,8 @@ public class ShapedMaterialRecipe extends ShapedRecipe {
       // assume all material ingredients match the same stat type
       for (Ingredient ingredient : getIngredients()) {
         // collect all ingredients that match
-        if (ingredient instanceof MaterialValueIngredient materialValue) {
+        ICustomIngredient custom = ingredient.getCustomIngredient();
+        if (custom instanceof MaterialValueIngredient materialValue) {
           if (material == null) {
             material = materialValue;
           } else {
@@ -71,21 +65,21 @@ public class ShapedMaterialRecipe extends ShapedRecipe {
       }
       // if we found no materials, that is also an issue
       if (material == null) {
-        TConstruct.LOG.error("No material ingredient found for material shaped recipe {}, this indicates a broken recipe", getId());
+        TConstruct.LOG.error("No material ingredient found for material shaped recipe, this indicates a broken recipe");
       }
     }
     return material;
   }
 
   @Nullable
-  private MaterialVariantId findMaterial(CraftingContainer inventory) {
+  private MaterialVariantId findMaterial(CraftingInput inventory) {
     MaterialValueIngredient material = getMaterial();
     if (material == null) {
       return null;
     }
     // ensure same material in all slots
     MaterialVariantId firstMaterial = null;
-    for (int i = 0; i < inventory.getContainerSize(); i++) {
+    for (int i = 0; i < inventory.size(); i++) {
       ItemStack stack = inventory.getItem(i);
       if (!stack.isEmpty()) {
         // ignore anything that does not meet our requirements
@@ -110,7 +104,7 @@ public class ShapedMaterialRecipe extends ShapedRecipe {
   }
 
   @Override
-  public boolean matches(CraftingContainer inventory, Level level) {
+  public boolean matches(CraftingInput inventory, Level level) {
     if (!super.matches(inventory, level)) {
       return false;
     }
@@ -125,7 +119,7 @@ public class ShapedMaterialRecipe extends ShapedRecipe {
   }
 
   @Override
-  public ItemStack assemble(CraftingContainer inventory, RegistryAccess registryAccess) {
+  public ItemStack assemble(CraftingInput inventory, HolderLookup.Provider registryAccess) {
     ItemStack stack = super.assemble(inventory, registryAccess);
     MaterialVariantId material = findMaterial(inventory);
     if (material != null) {
@@ -140,32 +134,45 @@ public class ShapedMaterialRecipe extends ShapedRecipe {
   }
 
   public static class Serializer implements LoggingRecipeSerializer<ShapedMaterialRecipe> {
-    static final Loadable<List<MaterialVariantId>> EXTRA_MATERIALS = ShapedMaterialsRecipe.Serializer.EXTRA_MATERIALS;
-    static final LoadableField<List<MaterialVariantId>,ShapedMaterialRecipe> MATERIAL_FIELD = EXTRA_MATERIALS.defaultField("extra_materials", List.of(), r -> r.extraMaterials);
+    /** Codec for the list of extra materials */
+    static final Codec<List<MaterialVariantId>> EXTRA_MATERIALS = ShapedMaterialsRecipe.Serializer.EXTRA_MATERIALS;
+    /** Field key for the extra materials list */
+    static final String MATERIAL_FIELD_KEY = ShapedMaterialsRecipe.Serializer.EXTRA_MATERIALS_KEY;
+
+    private static final MapCodec<ShapedMaterialRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+      Codec.STRING.optionalFieldOf("group", "").forGetter(ShapedRecipe::getGroup),
+      CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(ShapedRecipe::category),
+      ShapedRecipePattern.MAP_CODEC.forGetter(r -> r.pattern),
+      ItemStack.STRICT_CODEC.fieldOf("result").forGetter(r -> r.result),
+      Codec.BOOL.optionalFieldOf("show_notification", true).forGetter(ShapedRecipe::showNotification),
+      EXTRA_MATERIALS.optionalFieldOf(MATERIAL_FIELD_KEY, List.of()).forGetter(r -> r.extraMaterials)
+    ).apply(inst, ShapedMaterialRecipe::new));
 
     @Override
-    public ShapedMaterialRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-      ShapedMaterialRecipe recipe = new ShapedMaterialRecipe(SHAPED_RECIPE.fromJson(recipeId, json), MATERIAL_FIELD.get(json));
-      // ensure the material is valid, since we have all the needed information to check
-      // better now than at runtime
-      if (recipe.getMaterial() == null) {
-        throw new JsonSyntaxException("Invalid material ingredients for shaped material recipe " + recipeId);
-      }
-      return recipe;
+    public MapCodec<ShapedMaterialRecipe> codec() {
+      return CODEC;
     }
 
     @Override
     @Nullable
-    public ShapedMaterialRecipe fromNetworkSafe(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-      ShapedRecipe recipe = SHAPED_RECIPE.fromNetwork(recipeId, buffer);
-      List<MaterialVariantId> extraMaterials = MATERIAL_FIELD.decode(buffer);
-      return recipe == null ? null : new ShapedMaterialRecipe(recipe, extraMaterials);
+    public ShapedMaterialRecipe fromNetworkSafe(RegistryFriendlyByteBuf buffer) {
+      String group = buffer.readUtf();
+      CraftingBookCategory category = buffer.readEnum(CraftingBookCategory.class);
+      ShapedRecipePattern pattern = ShapedRecipePattern.STREAM_CODEC.decode(buffer);
+      ItemStack result = ItemStack.STREAM_CODEC.decode(buffer);
+      boolean showNotification = buffer.readBoolean();
+      List<MaterialVariantId> extraMaterials = ShapedMaterialsRecipe.Serializer.EXTRA_MATERIALS_STREAM.decode(buffer);
+      return new ShapedMaterialRecipe(group, category, pattern, result, showNotification, extraMaterials);
     }
 
     @Override
-    public void toNetworkSafe(FriendlyByteBuf buffer, ShapedMaterialRecipe recipe) {
-      SHAPED_RECIPE.toNetwork(buffer, recipe);
-      MATERIAL_FIELD.encode(buffer, recipe);
+    public void toNetworkSafe(RegistryFriendlyByteBuf buffer, ShapedMaterialRecipe recipe) {
+      buffer.writeUtf(recipe.getGroup());
+      buffer.writeEnum(recipe.category());
+      ShapedRecipePattern.STREAM_CODEC.encode(buffer, recipe.pattern);
+      ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
+      buffer.writeBoolean(recipe.showNotification());
+      ShapedMaterialsRecipe.Serializer.EXTRA_MATERIALS_STREAM.encode(buffer, recipe.extraMaterials);
     }
   }
 }

@@ -43,8 +43,9 @@ public class ModifierLootingHandler {
       return;
     }
     init = true;
-    // we overwrite looting values from vanilla in a couple cases, but mod effects that globally boost looting should still boost us
-    NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ModifierLootingHandler::onLooting);
+    // TODO(neoport): LootingLevelEvent was removed in 1.21; looting is now a minecraft:looting enchantment effect with no
+    // damage-source-aware hook. Re-implementing onLooting requires deciding how the looting modifier hooks (which take a
+    // damage source + LootingContext) map onto the new loot-context based enchantment value system. Left unbound for now.
     NeoForge.EVENT_BUS.addListener(ModifierLootingHandler::onLeaveServer);
   }
 
@@ -66,26 +67,26 @@ public class ModifierLootingHandler {
     return entity != null ? LOOTING_OFFHAND.getOrDefault(entity.getUUID(), EquipmentSlot.MAINHAND) : EquipmentSlot.MAINHAND;
   }
 
-  /** Applies the looting bonus for modifiers */
-  private static void onLooting(LootingLevelEvent event) {
-    // must be an attacker with our tool
-    DamageSource damageSource = event.getDamageSource();
-    if (damageSource == null) {
-      return;
-    }
-    LivingEntity target = event.getEntity();
-
+  /**
+   * Computes the looting level for the given attack, used by the looting reimplementation once the 1.21 enchantment-effect
+   * model is wired up. Kept as a standalone method (decoupled from the removed {@code LootingLevelEvent}) so the modifier
+   * looting hooks stay exercised.
+   * @param damageSource  Damage source causing the kill
+   * @param target        Entity being killed
+   * @param baseLooting   Looting level from vanilla/other mods
+   * @return  Looting level to apply, never negative
+   */
+  public static int getLootingLevel(DamageSource damageSource, LivingEntity target, int baseLooting) {
     // bleeding kills use the level of the effect for looting
     if (damageSource.is(TinkerDamageTypes.BLEEDING)) {
-      event.setLootingLevel(Math.max(0, TinkerEffect.getAmplifier(target, TinkerEffects.bleeding.get())));
-      return;
+      return Math.max(0, TinkerEffect.getAmplifier(target, TinkerEffects.bleeding.get()));
     }
 
     // otherwise, use the proper tool
+    int level = baseLooting;
     Entity source = damageSource.getEntity();
     if (source instanceof LivingEntity holder) {
       Entity direct = damageSource.getDirectEntity();
-      int level = event.getLootingLevel();
 
       // determine who is in charge of the looting
       LootingContext context;
@@ -97,7 +98,7 @@ public class ModifierLootingHandler {
         // no modifiers means its not a projectile we fired, so just defer to dumb vanilla behavior of whatever looting
         // since we don't set the enchantment on our tools, our looting modifiers won't set anything here anyways
         if (!modifiers.isEmpty()) {
-          ModDataNBT persistentData = direct.getCapability(PersistentDataCapability.CAPABILITY).orElseGet(ModDataNBT::new);
+          ModDataNBT persistentData = PersistentDataCapability.getData(direct);
           level = LootingModifierHook.getLooting(new DummyToolStack(Items.AIR, modifiers, persistentData), context, 0);
         }
       } else {
@@ -117,9 +118,9 @@ public class ModifierLootingHandler {
       }
       // boost looting with armor regardless, hopefully you did not switch your pants mid arrow firing
       level = ArmorLootingModifierHook.getLooting(tool, context, level);
-      // we allow the hook to return negatives to cancel out looting, so ensure its at least 0
-      event.setLootingLevel(Math.max(level, 0));
     }
+    // we allow the hook to return negatives to cancel out looting, so ensure its at least 0
+    return Math.max(level, 0);
   }
 
   /** Called when a player leaves the server to clear the face */

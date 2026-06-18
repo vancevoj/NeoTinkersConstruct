@@ -1,22 +1,19 @@
 package slimeknights.tconstruct.fluids.util;
 
 import lombok.Getter;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
-import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-/** Represents a capability handler for a container with a constant fluid */
-public class ConstantFluidContainerWrapper implements IFluidHandlerItem, ICapabilityProvider {
-  private final LazyOptional<IFluidHandlerItem> holder = LazyOptional.of(() -> this);
-
+/**
+ * Represents a fluid handler for a container item with a constant fluid.
+ * <p>
+ * In NeoForge 1.21.1 item capabilities are no longer provided via {@code initCapabilities}; the owning mod must register
+ * this handler in {@code RegisterCapabilitiesEvent} via {@code event.registerItem(Capabilities.FluidHandler.ITEM, ...)}.
+ */
+public class ConstantFluidContainerWrapper implements IFluidHandlerItem {
   /** Contained fluid */
   private final FluidStack fluid;
   /** If true, the container is now empty */
@@ -90,11 +87,5 @@ public class ConstantFluidContainerWrapper implements IFluidHandlerItem, ICapabi
       empty = true;
     }
     return fluid.copy();
-  }
-
-  @Nonnull
-  @Override
-  public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction side) {
-    return ForgeCapabilities.FLUID_HANDLER_ITEM.orEmpty(capability, holder);
   }
 }

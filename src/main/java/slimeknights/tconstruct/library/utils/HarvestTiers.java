@@ -46,7 +46,7 @@ public class HarvestTiers {
    * TODO(neoport): TierSortingRegistry removed in 1.21; only vanilla tiers have a stable ID. Returns null for unknown tiers.
    */
   @Nullable
-  public static ResourceLocation getName(Tier tier) {
+  public static ResourceLocation getId(Tier tier) {
     if (tier instanceof Tiers vanilla) {
       return ResourceLocation.fromNamespaceAndPath("minecraft", vanilla.name().toLowerCase(Locale.ROOT));
     }

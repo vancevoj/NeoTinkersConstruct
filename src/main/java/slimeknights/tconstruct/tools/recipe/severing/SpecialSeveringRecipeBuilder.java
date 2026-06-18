@@ -1,19 +1,21 @@
 package slimeknights.tconstruct.tools.recipe.severing;
 
-import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import slimeknights.mantle.recipe.data.AbstractRecipeBuilder;
+import slimeknights.mantle.recipe.helper.ItemOutput;
+import slimeknights.mantle.recipe.ingredient.EntityIngredient;
 import slimeknights.tconstruct.library.recipe.modifiers.severing.SeveringRecipe;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /** Builder for severing recipes that have only the base chance and looting bonus as fields */
@@ -37,31 +39,29 @@ public class SpecialSeveringRecipeBuilder extends AbstractRecipeBuilder<SpecialS
     return this;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
-  public void save(Consumer<FinishedRecipe> consumer) {
-    save(consumer, Objects.requireNonNull(BuiltInRegistries.RECIPE_SERIALIZER.getKey(serializer)));
+  public void save(RecipeOutput output) {
+    save(output, Objects.requireNonNull(BuiltInRegistries.RECIPE_SERIALIZER.getKey(serializer)));
   }
 
   @Override
-  public void save(Consumer<FinishedRecipe> consumer, ResourceLocation id) {
-    consumer.accept(new Finished(id, null));
+  public void save(RecipeOutput output, ResourceLocation id) {
+    AdvancementHolder advancement = buildOptionalAdvancement(id, "modifier");
+    output.accept(id, new Finished(id), advancement);
   }
 
-  /** Finished recipe instance */
-  private class Finished extends AbstractFinishedRecipe {
-    public Finished(ResourceLocation id, @Nullable ResourceLocation advancementId) {
-      super(id, advancementId);
+  /**
+   * Recipe instance for datagen output. The special severing serializers only serialize the per-level chance and looting
+   * bonus (plus the recipe ID), so the entity and output values are unused placeholders here. {@link #getSerializer()} is
+   * overridden so the loadable serializer wired by the builder is used to encode the recipe.
+   */
+  private class Finished extends SeveringRecipe {
+    public Finished(ResourceLocation id) {
+      super(id, EntityIngredient.of(EntityType.PLAYER), ItemOutput.fromItem(Items.AIR), baseChance, lootingBonus);
     }
 
     @Override
-    public void serializeRecipeData(JsonObject json) {
-      json.addProperty("per_level_chance", baseChance);
-      json.addProperty("looting_bonus", lootingBonus);
-    }
-
-    @Override
-    public RecipeSerializer<?> getType() {
+    public RecipeSerializer<?> getSerializer() {
       return serializer;
     }
   }

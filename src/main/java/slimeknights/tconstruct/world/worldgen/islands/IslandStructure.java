@@ -1,6 +1,6 @@
 package slimeknights.tconstruct.world.worldgen.islands;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,7 +31,7 @@ import java.util.Optional;
 
 /** Base logic for all island variants */
 public class IslandStructure extends Structure {
-  public static final Codec<IslandStructure> CODEC = RecordCodecBuilder.create(inst ->
+  public static final MapCodec<IslandStructure> CODEC = RecordCodecBuilder.mapCodec(inst ->
     inst.group(settingsCodec(inst)).and(inst.group(
           IslandPlacement.CODEC.fieldOf("placement").forGetter(s -> s.placement),
           SimpleWeightedRandomList.wrappedCodec(ResourceLocation.CODEC).fieldOf("templates").forGetter(s -> s.templates),
@@ -146,7 +146,7 @@ public class IslandStructure extends Structure {
     }
 
     /** Adds a new grass type to the builder with the given weight */
-    public Builder vines(DeferredHolder<?, ? extends Block> block) {
+    public Builder vines(DeferredHolder<Block, ? extends Block> block) {
       return vines(block.get());
     }
 
@@ -157,7 +157,7 @@ public class IslandStructure extends Structure {
     }
 
     /** Adds a new grass type to the builder with the given weight */
-    public Builder addGrass(DeferredHolder<?, ? extends Block> block, int weight) {
+    public Builder addGrass(DeferredHolder<Block, ? extends Block> block, int weight) {
       return addGrass(block.get(), weight);
     }
 

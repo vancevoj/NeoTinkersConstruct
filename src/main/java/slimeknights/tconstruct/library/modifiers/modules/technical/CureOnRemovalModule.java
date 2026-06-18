@@ -2,7 +2,7 @@ package slimeknights.tconstruct.library.modifiers.modules.technical;
 
 import lombok.RequiredArgsConstructor;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.EffectCures;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.hook.armor.EquipmentChangeModifierHook;
@@ -36,7 +36,8 @@ public enum CureOnRemovalModule implements HookProvider, EquipmentChangeModifier
       IToolStackView replacement = context.getReplacementTool();
       if (replacement == null || replacement.getModifierLevel(modifier.getModifier()) == 0 || replacement.getItem() != tool.getItem()) {
         // cure effects using the helmet
-        context.getEntity().curePotionEffects(new ItemStack(tool.getItem()));
+        // TODO(neoport): LivingEntity#curePotionEffects(ItemStack) removed in 1.21; item-based per-stack curative items are gone. Now uses NeoForge EffectCure tokens. Mapping the worn tool item to a specific EffectCure is a cross-package decision shared with CureEffectsFluidEffect; defaulting to MILK (the legacy "cure everything" stand-in) to preserve the broad cure behavior.
+        context.getEntity().removeEffectsCuredBy(EffectCures.MILK);
       }
     }
   }

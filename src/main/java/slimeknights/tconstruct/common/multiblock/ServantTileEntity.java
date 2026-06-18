@@ -118,7 +118,7 @@ public class ServantTileEntity extends MantleBlockEntity implements IServantLogi
     if (masterPos != null && tags.contains(TAG_MASTER_BLOCK, Tag.TAG_STRING)) {
       ResourceLocation masterBlockName = ResourceLocation.tryParse(tags.getString(TAG_MASTER_BLOCK));
       if (masterBlockName != null && BuiltInRegistries.BLOCK.containsKey(masterBlockName)) {
-        masterBlock = BuiltInRegistries.BLOCK.getValue(masterBlockName);
+        masterBlock = BuiltInRegistries.BLOCK.get(masterBlockName);
       }
     }
     // if both valid, set

@@ -128,7 +128,7 @@ public class MaterialMeltingRecipe implements IMeltingRecipe, IMultiRecipe<Melti
                 byproducts = byproducts.stream().map(fluid -> FluidOutput.fromStack(fluid.get().copyWithAmount(fluid.getAmount() * cost))).toList();
               }
             }
-            return new MeltingRecipe(id, "", MaterialIngredient.of(entry.getKey(), inputId), output, temperature,
+            return new MeltingRecipe(id, "", MaterialIngredient.of(entry.getKey(), inputId).toVanilla(), output, temperature,
                                      IMeltingRecipe.calcTimeForAmount(temperature, output.getAmount()), byproducts, false);
           }).collect(Collectors.toList());
       }

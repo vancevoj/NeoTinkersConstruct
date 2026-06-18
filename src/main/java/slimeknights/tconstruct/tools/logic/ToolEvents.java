@@ -39,8 +39,10 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import slimeknights.mantle.data.predicate.damage.DamageSourcePredicate;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerEffect;
@@ -89,7 +91,7 @@ import java.util.Objects;
 /**
  * Event subscriber for tool events
  */
-@Mod.EventBusSubscriber(modid = TConstruct.MOD_ID)
+@EventBusSubscriber(modid = TConstruct.MOD_ID)
 public class ToolEvents {
   @SuppressWarnings("removal")
   @SubscribeEvent
@@ -271,6 +273,8 @@ public class ToolEvents {
     // determine if there is any modifiable armor, if not nothing to do
     DamageSource source = event.getSource();
     EquipmentContext context = new EquipmentContext(entity);
+    // LivingIncomingDamageEvent only fires server side, so the level is always a ServerLevel (needed for vanilla protection enchantments)
+    ServerLevel serverLevel = (ServerLevel) entity.level();
     int vanillaModifier = 0;
     float modifierValue = 0;
     float originalDamage = event.getAmount();
@@ -293,7 +297,7 @@ public class ToolEvents {
 
       // run shulking global damage "boost", its a bit hardcoded Java wise to make it softcoded in JSON
       if (attacker.isCrouching()) {
-        double crouchMultiplier = living.getAttributeValue(TinkerAttributes.CROUCH_DAMAGE_MULTIPLIER.get());
+        double crouchMultiplier = living.getAttributeValue(TinkerAttributes.CROUCH_DAMAGE_MULTIPLIER);
         crouchMultiplier += ArmorStatModule.getStat(attacker, TinkerDataKeys.CROUCH_DAMAGE);
         if (crouchMultiplier != 0) {
           originalDamage *= crouchMultiplier;
@@ -332,7 +336,7 @@ public class ToolEvents {
       // remaining logic is reducing damage like vanilla protection
       // fetch vanilla enchant level, assuming its not bypassed in vanilla
       if (DamageSourcePredicate.CAN_PROTECT.matches(source)) {
-        modifierValue = vanillaModifier = EnchantmentHelper.getDamageProtection(entity.getArmorSlots(), source);
+        modifierValue = vanillaModifier = (int) EnchantmentHelper.getDamageProtection(serverLevel, entity, source);
       }
 
       // next, determine how much tinkers armor wants to change it
@@ -347,7 +351,7 @@ public class ToolEvents {
         modifierValue *= 4;
       }
     } else if (DamageSourcePredicate.CAN_PROTECT.matches(source) && entity.getType().is(TinkerTags.EntityTypes.SMALL_ARMOR)) {
-      vanillaModifier = EnchantmentHelper.getDamageProtection(entity.getArmorSlots(), source);
+      vanillaModifier = (int) EnchantmentHelper.getDamageProtection(serverLevel, entity, source);
       modifierValue = vanillaModifier * 4;
     }
 
@@ -379,14 +383,15 @@ public class ToolEvents {
           for (EquipmentSlot slotType : ModifiableArmorMaterial.ARMOR_SLOTS) {
             // for our own armor, saves effort to damage directly with our utility
             IToolStackView tool = context.getToolInSlot(slotType);
-            if (tool != null && (!source.is(DamageTypeTags.IS_FIRE) || !tool.getItem().isFireResistant())) {
+            if (tool != null && (!source.is(DamageTypeTags.IS_FIRE) || !entity.getItemBySlot(slotType).has(DataComponents.FIRE_RESISTANT))) {
               // mark this as protection (any valid modifier really would do) so tanned can reduce it to not count it as separate damage
               ToolDamageUtil.damageAnimated(tool, damageMissed, entity, slotType, ARMOR_DAMAGE);
             } else {
               // if not our armor, damage using vanilla like logic
               ItemStack armorStack = entity.getItemBySlot(slotType);
-              if (!armorStack.isEmpty() && (!source.is(DamageTypeTags.IS_FIRE) || !armorStack.getItem().isFireResistant()) && armorStack.getItem() instanceof ArmorItem) {
-                armorStack.hurtAndBreak(damageMissed, entity, e -> e.broadcastBreakEvent(slotType));
+              if (!armorStack.isEmpty() && (!source.is(DamageTypeTags.IS_FIRE) || !armorStack.has(DataComponents.FIRE_RESISTANT)) && armorStack.getItem() instanceof ArmorItem) {
+                // 1.21: hurtAndBreak(int, LivingEntity, EquipmentSlot) handles the break animation internally (broadcastBreakEvent removed)
+                armorStack.hurtAndBreak(damageMissed, entity, slotType);
               }
             }
           }
@@ -440,8 +445,11 @@ public class ToolEvents {
 
   /** Called the modifier hook when an entity's position changes */
   @SubscribeEvent
-  static void livingWalk(LivingTickEvent event) {
-    LivingEntity living = event.getEntity();
+  static void livingWalk(EntityTickEvent.Pre event) {
+    // LivingTickEvent was replaced by the generic EntityTickEvent, so filter to living entities to preserve the old behavior
+    if (!(event.getEntity() instanceof LivingEntity living)) {
+      return;
+    }
     // this event runs before vanilla updates prevBlockPos
     BlockPos pos = living.blockPosition();
     if (!living.isSpectator() && !living.level().isClientSide() && living.isAlive() && !Objects.equals(living.lastPos, pos)) {

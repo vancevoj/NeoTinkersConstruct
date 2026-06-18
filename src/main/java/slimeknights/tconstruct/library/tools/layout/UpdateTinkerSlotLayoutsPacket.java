@@ -27,19 +27,22 @@ public class UpdateTinkerSlotLayoutsPacket implements IThreadsafePacket {
   private final Collection<StationSlotLayout> layouts;
 
   public UpdateTinkerSlotLayoutsPacket(FriendlyByteBuf buffer) {
+    // the stream codec always provides a RegistryFriendlyByteBuf; layout/ingredient (de)serialization needs the registry access
+    RegistryFriendlyByteBuf registryBuffer = (RegistryFriendlyByteBuf) buffer;
     ImmutableList.Builder<StationSlotLayout> builder = ImmutableList.builder();
-    int max = buffer.readVarInt();
+    int max = registryBuffer.readVarInt();
     for (int i = 0; i < max; i++) {
-      builder.add(StationSlotLayout.read(buffer));
+      builder.add(StationSlotLayout.read(registryBuffer));
     }
     layouts = builder.build();
   }
 
   @Override
   public void encode(FriendlyByteBuf buffer) {
-    buffer.writeVarInt(layouts.size());
+    RegistryFriendlyByteBuf registryBuffer = (RegistryFriendlyByteBuf) buffer;
+    registryBuffer.writeVarInt(layouts.size());
     for (StationSlotLayout layout : layouts) {
-      layout.write(buffer);
+      layout.write(registryBuffer);
     }
   }
 

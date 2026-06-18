@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -120,7 +121,8 @@ public class TooltipUtil {
       }
     } else {
       ToolDataComponents.update(tool, t -> t.putString(KEY_NAME, name));
-      tool.resetHoverName();
+      // 1.21: ItemStack#resetHoverName is gone, the hover name is the CUSTOM_NAME component; clear it so our name takes over
+      tool.remove(DataComponents.CUSTOM_NAME);
     }
   }
 
@@ -246,7 +248,8 @@ public class TooltipUtil {
    */
   public static void getDefaultInfo(ItemStack stack, IToolStackView tool, @Nullable Player player, List<Component> tooltips, TooltipFlag flag) {
     // shows as broken when broken, hold shift for proper durability
-    if (tool.getItem().canBeDepleted() && !tool.isUnbreakable() && tool.hasTag(TinkerTags.Items.DURABILITY)) {
+    // 1.21: Item#canBeDepleted is gone, an item is depletable when it has a default MAX_DAMAGE component
+    if (tool.getItem().components().has(DataComponents.MAX_DAMAGE) && !tool.isUnbreakable() && tool.hasTag(TinkerTags.Items.DURABILITY)) {
       tooltips.add(TooltipBuilder.formatDurability(tool.getCurrentDurability(), tool.getStats().getInt(ToolStats.DURABILITY), true));
     }
     // modifier tooltip

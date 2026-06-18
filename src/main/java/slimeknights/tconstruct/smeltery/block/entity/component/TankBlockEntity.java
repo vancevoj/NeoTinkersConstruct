@@ -4,8 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.BlockItem;
+import java.util.Objects;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -149,14 +151,23 @@ public class TankBlockEntity extends SmelteryComponentBlockEntity implements ITa
   }
 
   /**
-   * Updates the tank from an NBT tag, used in the block
+   * Updates the tank from an NBT tag, used in the block. Resolves the registry provider from the level.
    * @param nbt  tank NBT
    */
   public void updateTank(CompoundTag nbt) {
+    updateTank(Objects.requireNonNull(getLevel(), "Tank block entity has no level").registryAccess(), nbt);
+  }
+
+  /**
+   * Updates the tank from an NBT tag, used in the block
+   * @param registries  Registry lookup provider for deserializing the component-backed fluid
+   * @param nbt         tank NBT
+   */
+  public void updateTank(HolderLookup.Provider registries, CompoundTag nbt) {
     if (nbt.isEmpty()) {
       tank.setFluid(FluidStack.EMPTY);
     } else {
-      tank.readFromNBT(nbt);
+      tank.readFromNBT(registries, nbt);
       updateLight(this, tank);
     }
   }
@@ -167,18 +178,18 @@ public class TankBlockEntity extends SmelteryComponentBlockEntity implements ITa
   }
 
   @Override
-  public void load(CompoundTag tag) {
+  public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
     tank.setCapacity(getCapacity(getBlockState().getBlock()));
-    updateTank(tag.getCompound(NBTTags.TANK));
-    super.load(tag);
+    updateTank(registries, tag.getCompound(NBTTags.TANK));
+    super.loadAdditional(tag, registries);
   }
 
   @Override
-  public void saveSynced(CompoundTag tag) {
-    super.saveSynced(tag);
+  public void saveSynced(CompoundTag tag, HolderLookup.Provider registries) {
+    super.saveSynced(tag, registries);
     // want tank on the client on world load
     if (!tank.isEmpty()) {
-      tag.put(NBTTags.TANK, tank.writeToNBT(new CompoundTag()));
+      tag.put(NBTTags.TANK, tank.writeToNBT(registries, new CompoundTag()));
     }
   }
 

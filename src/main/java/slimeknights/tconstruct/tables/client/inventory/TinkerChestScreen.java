@@ -64,16 +64,16 @@ public class TinkerChestScreen extends BaseTabbedScreen<AbstractChestBlockEntity
   }
 
   @Override
-  public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+  public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
     if (this.scalingChestScreen == null) {
       return false;
     }
 
-    if (this.scalingChestScreen.handleMouseScrolled(mouseX, mouseY, delta)) {
+    if (this.scalingChestScreen.handleMouseScrolled(mouseX, mouseY, scrollY)) {
       return false;
     }
 
-    return super.mouseScrolled(mouseX, mouseY, delta);
+    return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
   }
 
   @Override

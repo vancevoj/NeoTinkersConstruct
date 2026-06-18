@@ -23,7 +23,7 @@ import java.util.Set;
 public record ToolActionsModule(Set<ItemAbility> actions, ModifierCondition<IToolStackView> condition) implements ToolActionModifierHook, ModifierModule, ConditionalModule<IToolStackView> {
   private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<ToolActionsModule>defaultHooks(ModifierHooks.TOOL_ACTION);
   public static final RecordLoadable<ToolActionsModule> LOADER = RecordLoadable.create(
-    Loadables.TOOL_ACTION.set().requiredField("tool_actions", ToolActionsModule::actions),
+    Loadables.ITEM_ABILITY.set().requiredField("tool_actions", ToolActionsModule::actions),
     ModifierCondition.TOOL_FIELD,
     ToolActionsModule::new);
 

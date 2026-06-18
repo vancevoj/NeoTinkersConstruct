@@ -1,7 +1,9 @@
 package slimeknights.tconstruct.library.tools.part;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.ItemLike;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
 import slimeknights.tconstruct.library.materials.definition.IMaterial;
@@ -35,7 +37,8 @@ public interface IMaterialItem extends ItemLike {
   /** Sets the material on the existing stack, bypassing the valid material check. */
   default ItemStack setMaterialForced(ItemStack stack, MaterialVariantId material) {
     // FIXME: it is odd that we assume the NBT format in this method but not in getMaterial, should be consistent in the implementation location
-    stack.getOrCreateTag().putString(MATERIAL_TAG, material.toString());
+    // 1.21: item NBT is gone, store the material string in the CUSTOM_DATA component compound under the existing tag key
+    CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.putString(MATERIAL_TAG, material.toString()));
     return stack;
   }
 

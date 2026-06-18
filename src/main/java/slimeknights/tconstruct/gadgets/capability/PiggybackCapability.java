@@ -1,40 +1,36 @@
 package slimeknights.tconstruct.gadgets.capability;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.event.AttachCapabilitiesEvent;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import slimeknights.tconstruct.TConstruct;
 
-/** Capability logic */
+/**
+ * Holds the piggyback data attachment, replacing the old Forge capability.
+ * <p>
+ * In NeoForge 1.21 per-entity mutable data uses a {@link AttachmentType data attachment} instead of a capability, so the
+ * attachment is non-persistent (matching the old non-serializing capability) and only exists on players.
+ */
 public class PiggybackCapability {
-  private static final ResourceLocation ID = TConstruct.getResource("piggyback");
-  public static final Capability<PiggybackHandler> PIGGYBACK = CapabilityManager.get(new CapabilityToken<>() {});
-
   private PiggybackCapability() {}
 
-  /** Registers this capability */
-  public static void register() {
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.NORMAL, false, RegisterCapabilitiesEvent.class, PiggybackCapability::register);
-    NeoForge.EVENT_BUS.addGenericListener(Entity.class, PiggybackCapability::attachCapability);
+  /** Deferred register for the attachment type. Must be registered on the mod bus during construction via {@link #register(IEventBus)}. */
+  private static final DeferredRegister<AttachmentType<?>> ATTACHMENTS = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, TConstruct.MOD_ID);
+
+  /** Attachment holding the piggyback handler. Not serialized as the riders are saved with the world. */
+  public static final DeferredHolder<AttachmentType<?>, AttachmentType<PiggybackHandler>> PIGGYBACK =
+    ATTACHMENTS.register("piggyback", () -> AttachmentType.builder(PiggybackHandler::new).build());
+
+  /** Gets the piggyback handler for the given player, creating it if missing */
+  public static PiggybackHandler get(Player player) {
+    return player.getData(PIGGYBACK);
   }
 
-  /** Registers the capability with the event bus */
-  private static void register(RegisterCapabilitiesEvent event) {
-    event.register(PiggybackHandler.class);
-  }
-
-  /** Event listener to attach the capability */
-  private static void attachCapability(AttachCapabilitiesEvent<Entity> event) {
-    if (event.getObject() instanceof Player) {
-      event.addCapability(ID, new PiggybackHandler((Player) event.getObject()));
-    }
+  /** Registers the attachment type with the mod event bus. Call during mod construction. */
+  public static void register(IEventBus bus) {
+    ATTACHMENTS.register(bus);
   }
 }

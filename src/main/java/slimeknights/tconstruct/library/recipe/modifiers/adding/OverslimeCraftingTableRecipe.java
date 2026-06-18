@@ -1,11 +1,12 @@
 package slimeknights.tconstruct.library.recipe.modifiers.adding;
 
+import lombok.Getter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -32,18 +33,21 @@ public class OverslimeCraftingTableRecipe extends CustomRecipe {
     IntLoadable.FROM_ONE.requiredField("restore_amount", r -> r.restoreAmount),
     OverslimeCraftingTableRecipe::new);
 
+  @Getter
+  private final ResourceLocation id;
   private final Ingredient tools;
   private final Ingredient ingredient;
   private final int restoreAmount;
 
   public OverslimeCraftingTableRecipe(ResourceLocation id, Ingredient tools, Ingredient ingredient, int restoreAmount) {
-    super(id, CraftingBookCategory.EQUIPMENT);
+    super(CraftingBookCategory.EQUIPMENT);
+    this.id = id;
     this.tools = tools;
     this.ingredient = ingredient;
     this.restoreAmount = restoreAmount;
   }
 
-  /** Result from {@link #findTool(CraftingContainer, Predicate, Ingredient)} */
+  /** Result from {@link #findTool(CraftingInput, Predicate, Ingredient)} */
   public record ToolFound(ItemStack tool, int itemsFound) {}
 
   /**
@@ -54,10 +58,10 @@ public class OverslimeCraftingTableRecipe extends CustomRecipe {
    * @return  Found tool, or null if either the tool or overslime ingredient is absent
    */
   @Nullable
-  public static ToolFound findTool(CraftingContainer inv, Predicate<ItemStack> tools, Ingredient ingredient) {
+  public static ToolFound findTool(CraftingInput inv, Predicate<ItemStack> tools, Ingredient ingredient) {
     ItemStack foundTool = null;
     int itemsFound = 0;
-    for (int i = 0; i < inv.getContainerSize(); i++) {
+    for (int i = 0; i < inv.size(); i++) {
       ItemStack stack = inv.getItem(i);
       if (stack.isEmpty()) {
         continue;
@@ -84,7 +88,7 @@ public class OverslimeCraftingTableRecipe extends CustomRecipe {
   }
 
   @Override
-  public boolean matches(CraftingContainer inv, Level level) {
+  public boolean matches(CraftingInput inv, Level level) {
     ToolFound match = findTool(inv, tools, ingredient);
     if (match == null) {
       return false;
@@ -97,7 +101,7 @@ public class OverslimeCraftingTableRecipe extends CustomRecipe {
   }
 
   @Override
-  public ItemStack assemble(CraftingContainer inv, RegistryAccess registryAccess) {
+  public ItemStack assemble(CraftingInput inv, HolderLookup.Provider registryAccess) {
     ToolFound match = findTool(inv, tools, ingredient);
     if (match == null) {
       TConstruct.LOG.error("Overslime crafting table recipe {} failed to find tool after matching", getId());
@@ -109,9 +113,9 @@ public class OverslimeCraftingTableRecipe extends CustomRecipe {
   }
 
   /** Gets the remaining items after repairing the necessary number of times */
-  public static NonNullList<ItemStack> getRemainingItems(CraftingContainer inv, Ingredient ingredient, int repairNeeded, int repairPerItem) {
-    NonNullList<ItemStack> list = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
-    for (int i = 0; i < inv.getContainerSize(); i++) {
+  public static NonNullList<ItemStack> getRemainingItems(CraftingInput inv, Ingredient ingredient, int repairNeeded, int repairPerItem) {
+    NonNullList<ItemStack> list = NonNullList.withSize(inv.size(), ItemStack.EMPTY);
+    for (int i = 0; i < inv.size(); i++) {
       ItemStack stack = inv.getItem(i);
       if (ingredient.test(stack)) {
         // if done repairing, leave the items
@@ -129,7 +133,7 @@ public class OverslimeCraftingTableRecipe extends CustomRecipe {
   }
 
   @Override
-  public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
+  public NonNullList<ItemStack> getRemainingItems(CraftingInput inv) {
     // step 1: find out how much we need to repair
     ToolFound inputs = findTool(inv, tools, ingredient);
     int repairNeeded = 0;

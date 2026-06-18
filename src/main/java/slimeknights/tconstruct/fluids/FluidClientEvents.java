@@ -2,13 +2,14 @@ package slimeknights.tconstruct.fluids;
 
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.client.event.ModelEvent.RegisterGeometryLoaders;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod.EventBusSubscriber;
-import net.neoforged.fml.common.Mod.EventBusSubscriber.Bus;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.EventBusSubscriber.Bus;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import slimeknights.mantle.registration.object.FlowingFluidObject;
 import slimeknights.tconstruct.TConstruct;
@@ -36,12 +37,18 @@ public class FluidClientEvents extends ClientEventBase {
 
   @SubscribeEvent
   static void itemColors(final RegisterColorHandlersEvent.Item event) {
-    event.register((stack, index) -> index > 0 ? -1 : PotionUtils.getColor(stack), TinkerFluids.potion.asItem());
+    event.register((stack, index) -> {
+      if (index > 0) {
+        return -1;
+      }
+      PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
+      return contents != null ? contents.getColor() : -1;
+    }, TinkerFluids.potion.asItem());
   }
 
   @SubscribeEvent
   static void registerModelLoaders(RegisterGeometryLoaders event) {
-    event.register("fluid_container", FluidContainerModel.LOADER);
+    event.register(TConstruct.getResource("fluid_container"), FluidContainerModel.LOADER);
   }
 
   private static void setTranslucent(FlowingFluidObject<?> fluid) {
