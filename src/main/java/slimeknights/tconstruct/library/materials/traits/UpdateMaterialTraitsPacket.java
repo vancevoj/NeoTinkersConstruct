@@ -3,8 +3,12 @@ package slimeknights.tconstruct.library.materials.traits;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent.Context;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import slimeknights.mantle.network.packet.ISimplePacket;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
+import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 
@@ -14,6 +18,9 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public class UpdateMaterialTraitsPacket implements IThreadsafePacket {
+  public static final Type<UpdateMaterialTraitsPacket> TYPE = new Type<>(TConstruct.getResource("update_material_traits"));
+  public static final StreamCodec<RegistryFriendlyByteBuf,UpdateMaterialTraitsPacket> STREAM_CODEC = ISimplePacket.codec(UpdateMaterialTraitsPacket::new);
+
   protected final Map<MaterialId,MaterialTraits> materialToTraits;
 
   public UpdateMaterialTraitsPacket(FriendlyByteBuf buffer) {
@@ -36,7 +43,12 @@ public class UpdateMaterialTraitsPacket implements IThreadsafePacket {
   }
 
   @Override
-  public void handleThreadsafe(Context context) {
+  public Type<UpdateMaterialTraitsPacket> type() {
+    return TYPE;
+  }
+
+  @Override
+  public void handleThreadsafe(IPayloadContext context) {
     MaterialRegistry.updateMaterialTraitsFromServer(this);
   }
 }

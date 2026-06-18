@@ -4,9 +4,13 @@ import com.google.common.collect.ImmutableMap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
-import net.neoforged.neoforge.network.NetworkEvent.Context;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import slimeknights.mantle.network.packet.ISimplePacket;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
+import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
 import slimeknights.tconstruct.library.utils.GenericTagUtil;
 
@@ -18,6 +22,9 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public class UpdateMaterialsPacket implements IThreadsafePacket {
+  public static final Type<UpdateMaterialsPacket> TYPE = new Type<>(TConstruct.getResource("update_materials"));
+  public static final StreamCodec<RegistryFriendlyByteBuf,UpdateMaterialsPacket> STREAM_CODEC = ISimplePacket.codec(UpdateMaterialsPacket::new);
+
   private final Map<MaterialId,IMaterial> materials;
   private final Map<MaterialId,MaterialId> redirects;
   private final Map<TagKey<IMaterial>,List<IMaterial>> tags;
@@ -67,7 +74,12 @@ public class UpdateMaterialsPacket implements IThreadsafePacket {
   }
 
   @Override
-  public void handleThreadsafe(Context context) {
+  public Type<UpdateMaterialsPacket> type() {
+    return TYPE;
+  }
+
+  @Override
+  public void handleThreadsafe(IPayloadContext context) {
     MaterialRegistry.updateMaterialsFromServer(this);
   }
 }

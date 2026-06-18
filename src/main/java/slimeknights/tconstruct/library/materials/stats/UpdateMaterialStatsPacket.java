@@ -3,10 +3,13 @@ package slimeknights.tconstruct.library.materials.stats;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.NetworkEvent.Context;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.apache.logging.log4j.Logger;
 import slimeknights.mantle.data.loadable.Loadable;
+import slimeknights.mantle.network.packet.ISimplePacket;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
 import slimeknights.mantle.util.typed.TypedMapBuilder;
 import slimeknights.tconstruct.TConstruct;
@@ -23,6 +26,9 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public class UpdateMaterialStatsPacket implements IThreadsafePacket {
+  public static final Type<UpdateMaterialStatsPacket> TYPE = new Type<>(TConstruct.getResource("update_material_stats"));
+  public static final StreamCodec<RegistryFriendlyByteBuf,UpdateMaterialStatsPacket> STREAM_CODEC = ISimplePacket.codec(UpdateMaterialStatsPacket::new);
+
   private static final Logger log = Util.getLogger("NetworkSync");
 
   protected final Map<MaterialId, Collection<IMaterialStats>> materialToStats;
@@ -84,7 +90,12 @@ public class UpdateMaterialStatsPacket implements IThreadsafePacket {
   }
 
   @Override
-  public void handleThreadsafe(Context context) {
+  public Type<UpdateMaterialStatsPacket> type() {
+    return TYPE;
+  }
+
+  @Override
+  public void handleThreadsafe(IPayloadContext context) {
     MaterialRegistry.updateMaterialStatsFromServer(this);
   }
 }

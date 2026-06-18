@@ -5,8 +5,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.PacketDistributor.PacketTarget;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import slimeknights.mantle.command.argument.TagSource;
 import slimeknights.mantle.network.packet.ISimplePacket;
@@ -264,9 +262,8 @@ public final class MaterialRegistry {
       NeoForge.EVENT_BUS.post(new MaterialsLoadedEvent());
     } else {
       TinkerNetwork network = TinkerNetwork.getInstance();
-      PacketTarget target = PacketDistributor.PLAYER.with(() -> player);
       for (ISimplePacket packet : packets) {
-        network.send(target, packet);
+        network.sendTo(packet, player);
       }
     }
   }
