@@ -84,6 +84,12 @@ sourceSets.main.resources {
     exclude 'assets/tconstruct/debug'
 }
 
+// TEMPORARY: JEI integration not yet ported to the 1.21.1 JEI API. Excluded so the
+// core mod builds; remove once slimeknights.tconstruct.plugin.jei is ported.
+sourceSets.main.java {
+    exclude 'slimeknights/tconstruct/plugin/jei/**'
+}
+
 dependencies {
     // Mantle: substituted by the ../Mantle composite build (see settings.gradle).
     implementation "slimeknights.mantle:Mantle:${minecraft_version}-${mantle_version}"

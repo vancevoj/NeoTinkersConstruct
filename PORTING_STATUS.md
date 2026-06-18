@@ -39,48 +39,44 @@ The two repos build together. Clone them as siblings:
 - **Toolchain verified**: `./gradlew createMinecraftArtifacts` succeeds - NeoForge
   downloads and Minecraft 1.21.1 decompiles + recompiles under JDK 21. `help`
   configures both projects.
-- **Mantle mechanical pass** committed (`scripts/migrate-forge-imports.sh`): all
-  452 `net.minecraftforge` references rewritten; ~49 ResourceLocation constructors
-  converted. The module does **not** compile yet.
+- **Mantle is fully ported.** `./gradlew :Mantle:build` is green and produces
+  `Mantle-1.21.1-1.21.0.jar` (1675 errors -> 0). Done via the parallel-agent method
+  (one agent per package cluster) + central recompile reconciliation. The optional
+  JEI plugin package (`slimeknights.mantle.plugin.jei`) is temporarily excluded in
+  `build.gradle` pending its own port against the 1.21.1 JEI API.
 
-## In progress / next
+### Key gotcha solved: the access transformer
+The inherited `accesstransformer.cfg` used **1.20.1 SRG names** (`f_111419_`,
+`m_280092_`), which are silent no-ops on NeoForge's Mojang mappings - so every
+widened field/method was actually inaccessible. Convert it to mojmap names (the
+names are in the trailing `# comments`):
+```bash
+perl -i -pe '
+  s/^([\w-]+\s+\S+\s+)m_\d+_(\([^ ]*\)[^ ]+)\s+#\s+(\w+).*$/$1$3$2/;
+  s/^([\w-]+\s+\S+\s+)f_\d+_\s+#\s+(\w+).*$/$1$2/;
+' src/main/resources/META-INF/accesstransformer.cfg
+```
+Then fix fields renamed in 1.21 (guiLeft->leftPos, lastKnownValue->prevValue,
+blocks->palettes, idToFontMap->fontSets). Already done for both repos.
 
-### Mantle code port (the current front)
-`./gradlew :Mantle:compileJava` (with `-I` to lift the error cap) reports
-**~1630 errors**, all genuine reworks. Tackle bottom-up; categories and concrete
-before/after snippets are in [`docs/forge-to-neoforge.md`](docs/forge-to-neoforge.md):
+## In progress / next: TConstruct
 
-1. `registration` + `util` - DeferredRegister/RegistryObject -> DeferredHolder,
-   ForgeRegistries -> BuiltInRegistries. Fixes the bulk of `cannot find symbol`.
-2. `network` - SimpleChannel -> `RegisterPayloadHandlersEvent` + CustomPacketPayload.
-3. `fluid` - FluidStack components, BaseFlowingFluid, fluid capabilities.
-4. capabilities usage across `block`/`item`/`inventory` - typed BlockCapability/ItemCapability.
-5. `data`/`recipe`/`loot` - codec-based conditions, advancement Criterion wrap.
-6. `client` - model loaders + GUI layer event renames.
-7. `command`/`config`/`plugin` - last; re-enable JEI in `build.gradle` for `plugin`.
+Mechanical pass + AT conversion done (1460 forge refs -> 0). Baseline compile vs the
+working Mantle: **~6000+ errors**. Plan, in order:
 
-Milestone: `./gradlew :Mantle:build` green, then a dedicated-server smoke
-(`./gradlew :Mantle:runServer`, expect "Done", stop it).
+1. **Exclude the JEI plugin** (`slimeknights.tconstruct.plugin.jei`) in build.gradle
+   like Mantle - removes ~350 errors (JEIPlugin + *Category files).
+2. **Design the data-component tool model (the gate).** Redesign these 6 files off
+   item NBT onto registered `DataComponentType`s (Codec + StreamCodec):
+   `library/tools/nbt/{ToolStack,MaterialNBT,ModifierNBT,StatsNBT,ToolDataNBT,IToolStackView}.java`.
+   **475 files reference `ToolStack`** - this core must be coherent before parallel
+   porting, or every tool-touching file cascades.
+3. **Parallel-port the packages** like Mantle (one agent per cluster: smeltery,
+   fluids/`TinkerFluids`, world, shared, blocks/block-entities, then the tool/modifier
+   core that depends on step 2), then reconcile by recompiling the aggregate.
+4. Re-enable + port both JEI plugins; datagen pass; in-game test.
 
-**Exact next files** (Mantle, highest error count first - this is the dependency
-root, port as one batch then recompile to watch the ~1630 total drop):
-1. `registration/adapter/RegistryAdapter.java` (57) - base of the adapter layer
-2. `registration/deferred/BlockDeferredRegister.java` (29),
-   `FluidDeferredRegister.java` (22), `EntityTypeDeferredRegister.java` (10),
-   and the rest of `registration/deferred/*` and `registration/adapter/*`
-3. `util/CombatHelper.java` (40), `util/OffhandCooldownTracker.java` (23) -
-   note `MobType` was REMOVED in 1.21; these use it. Replace MobType checks with
-   entity type tags (`EntityTypeTags`) / `LivingEntity` accessors.
-4. `util/JsonHelper.java` (9), `RegistrationHelper.java` (4), then `Mantle.java`
-   (entangled: needs predicates, conditions, network, MobType all done first).
-Recompile after each batch: `./gradlew compileJava -I /tmp/maxerrs.init.gradle`.
-
-### TConstruct code port (blocked on Mantle)
-545/1854 files import Forge (1446 imports). After Mantle compiles:
-run `scripts/migrate-forge-imports.sh` here too, then the **data-components**
-rewrite (Phase 3 in `PORTING.md`) before Phase 4 systems. This is the largest
-single task in the whole port - schema the tool/material/modifier/stats components
-first.
+Recompile to see the full error list: `./gradlew :compileJava -I /tmp/maxerrs.init.gradle`
 
 ## Quick reference
 
