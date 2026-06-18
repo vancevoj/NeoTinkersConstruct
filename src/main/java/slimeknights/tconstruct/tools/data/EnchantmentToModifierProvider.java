@@ -18,11 +18,11 @@ public class EnchantmentToModifierProvider extends AbstractEnchantmentToModifier
     add(Enchantments.UNBREAKING, ModifierIds.reinforced);
 
     // protection
-    add(Enchantments.ALL_DAMAGE_PROTECTION, ModifierIds.protection);
+    add(Enchantments.PROTECTION, ModifierIds.protection);
     add(Enchantments.FIRE_PROTECTION, ModifierIds.fireProtection);
     add(Enchantments.BLAST_PROTECTION, ModifierIds.blastProtection);
     add(Enchantments.PROJECTILE_PROTECTION, ModifierIds.projectileProtection);
-    add(Enchantments.FALL_PROTECTION, ModifierIds.featherFalling);
+    add(Enchantments.FEATHER_FALLING, ModifierIds.featherFalling);
     // misc armor
     add(Enchantments.RESPIRATION, ModifierIds.respiration);
     add(Enchantments.AQUA_AFFINITY, ModifierIds.aquaAffinity);
@@ -38,27 +38,27 @@ public class EnchantmentToModifierProvider extends AbstractEnchantmentToModifier
     add(Enchantments.BANE_OF_ARTHROPODS, ModifierIds.baneOfSssss);
     add(Enchantments.KNOCKBACK, ModifierIds.knockback);
     add(Enchantments.FIRE_ASPECT, ModifierIds.fiery);
-    add(Enchantments.MOB_LOOTING, ModifierIds.luck);
+    add(Enchantments.LOOTING, ModifierIds.luck);
     add(Enchantments.SWEEPING_EDGE, ModifierIds.sweeping);
     add(Enchantments.IMPALING, ModifierIds.antiaquatic);
 
     // harvest
-    add(Enchantments.BLOCK_EFFICIENCY, ModifierIds.haste);
+    add(Enchantments.EFFICIENCY, ModifierIds.haste);
     add(Enchantments.SILK_TOUCH, ModifierIds.silky);
-    add(Enchantments.BLOCK_FORTUNE, ModifierIds.luck);
+    add(Enchantments.FORTUNE, ModifierIds.luck);
 
     // ranged
-    add(Enchantments.POWER_ARROWS, ModifierIds.power);
-    add(Enchantments.PUNCH_ARROWS, ModifierIds.punch);
-    add(Enchantments.FLAMING_ARROWS, ModifierIds.fiery);
-    add(Enchantments.INFINITY_ARROWS, ModifierIds.crystalshot);
+    add(Enchantments.POWER, ModifierIds.power);
+    add(Enchantments.PUNCH, ModifierIds.punch);
+    add(Enchantments.FLAME, ModifierIds.fiery);
+    add(Enchantments.INFINITY, ModifierIds.crystalshot);
     add(Enchantments.MULTISHOT, ModifierIds.multishot);
     add(Enchantments.QUICK_CHARGE, ModifierIds.quickCharge);
     add(Enchantments.PIERCING, ModifierIds.arrowPierce);
 
     // fishing
-    add(Enchantments.FISHING_LUCK, ModifierIds.luck);
-    add(Enchantments.FISHING_SPEED, ModifierIds.lure);
+    add(Enchantments.LUCK_OF_THE_SEA, ModifierIds.luck);
+    add(Enchantments.LURE, ModifierIds.lure);
 
     // trident
     add(Enchantments.LOYALTY, ModifierIds.returning);

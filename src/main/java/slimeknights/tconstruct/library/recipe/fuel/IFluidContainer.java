@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.library.recipe.fuel;
 
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.material.Fluid;
 import slimeknights.mantle.recipe.container.IEmptyContainer;
@@ -18,5 +19,17 @@ public interface IFluidContainer extends IEmptyContainer, RecipeInput {
   @Override
   default int size() {
     return getContainerSize();
+  }
+
+  /** Implements {@link RecipeInput#getItem(int)}; this container holds no items */
+  @Override
+  default ItemStack getItem(int index) {
+    return ItemStack.EMPTY;
+  }
+
+  /** Resolves the clash between {@link RecipeInput#isEmpty()} and the legacy container */
+  @Override
+  default boolean isEmpty() {
+    return true;
   }
 }

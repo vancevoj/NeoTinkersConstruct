@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -102,7 +101,7 @@ public abstract class FluidEffectContext {
 
   /** If true, this context is not allowed to place blocks at the given position */
   public boolean placeRestricted(ItemStack stack) {
-    return player != null && !player.mayBuild() && !stack.hasAdventureModePlaceTagForBlock(level.registryAccess().registryOrThrow(Registries.BLOCK), new BlockInWorld(level, getBlockPos(), false));
+    return player != null && !player.mayBuild() && !stack.canPlaceOnBlockInAdventureMode(new BlockInWorld(level, getBlockPos(), false));
   }
 
   /** Context for fluid effects targeting an entity */

@@ -44,7 +44,7 @@ public record PotionCloudFluidEffect(float scale, TagPredicate predicate) implem
           // keep track of how many effects are actually added
           boolean used = false;
           for (MobEffectInstance instance : effects) {
-            if (instance.getEffect().isInstantenous()) {
+            if (instance.getEffect().value().isInstantenous()) {
               // only thing we have to scale on instant effects is the amplifier, though clouds automatically half instant effects for us
               int amplifier = (int)((instance.getAmplifier() + 1) * effectScale * 2) - 1;
               if (amplifier >= 0) {

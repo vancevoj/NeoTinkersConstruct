@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.tools.modifiers.traits.general;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -14,6 +15,7 @@ import slimeknights.tconstruct.library.modifiers.hook.behavior.ProcessLootModifi
 import slimeknights.tconstruct.library.modifiers.modules.behavior.EdibleModule;
 import slimeknights.tconstruct.library.modifiers.modules.build.StatBoostModule;
 import slimeknights.tconstruct.library.module.ModuleHookMap.Builder;
+import slimeknights.tconstruct.library.tools.helper.ModifierLootingHandler;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.shared.TinkerCommons;
 
@@ -40,9 +42,10 @@ public class TastyModifier extends Modifier implements ProcessLootModifierHook {
 
     // must have an entity
     Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
-    if (entity != null && entity.getType().is(TinkerTags.EntityTypes.BACON_PRODUCER)) {
+    if (entity instanceof LivingEntity living && entity.getType().is(TinkerTags.EntityTypes.BACON_PRODUCER)) {
       // at tasty 1, 2, 3, and 4 its a 2%, 4.15%, 6.25%, 8% per level
-      int looting = context.getLootingModifier();
+      // 1.21 dropped LootContext#getLootingModifier; recompute looting from the kill via the tinker looting handler
+      int looting = ModifierLootingHandler.getLootingLevel(context.getParam(LootContextParams.DAMAGE_SOURCE), living, 0);
       if (RANDOM.nextInt(48 / modifier.intEffectiveLevel()) <= looting) {
         // bacon
         generatedLoot.add(new ItemStack(TinkerCommons.bacon));

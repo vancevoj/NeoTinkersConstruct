@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.living.LivingShieldBlockEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
@@ -360,13 +360,13 @@ public class InteractionHandler {
   }
 
   /** Sets the event result and swings the hand */
-  private static void setLeftClickEventResult(PlayerInteractEvent event, InteractionResult result) {
+  private static void setLeftClickEventResult(LeftClickBlock event, InteractionResult result) {
     if (result.consumesAction()) {
       // success means swing hand
       if (result == InteractionResult.SUCCESS) {
         event.getEntity().swing(event.getHand());
       }
-      event.setCancellationResult(result);
+      // 1.21 dropped PlayerInteractEvent#setCancellationResult; the consumed result is conveyed by canceling the event
       // don't cancel the result in survival as it does not actually prevent breaking the block, just causes really weird desyncs
       // leaving uncanceled lets us still do blocky stuff but if you hold click it digs
       if (event.getEntity().getAbilities().instabuild) {
@@ -502,7 +502,7 @@ public class InteractionHandler {
           if (damage >= 3) {
             InteractionHand usingHand = entity.getUsedItemHand();
             if (ToolDamageUtil.damageAnimated(tool, 1 + Mth.floor(damage), entity, usingHand)) {
-              CommonHooks.onPlayerDestroyItem(player, activeStack, usingHand);
+              EventHooks.onPlayerDestroyItem(player, activeStack, usingHand);
               entity.stopUsingItem();
               entity.playSound(SoundEvents.SHIELD_BREAK, 0.8F, 0.8F + entity.level().random.nextFloat() * 0.4F);
             }

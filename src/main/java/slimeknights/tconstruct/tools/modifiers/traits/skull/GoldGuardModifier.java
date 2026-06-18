@@ -19,6 +19,7 @@ import slimeknights.tconstruct.library.modifiers.hook.armor.EquipmentChangeModif
 import slimeknights.tconstruct.library.modifiers.hook.display.TooltipModifierHook;
 import slimeknights.tconstruct.library.modifiers.impl.NoLevelsModifier;
 import slimeknights.tconstruct.library.module.ModuleHookMap.Builder;
+import slimeknights.tconstruct.library.tools.capability.TinkerDataCapability;
 import slimeknights.tconstruct.library.tools.capability.TinkerDataCapability.ComputableDataKey;
 import slimeknights.tconstruct.library.tools.context.EquipmentChangeContext;
 import slimeknights.tconstruct.library.tools.item.armor.ModifiableArmorItem;
@@ -43,14 +44,15 @@ public class GoldGuardModifier extends NoLevelsModifier implements EquipmentChan
   public void onEquip(IToolStackView tool, ModifierEntry modifier, EquipmentChangeContext context) {
     // adding a helmet? activate bonus
     if (context.getChangedSlot() == EquipmentSlot.HEAD) {
-      context.getTinkerData().ifPresent(data -> {
+      TinkerDataCapability.Holder data = context.getTinkerData();
+      if (data != null) {
         GoldGuardGold gold = data.get(TOTAL_GOLD);
         if (gold == null) {
           data.computeIfAbsent(TOTAL_GOLD).initialize(context);
         } else {
           gold.setGold(EquipmentSlot.HEAD, tool.getVolatileData().getBoolean(ModifiableArmorItem.PIGLIN_NEUTRAL), context.getEntity());
         }
-      });
+      }
     }
   }
 
@@ -60,7 +62,10 @@ public class GoldGuardModifier extends NoLevelsModifier implements EquipmentChan
       IToolStackView newTool = context.getReplacementTool();
       // when replacing with a helmet that lacks this modifier, remove bonus
       if (newTool == null || newTool.getModifierLevel(this) == 0) {
-        context.getTinkerData().ifPresent(data -> data.remove(TOTAL_GOLD));
+        TinkerDataCapability.Holder data = context.getTinkerData();
+        if (data != null) {
+          data.remove(TOTAL_GOLD);
+        }
         AttributeInstance instance = context.getEntity().getAttribute(Attributes.MAX_HEALTH);
         if (instance != null) {
           instance.removeModifier(GOLD_GUARD_ID);
@@ -76,7 +81,10 @@ public class GoldGuardModifier extends NoLevelsModifier implements EquipmentChan
     if (slotType == EquipmentSlot.HEAD && changed.getType() == Type.HUMANOID_ARMOR) {
       LivingEntity living = context.getEntity();
       boolean hasGold = ChrysophiliteModifier.hasGold(context, changed);
-      context.getTinkerData().ifPresent(data -> data.computeIfAbsent(TOTAL_GOLD).setGold(changed, hasGold, living));
+      TinkerDataCapability.Holder data = context.getTinkerData();
+      if (data != null) {
+        data.computeIfAbsent(TOTAL_GOLD).setGold(changed, hasGold, living);
+      }
     }
   }
 

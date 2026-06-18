@@ -10,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -90,18 +89,12 @@ public class PotionFluidType extends FluidType {
 
   /** Creates a fluid stack for the given potion */
   public static FluidStack potionFluid(Holder<Potion> potion, int size) {
-    if (potion == Potions.EMPTY) {
-      return new FluidStack(TinkerFluids.potion.get(), size);
-    }
-    return new FluidStack(TinkerFluids.potion.get(), size, potionPatch(potion));
+    return new FluidStack(BuiltInRegistries.FLUID.wrapAsHolder(TinkerFluids.potion.get()), size, potionPatch(potion));
   }
 
   /** Creates a fluid output for the given potion */
   public static FluidOutput potionResult(Holder<Potion> potion, int size) {
-    CompoundTag tag = null;
-    if (potion != Potions.EMPTY) {
-      tag = potionTag(potion.unwrapKey().map(ResourceKey::location).orElseThrow());
-    }
+    CompoundTag tag = potionTag(potion.unwrapKey().map(ResourceKey::location).orElseThrow());
     return FluidOutput.fromTag(Objects.requireNonNull(TinkerFluids.potion.getCommonTag()), size, tag);
   }
 
@@ -113,9 +106,7 @@ public class PotionFluidType extends FluidType {
   /** Creates a potion bucket for the given potion */
   public static ItemStack potionBucket(Holder<Potion> potion) {
     ItemStack stack = new ItemStack(TinkerFluids.potion);
-    if (potion != Potions.EMPTY) {
-      stack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
-    }
+    stack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
     return stack;
   }
 

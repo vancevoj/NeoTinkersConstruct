@@ -74,7 +74,7 @@ public class ToolTierStat implements IToolStat<Tier> {
 
   @Override
   public Tag write(Tier value) {
-    ResourceLocation id = HarvestTiers.getName(value);
+    ResourceLocation id = HarvestTiers.getId(value);
     if (id != null) {
       return StringTag.valueOf(id.toString());
     }

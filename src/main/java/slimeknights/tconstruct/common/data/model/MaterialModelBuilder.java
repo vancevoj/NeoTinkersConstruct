@@ -10,7 +10,7 @@ import slimeknights.tconstruct.TConstruct;
 public class MaterialModelBuilder<T extends ModelBuilder<T>> extends CustomLoaderBuilder<T> {
   private JsonArray offset = null;
   public MaterialModelBuilder(T parent, ExistingFileHelper existingFileHelper) {
-    super(TConstruct.getResource("material"), parent, existingFileHelper);
+    super(TConstruct.getResource("material"), parent, existingFileHelper, false);
   }
 
   /** Sets the offset */

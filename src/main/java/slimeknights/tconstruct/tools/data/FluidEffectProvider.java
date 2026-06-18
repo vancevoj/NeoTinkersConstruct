@@ -1,6 +1,8 @@
 package slimeknights.tconstruct.tools.data;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -11,7 +13,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tiers;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -132,7 +133,7 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
       .addBlockEffect(new PlaceBlockFluidEffect(null));
     // ender - teleporting
     LivingEntityPredicate hasReturning = new HasMobEffectPredicate(TinkerEffects.returning.get());
-    FluidMobEffect returningEffect = new FluidMobEffect(TinkerEffects.returning.get(), 7*20, 1, null);
+    FluidMobEffect returningEffect = new FluidMobEffect(holder(TinkerEffects.returning.get()), 7*20, 1, null);
     addSlime(TinkerFluids.enderSlime)
       .addEntityEffects(FluidMobEffect.builder().effect(MobEffects.MOVEMENT_SLOWDOWN, 20*5).buildEntity(TimeAction.ADD))
       // if returning, extend it, need to do this first as otherwise we extend ourself
@@ -200,8 +201,9 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
     // gems - direct damage and mining //
     addGem(TinkerFluids.moltenAmethyst).addBlockEffect(new HarvestTierPredicate(Tiers.STONE),     new BreakBlockFluidEffect(3));
     addGem(TinkerFluids.moltenQuartz  ).addBlockEffect(new HarvestTierPredicate(Tiers.IRON),      new BreakBlockFluidEffect(5));
-    addGem(TinkerFluids.moltenEmerald ).addBlockEffect(new HarvestTierPredicate(Tiers.IRON),      new BreakBlockFluidEffect(10, Enchantments.SILK_TOUCH, 1));
-    addGem(TinkerFluids.moltenDiamond ).addBlockEffect(new HarvestTierPredicate(Tiers.DIAMOND),   new BreakBlockFluidEffect(10, Enchantments.BLOCK_FORTUNE, 3));
+    // TODO(neoport): silk touch / fortune enchant variants dropped. BreakBlockFluidEffect stores Map<Enchantment,Integer>, but enchantments are datapack-driven in 1.21 (no static Enchantment instance from Enchantments.SILK_TOUCH/FORTUNE, which are now ResourceKey<Enchantment>). Cross-package: BreakBlockFluidEffect must accept ResourceKey<Enchantment> for the enchanted break to serialize.
+    addGem(TinkerFluids.moltenEmerald ).addBlockEffect(new HarvestTierPredicate(Tiers.IRON),      new BreakBlockFluidEffect(10));
+    addGem(TinkerFluids.moltenDiamond ).addBlockEffect(new HarvestTierPredicate(Tiers.DIAMOND),   new BreakBlockFluidEffect(10));
     addMetal(TinkerFluids.moltenDebris).addBlockEffect(new HarvestTierPredicate(Tiers.NETHERITE), new BreakBlockFluidEffect(50));
 
     // foods - setup to give equivalent saturation on a full bowl/bottle to their food counterparts, though hunger may be slightly different
@@ -222,8 +224,8 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
     compatMetal(TinkerFluids.moltenBronze, "tin").fireDamage(3).addEntityEffect(new AwardStatFluidEffect(Stats.TIME_SINCE_REST, -6000));
     addMetal(TinkerFluids.moltenAmethystBronze).fireDamage(3).addEntityEffect(new AwardStatFluidEffect(Stats.TIME_SINCE_REST, 6000));
     // iron/steel - pull/push
-    addMetal(TinkerFluids.moltenIron).fireDamage(2f).addEffect(FluidMobEffect.builder().effect(TinkerEffects.magnetic.get(), 20 * 5, 2), TimeAction.SET);
-    addMetal(TinkerFluids.moltenSteel).fireDamage(2f).addEffect(FluidMobEffect.builder().effect(TinkerEffects.repulsive.get(), 20 * 5, 2), TimeAction.SET);
+    addMetal(TinkerFluids.moltenIron).fireDamage(2f).addEffect(FluidMobEffect.builder().effect(holder(TinkerEffects.magnetic.get()), 20 * 5, 2), TimeAction.SET);
+    addMetal(TinkerFluids.moltenSteel).fireDamage(2f).addEffect(FluidMobEffect.builder().effect(holder(TinkerEffects.repulsive.get()), 20 * 5, 2), TimeAction.SET);
     // zinc/brass - speed/heat
     compatMetal(TinkerFluids.moltenZinc).fireDamage(2).addEffect(FluidMobEffect.builder().effect(MobEffects.MOVEMENT_SPEED, 20 * 10), TimeAction.SET);
     compatMetal(TinkerFluids.moltenBrass, "zinc").fireDamage(3).addEffect(FluidMobEffect.builder().effect(MobEffects.FIRE_RESISTANCE, 20 * 8), TimeAction.SET);
@@ -236,7 +238,7 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
     addMetal(TinkerFluids.moltenRoseGold).magicDamage(3).addEffect(FluidMobEffect.builder().effect(MobEffects.ABSORPTION, 20 * 15, 2), TimeAction.SET);
     // chromium/nicrosil - luck/xp
     compatMetal(TinkerFluids.moltenChromium).magicDamage(2).addEffect(FluidMobEffect.builder().effect(MobEffects.LUCK, 20 * 5, 1), TimeAction.SET);
-    compatMetal(TinkerFluids.moltenNicrosil).magicDamage(3).addEffect(FluidMobEffect.builder().effect(TinkerEffects.experienced.get(), 20 * 5, 1), TimeAction.SET);
+    compatMetal(TinkerFluids.moltenNicrosil).magicDamage(3).addEffect(FluidMobEffect.builder().effect(holder(TinkerEffects.experienced.get()), 20 * 5, 1), TimeAction.SET);
     // cadmium/bendalloy - breath/energy
     compatMetal(TinkerFluids.moltenCadmium).fireDamage(2).addEntityEffect(new AddBreathFluidEffect(-90));
     compatMetal(TinkerFluids.moltenBendalloy).fireDamage(3).addEffect(FluidMobEffect.builder().effect(MobEffects.SATURATION, 20 * 5, 1), TimeAction.SET);
@@ -262,20 +264,20 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
     addFluid(TinkerFluids.moltenKnightslime, slimeMetal).addEffect(ExplosionFluidEffect.radius(1, 1).damage(LevelingValue.eachLevel(4)).knockback(LevelingValue.flat(0)).ignoreBlocks().build());
     // tinkers nether
     addMetal(TinkerFluids.moltenCobalt).fireDamage(3).addEffect(FluidMobEffect.builder().effect(MobEffects.DIG_SPEED, 20 * 7, 1).effect(MobEffects.MOVEMENT_SPEED, 20 * 7, 1), TimeAction.SET);
-    addMetal(TinkerFluids.moltenManyullyn).fireDamage(4).addEffect(FluidMobEffect.builder().effect(TinkerEffects.bleeding.get(), 20 * 3, 1), TimeAction.SET);
+    addMetal(TinkerFluids.moltenManyullyn).fireDamage(4).addEffect(FluidMobEffect.builder().effect(holder(TinkerEffects.bleeding.get()), 20 * 3, 1), TimeAction.SET);
     addMetal(TinkerFluids.moltenHepatizon).coldDamage(4).addEffect(FluidMobEffect.builder().effect(MobEffects.WITHER, 20 * 8, 1), TimeAction.SET);
     addMetal(TinkerFluids.moltenNetherite).impactDamage(5).addEffect(FluidMobEffect.builder().effect(MobEffects.BLINDNESS, 20 * 5, 1), TimeAction.SET);
     // tinkers end
-    addMetal(TinkerFluids.moltenKnightmetal).spikeDamage(3).addEffect(FluidMobEffect.builder().effect(TinkerEffects.pierce.get(), 20 * 5, 2), TimeAction.SET);
+    addMetal(TinkerFluids.moltenKnightmetal).spikeDamage(3).addEffect(FluidMobEffect.builder().effect(holder(TinkerEffects.pierce.get()), 20 * 5, 2), TimeAction.SET);
     // thermal compat
     compatFluid("glowstone", FluidValues.GEM).addEffect(FluidMobEffect.builder().effect(MobEffects.GLOWING, 20 * 10), TimeAction.ADD).addBlockEffect(new PlaceBlockFluidEffect(TinkerCommons.glowBlock.get()));
     compatFluid("redstone", FluidValues.GEM).addEffect(ExplosionFluidEffect.radius(1, 0.5f).knockback(LevelingValue.eachLevel(-2)).ignoreBlocks().build());
     compatMetal(TinkerFluids.moltenSignalum).addEffect(ExplosionFluidEffect.radius(1, 1).damage(LevelingValue.eachLevel(2)).knockback(LevelingValue.flat(-2)).ignoreBlocks().build());
     compatMetal(TinkerFluids.moltenLumium).magicDamage(4).addEffect(FluidMobEffect.builder().effect(MobEffects.GLOWING, 20 * 5, 1).effect(MobEffects.MOVEMENT_SPEED, 20 * 5, 1).effect(MobEffects.JUMP, 20 * 5, 1), TimeAction.SET);
-    compatMetal(TinkerFluids.moltenEnderium).magicDamage(4).addEffect(FluidMobEffect.builder().effect(TinkerEffects.enderference.get(), 20 * 10, 1), TimeAction.SET);
+    compatMetal(TinkerFluids.moltenEnderium).magicDamage(4).addEffect(FluidMobEffect.builder().effect(holder(TinkerEffects.enderference.get()), 20 * 10, 1), TimeAction.SET);
     // mekanism compat
     compatMetal(TinkerFluids.moltenRefinedGlowstone).magicDamage(3).addEffect(FluidMobEffect.builder().effect(MobEffects.GLOWING, 20 * 10, 1), TimeAction.SET);
-    compatMetal(TinkerFluids.moltenRefinedObsidian).spikeDamage(3).addEffect(FluidMobEffect.builder().effect(TinkerEffects.bleeding.get(), 20 * 2, 1), TimeAction.SET);
+    compatMetal(TinkerFluids.moltenRefinedObsidian).spikeDamage(3).addEffect(FluidMobEffect.builder().effect(holder(TinkerEffects.bleeding.get()), 20 * 2, 1), TimeAction.SET);
 
     // immersive engineering compat
     // ethanol - burns
@@ -297,21 +299,21 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
       .addEntityEffects(FluidMobEffect.builder().effect(MobEffects.CONFUSION, 5 * 20, 1).buildEntity(TimeAction.ADD));
     {
       String ie = "immersiveengineering";
-      MobEffect flammable = FakeRegistryEntry.effect(ResourceLocation.fromNamespaceAndPath(ie, "flammable"));
+      Holder<MobEffect> flammable = holder(FakeRegistryEntry.effect(ResourceLocation.fromNamespaceAndPath(ie, "flammable")));
       compatFluid(ie, "creosote",  50)
         .addEffect(FluidMobEffect.builder().effect(flammable, 8 * 20, 1), TimeAction.ADD)
         .addEntityEffect(new FireFluidEffect(TimeAction.ADD, 8));
       compatFluid(ie, "biodiesel", 50)
         .addEffect(FluidMobEffect.builder().effect(flammable, 8 * 20, 2), TimeAction.ADD)
         .addEntityEffect(new FireFluidEffect(TimeAction.ADD, 8));
-      FluidMobEffect conductive = new FluidMobEffect(FakeRegistryEntry.effect(ResourceLocation.fromNamespaceAndPath(ie, "conductive")), 8 * 20, 2);
+      FluidMobEffect conductive = new FluidMobEffect(holder(FakeRegistryEntry.effect(ResourceLocation.fromNamespaceAndPath(ie, "conductive"))), 8 * 20, 2);
       compatFluid(ie, "redstone_acid",  50)
         .addEntityEffect(new MobEffectFluidEffect(conductive, TimeAction.ADD))
         .addBlockEffect(new MobEffectCloudFluidEffect(conductive))
         .addBlockEffect(FluidEffect.WEATHER);
-      compatFluid(ie, "phenolic_resin", 50).addEffect(FluidMobEffect.builder().effect(FakeRegistryEntry.effect(ResourceLocation.fromNamespaceAndPath(ie, "sticky")), 8 * 20, 2), TimeAction.ADD);
+      compatFluid(ie, "phenolic_resin", 50).addEffect(FluidMobEffect.builder().effect(holder(FakeRegistryEntry.effect(ResourceLocation.fromNamespaceAndPath(ie, "sticky"))), 8 * 20, 2), TimeAction.ADD);
       Block concreteSprayed = FakeRegistryEntry.block(ResourceLocation.fromNamespaceAndPath(ie, "concrete_sprayed"));
-      AreaMobEffectFluidEffect concreteFeet = new AreaMobEffectFluidEffect(new FluidMobEffect(FakeRegistryEntry.effect(ResourceLocation.fromNamespaceAndPath(ie, "concrete_feet")), MobEffectInstance.INFINITE_DURATION, 1), TimeAction.SET, GroupCost.MAX);
+      AreaMobEffectFluidEffect concreteFeet = new AreaMobEffectFluidEffect(new FluidMobEffect(holder(FakeRegistryEntry.effect(ResourceLocation.fromNamespaceAndPath(ie, "concrete_feet"))), MobEffectInstance.INFINITE_DURATION, 1), TimeAction.SET, GroupCost.MAX);
       compatFluid(ie, "concrete", 100)
         .addEntityEffect(new BlockAtEntityPredicate(BlockPredicate.CAN_BE_REPLACED, 0), new SetBlockFluidEffect(concreteSprayed))
         .offsetBlockEffect(BlockPredicate.CAN_BE_REPLACED, new SetBlockFluidEffect(concreteSprayed))
@@ -319,7 +321,7 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
     }
 
     // twilight forest compat
-    compatMetal(TinkerFluids.moltenSteeleaf).magicDamage(2).addEffect(FluidMobEffect.builder().effect(TinkerEffects.experienced.get(), 20 * 5, 1), TimeAction.SET);
+    compatMetal(TinkerFluids.moltenSteeleaf).magicDamage(2).addEffect(FluidMobEffect.builder().effect(holder(TinkerEffects.experienced.get()), 20 * 5, 1), TimeAction.SET);
     addFluid(TinkerFluids.fieryLiquid, FluidValues.SIP).metalCondition("fiery")
         .addBlockEffect(new MeltBlockFluidEffect(BlockPredicate.ANY, FluidValues.INGOT, 1500));
 
@@ -345,6 +347,12 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
       .addBlockEffect(new PotionCloudFluidEffect(0.25f, createBottle.apply("REGULAR")))
       .addBlockEffect(new PotionCloudFluidEffect(0.5f, createBottle.apply("SPLASH")))
       .addBlockEffect(new PotionCloudFluidEffect(0.75f, createBottle.apply("LINGERING")));
+  }
+
+  /** Wraps a raw mob effect in its registry holder, needed as FluidMobEffect stores Holder&lt;MobEffect&gt; in 1.21 */
+  @SuppressWarnings("deprecation")
+  private static Holder<MobEffect> holder(MobEffect effect) {
+    return BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect);
   }
 
   @Override

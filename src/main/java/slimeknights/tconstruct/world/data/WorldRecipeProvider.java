@@ -5,8 +5,13 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -28,6 +33,17 @@ public class WorldRecipeProvider extends BaseRecipeProvider implements ICommonRe
   @Override
   public String getName() {
     return "Tinkers' Construct World Recipes";
+  }
+
+  /* Resolve the clash between RecipeProvider's static has(...) and ICommonRecipeHelper's instance has(...) */
+  @Override
+  public Criterion<InventoryChangeTrigger.TriggerInstance> has(ItemLike item) {
+    return inventoryTrigger(ItemPredicate.Builder.item().of(item).build());
+  }
+
+  @Override
+  public Criterion<InventoryChangeTrigger.TriggerInstance> has(TagKey<Item> tag) {
+    return inventoryTrigger(ItemPredicate.Builder.item().of(tag).build());
   }
 
   @Override

@@ -1,6 +1,6 @@
 package slimeknights.tconstruct.tools;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -17,9 +17,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -183,8 +185,6 @@ import slimeknights.tconstruct.library.recipe.tinkerstation.repairing.ModifierRe
 import slimeknights.tconstruct.library.recipe.worktable.ModifierSetWorktableRecipe;
 import slimeknights.tconstruct.library.tools.capability.BlockItemProviderCapability;
 import slimeknights.tconstruct.library.tools.capability.EntityModifierCapability;
-import slimeknights.tconstruct.library.tools.capability.PersistentDataCapability;
-import slimeknights.tconstruct.library.tools.capability.TinkerDataCapability;
 import slimeknights.tconstruct.library.tools.capability.TinkerDataKeys;
 import slimeknights.tconstruct.library.tools.capability.fluid.TankModule;
 import slimeknights.tconstruct.library.tools.capability.fluid.ToolTankHelper;
@@ -717,7 +717,7 @@ public final class TinkerModifiers extends TinkerModule {
   public static final EnumObject<ToolType,TinkerEffect> insatiableEffect = MOB_EFFECTS.registerEnum("insatiable", new ToolType[] {ToolType.MELEE, ToolType.RANGED, ToolType.ARMOR}, type -> {
     TinkerEffect effect = new NoMilkEffect(MobEffectCategory.BENEFICIAL, 0x9261cc, true);
     if (type == ToolType.ARMOR) {
-      effect.addAttributeModifier(Attributes.ATTACK_DAMAGE, "cc6904f7-674a-4e6a-b992-4f3cb8edfef4", 1, AttributeModifier.Operation.ADD_VALUE);
+      effect.addAttributeModifier(Attributes.ATTACK_DAMAGE, TConstruct.getResource("effect.insatiable"), 1, AttributeModifier.Operation.ADD_VALUE);
     }
     return effect;
   });
@@ -733,9 +733,9 @@ public final class TinkerModifiers extends TinkerModule {
   public static final DeferredHolder<? super RecipeSerializer<OverslimeModifierRecipe>, RecipeSerializer<OverslimeModifierRecipe>> overslimeSerializer = RECIPE_SERIALIZERS.register("overslime_modifier", () -> LoadableRecipeSerializer.of(OverslimeModifierRecipe.LOADER));
   public static final DeferredHolder<? super RecipeSerializer<OverslimeCraftingTableRecipe>, RecipeSerializer<OverslimeCraftingTableRecipe>> craftingOverslimeSerializer = RECIPE_SERIALIZERS.register("crafting_overslime_modifier", () -> LoadableRecipeSerializer.of(OverslimeCraftingTableRecipe.LOADER));
   public static final DeferredHolder<? super RecipeSerializer<ModifierSalvage>, RecipeSerializer<ModifierSalvage>> modifierSalvageSerializer = RECIPE_SERIALIZERS.register("modifier_salvage", () -> LoadableRecipeSerializer.of(ModifierSalvage.LOADER));
-  public static final DeferredHolder<? super RecipeSerializer<ArmorDyeingRecipe>, RecipeSerializer<ArmorDyeingRecipe>> armorDyeingSerializer = RECIPE_SERIALIZERS.register("armor_dyeing_modifier", () -> new SimpleRecipeSerializer<>(ArmorDyeingRecipe::new));
-  public static final DeferredHolder<? super RecipeSerializer<BannerModifierRecipe>, RecipeSerializer<BannerModifierRecipe>> bannerModifierSerializer = RECIPE_SERIALIZERS.register("banner_modifier", () -> new SimpleRecipeSerializer<>(BannerModifierRecipe::new));
-  public static final DeferredHolder<? super RecipeSerializer<ArmorTrimRecipe>, RecipeSerializer<ArmorTrimRecipe>> armorTrimSerializer = RECIPE_SERIALIZERS.register("armor_trim_modifier", () -> new SimpleRecipeSerializer<>(ArmorTrimRecipe::new));
+  public static final DeferredHolder<? super RecipeSerializer<ArmorDyeingRecipe>, RecipeSerializer<ArmorDyeingRecipe>> armorDyeingSerializer = RECIPE_SERIALIZERS.register("armor_dyeing_modifier", () -> new SimpleRecipeSerializer<>(() -> new ArmorDyeingRecipe(getResource("armor_dyeing_modifier"))));
+  public static final DeferredHolder<? super RecipeSerializer<BannerModifierRecipe>, RecipeSerializer<BannerModifierRecipe>> bannerModifierSerializer = RECIPE_SERIALIZERS.register("banner_modifier", () -> new SimpleRecipeSerializer<>(() -> new BannerModifierRecipe(getResource("banner_modifier"))));
+  public static final DeferredHolder<? super RecipeSerializer<ArmorTrimRecipe>, RecipeSerializer<ArmorTrimRecipe>> armorTrimSerializer = RECIPE_SERIALIZERS.register("armor_trim_modifier", () -> new SimpleRecipeSerializer<>(() -> new ArmorTrimRecipe(getResource("armor_trim_modifier"))));
   public static final DeferredHolder<? super RecipeSerializer<TippedToolTransformRecipe>, RecipeSerializer<TippedToolTransformRecipe>> tippedToolTransformRecipeSerializer = RECIPE_SERIALIZERS.register("tipped_tool_transform", () -> LoadableRecipeSerializer.of(TippedToolTransformRecipe.LOADER));
   // modifiers
   public static final DeferredHolder<? super RecipeSerializer<ModifierRepairTinkerStationRecipe>, RecipeSerializer<ModifierRepairTinkerStationRecipe>> modifierRepair = RECIPE_SERIALIZERS.register("modifier_repair", () -> LoadableRecipeSerializer.of(ModifierRepairTinkerStationRecipe.LOADER));
@@ -743,11 +743,11 @@ public final class TinkerModifiers extends TinkerModule {
   /** @deprecated use {@link MaterialRepairModule} */
   @SuppressWarnings("removal")
   @Deprecated(forRemoval = true)
-  public static final DeferredHolder<? super RecipeSerializer<ModifierMaterialRepairRecipe>, RecipeSerializer<ModifierMaterialRepairRecipe>> modifierMaterialRepair = RECIPE_SERIALIZERS.register("modifier_material_repair", () -> LoadableRecipeSerializer.deprecated(ModifierMaterialRepairRecipe.LOADER, "use the tconstruct:material_repair modifier module instead"));
+  public static final DeferredHolder<? super RecipeSerializer<ModifierMaterialRepairRecipe>, RecipeSerializer<ModifierMaterialRepairRecipe>> modifierMaterialRepair = RECIPE_SERIALIZERS.register("modifier_material_repair", () -> LoadableRecipeSerializer.of(ModifierMaterialRepairRecipe.LOADER));
   /** @deprecated use {@link MaterialRepairModule} */
   @SuppressWarnings("removal")
   @Deprecated(forRemoval = true)
-  public static final DeferredHolder<? super RecipeSerializer<ModifierMaterialRepairKitRecipe>, RecipeSerializer<ModifierMaterialRepairKitRecipe>> craftingModifierMaterialRepair = RECIPE_SERIALIZERS.register("crafting_modifier_material_repair", () -> LoadableRecipeSerializer.deprecated(ModifierMaterialRepairKitRecipe.LOADER, "use the tconstruct:material_repair modifier module instead"));
+  public static final DeferredHolder<? super RecipeSerializer<ModifierMaterialRepairKitRecipe>, RecipeSerializer<ModifierMaterialRepairKitRecipe>> craftingModifierMaterialRepair = RECIPE_SERIALIZERS.register("crafting_modifier_material_repair", () -> LoadableRecipeSerializer.of(ModifierMaterialRepairKitRecipe.LOADER));
   // worktable
   public static final DeferredHolder<? super RecipeSerializer<ModifierRemovalRecipe>, RecipeSerializer<ModifierRemovalRecipe>> removeModifierSerializer = RECIPE_SERIALIZERS.register("remove_modifier", () -> LoadableRecipeSerializer.of(ModifierRemovalRecipe.LOADER));
   public static final DeferredHolder<? super RecipeSerializer<ExtractModifierRecipe>, RecipeSerializer<ExtractModifierRecipe>> extractModifierSerializer = RECIPE_SERIALIZERS.register("extract_modifier", () -> LoadableRecipeSerializer.of(ExtractModifierRecipe.LOADER));
@@ -768,11 +768,11 @@ public final class TinkerModifiers extends TinkerModule {
   /**
    * Loot
    */
-  public static final DeferredHolder<? super Codec<ModifierLootModifier>, Codec<ModifierLootModifier>> modifierLootModifier = GLOBAL_LOOT_MODIFIERS.register("modifier_hook", () -> ModifierLootModifier.CODEC);
-  public static final DeferredHolder<? super LootItemConditionType, LootItemConditionType> hasModifierLootCondition = LOOT_CONDITIONS.register("has_modifier", () -> new LootItemConditionType(new HasModifierLootCondition.ConditionSerializer()));
-  public static final DeferredHolder<? super LootItemFunctionType, LootItemFunctionType> modifierBonusFunction = LOOT_FUNCTIONS.register("modifier_bonus", () -> new LootItemFunctionType(new ModifierBonusLootFunction.Serializer()));
-  public static final DeferredHolder<? super LootItemConditionType, LootItemConditionType> chrysophiliteLootCondition = LOOT_CONDITIONS.register("has_chrysophilite", () -> new LootItemConditionType(ChrysophiliteLootCondition.SERIALIZER));
-  public static final DeferredHolder<? super LootItemFunctionType, LootItemFunctionType> chrysophiliteBonusFunction = LOOT_FUNCTIONS.register("chrysophilite_bonus", () -> new LootItemFunctionType(ChrysophiliteBonusFunction.SERIALIZER));
+  public static final DeferredHolder<? super MapCodec<? extends IGlobalLootModifier>, MapCodec<ModifierLootModifier>> modifierLootModifier = GLOBAL_LOOT_MODIFIERS.register("modifier_hook", () -> ModifierLootModifier.CODEC);
+  public static final DeferredHolder<? super LootItemConditionType, LootItemConditionType> hasModifierLootCondition = LOOT_CONDITIONS.register("has_modifier", () -> new LootItemConditionType(HasModifierLootCondition.CODEC));
+  public static final DeferredHolder<? super LootItemFunctionType<?>, LootItemFunctionType<ModifierBonusLootFunction>> modifierBonusFunction = LOOT_FUNCTIONS.register("modifier_bonus", () -> new LootItemFunctionType<>(ModifierBonusLootFunction.CODEC));
+  public static final DeferredHolder<? super LootItemConditionType, LootItemConditionType> chrysophiliteLootCondition = LOOT_CONDITIONS.register("has_chrysophilite", () -> new LootItemConditionType(ChrysophiliteLootCondition.CODEC));
+  public static final DeferredHolder<? super LootItemFunctionType<?>, LootItemFunctionType<ChrysophiliteBonusFunction>> chrysophiliteBonusFunction = LOOT_FUNCTIONS.register("chrysophilite_bonus", () -> new LootItemFunctionType<>(ChrysophiliteBonusFunction.CODEC));
 
   /*
    * Events
@@ -1074,11 +1074,13 @@ public final class TinkerModifiers extends TinkerModule {
   }
 
   @SubscribeEvent
+  void registerCapabilities(final RegisterCapabilitiesEvent event) {
+    // the data-attachment registers (TinkerDataCapability/PersistentDataCapability/EntityModifierCapability) are registered on the mod bus in TConstruct
+    BlockItemProviderCapability.register(event);
+  }
+
+  @SubscribeEvent
   void commonSetup(final FMLCommonSetupEvent event) {
-    TinkerDataCapability.register();
-    PersistentDataCapability.register();
-    EntityModifierCapability.register();
-    BlockItemProviderCapability.register();
     // by default, we support modifying projectiles (arrows or fireworks mainly, but maybe other stuff). other entities may come in the future
     EntityModifierCapability.registerEntityPredicate(entity -> entity instanceof Projectile);
   }

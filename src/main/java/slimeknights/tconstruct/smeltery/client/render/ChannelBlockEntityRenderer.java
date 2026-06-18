@@ -26,6 +26,12 @@ public class ChannelBlockEntityRenderer implements BlockEntityRenderer<ChannelBl
   public ChannelBlockEntityRenderer(Context context) {}
 
 	@Override
+	public net.minecraft.world.phys.AABB getRenderBoundingBox(ChannelBlockEntity te) {
+		BlockPos pos = te.getBlockPos();
+		return new net.minecraft.world.phys.AABB(pos.getX(), pos.getY() - 1, pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
+	}
+
+	@Override
 	public void render(ChannelBlockEntity te, float partialTicks, PoseStack matrices, MultiBufferSource buffer, int light, int combinedOverlayIn)  {
 		FluidStack fluid = te.getFluid();
 		if (fluid.isEmpty()) {

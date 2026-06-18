@@ -4,7 +4,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import slimeknights.mantle.util.LogicHelper;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
@@ -52,7 +51,7 @@ public interface MaxArmorLevelModule extends HookProvider, EquipmentChangeModifi
   /** Updates the level of this module, properly evaluating the condition and setting the max level */
   default void updateLevel(IToolStackView tool, ModifierEntry modifier, float effectiveLevel, EquipmentChangeContext context) {
     if (condition().matches(tool, modifier) && ArmorLevelModule.validSlot(tool, context.getChangedSlot(), heldTag()) && (!tool.isBroken() || allowBroken())) {
-      TinkerDataCapability.Holder data = LogicHelper.orElseNull(context.getTinkerData());
+      TinkerDataCapability.Holder data = context.getTinkerData();
       if (data != null) {
         ModifierMaxLevel maxLevel = data.computeIfAbsent(maxLevel());
         float oldLevel = maxLevel.getMax();

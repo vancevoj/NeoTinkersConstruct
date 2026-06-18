@@ -5,8 +5,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
-import slimeknights.mantle.recipe.container.ISingleStackContainer;
 import slimeknights.tconstruct.library.recipe.TinkerRecipeTypes;
+import slimeknights.tconstruct.library.recipe.material.IMaterialRecipeContainer;
 import slimeknights.tconstruct.library.recipe.material.MaterialRecipe;
 import slimeknights.tconstruct.library.recipe.tinkerstation.IMutableTinkerStationContainer;
 import slimeknights.tconstruct.library.tools.nbt.LazyToolStack;
@@ -58,7 +58,7 @@ public class TinkerStationContainerWrapper implements IMutableTinkerStationConta
       return null;
     }
     // try last recipe
-    ISingleStackContainer inv = () -> stack;
+    IMaterialRecipeContainer inv = () -> stack;
     if (lastMaterialRecipe != null && lastMaterialRecipe.matches(inv, world)) {
       return lastMaterialRecipe;
     }

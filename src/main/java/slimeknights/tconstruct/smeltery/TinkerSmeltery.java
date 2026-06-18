@@ -145,7 +145,7 @@ import static slimeknights.mantle.Mantle.commonResource;
 @SuppressWarnings("unused")
 public final class TinkerSmeltery extends TinkerModule {
   /** Predicate for something that never happens */
-  private static final StatePredicate NEVER = Blocks::never;
+  private static final StatePredicate NEVER = (state, level, pos) -> false;
   /** Creative tab for smeltery, all contents related to the multiblocks */
   public static final DeferredHolder<? super CreativeModeTab, CreativeModeTab> tabSmeltery = CREATIVE_TABS.register(
     "smeltery", () -> CreativeModeTab.builder().title(TConstruct.makeTranslation("itemGroup", "smeltery"))

@@ -142,7 +142,7 @@ public class MaterialCastingRecipeBuilder extends AbstractRecipeBuilder<Material
    * @return  Builder instance
    */
   public MaterialCastingRecipeBuilder setPart(ItemLike part, boolean first) {
-    return this.setCast(MaterialIngredient.of(part), first ? CastPurpose.FIRST_MATERIAL : CastPurpose.SECOND_MATERIAL);
+    return this.setCast(MaterialIngredient.of(part).toVanilla(), first ? CastPurpose.FIRST_MATERIAL : CastPurpose.SECOND_MATERIAL);
   }
 
   /**

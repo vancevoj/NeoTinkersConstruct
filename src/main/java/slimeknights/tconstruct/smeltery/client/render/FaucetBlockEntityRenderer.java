@@ -29,6 +29,12 @@ public class FaucetBlockEntityRenderer implements BlockEntityRenderer<FaucetBloc
   public FaucetBlockEntityRenderer(Context context) {}
 
   @Override
+  public net.minecraft.world.phys.AABB getRenderBoundingBox(FaucetBlockEntity tileEntity) {
+    net.minecraft.core.BlockPos pos = tileEntity.getBlockPos();
+    return new net.minecraft.world.phys.AABB(pos.getX(), pos.getY() - 1, pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
+  }
+
+  @Override
   public void render(FaucetBlockEntity tileEntity, float partialTicks, PoseStack matrices, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
     FluidStack renderFluid = tileEntity.getRenderFluid();
     if (!tileEntity.isPouring() || renderFluid.isEmpty()) {

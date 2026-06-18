@@ -28,7 +28,6 @@ import slimeknights.tconstruct.library.modifiers.modules.util.ModuleBuilder;
 import slimeknights.tconstruct.library.module.HookProvider;
 import slimeknights.tconstruct.library.module.ModuleHook;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import slimeknights.tconstruct.library.recipe.TinkerRecipeTypes;
 import slimeknights.tconstruct.library.recipe.entitymelting.EntityMeltingRecipe;
 import slimeknights.tconstruct.library.recipe.entitymelting.EntityMeltingRecipeCache;
@@ -90,6 +89,11 @@ public record MeltingModule(LevelingInt temperature, LevelingInt nuggetsPerMetal
   }
 
   @Override
+  public ItemStack getItem(int index) {
+    return index == 0 ? getStack() : ItemStack.EMPTY;
+  }
+
+  @Override
   public int applyOreBoost(OreRateType rate, int amount) {
     return switch (rate) {
       case METAL -> amount * nuggetsPerMetal.compute(level) / 9;
@@ -118,8 +122,7 @@ public record MeltingModule(LevelingInt temperature, LevelingInt nuggetsPerMetal
     // first, update inventory
     IMeltingRecipe recipe = lastRecipe;
     if (recipe == null || !recipe.matches(this, world)) {
-      // TODO(neoport): IMeltingContainer must implement RecipeInput for getRecipeFor to work; using SingleRecipeInput as workaround (runtime ClassCast possible until IMeltingContainer is ported)
-      recipe = world.getRecipeManager().getRecipeFor(TinkerRecipeTypes.MELTING.get(), new SingleRecipeInput(this.getStack()), world).map(RecipeHolder::value).orElse(null);
+      recipe = world.getRecipeManager().getRecipeFor(TinkerRecipeTypes.MELTING.get(), this, world).map(RecipeHolder::value).orElse(null);
       if (recipe == null) {
         MeltingModule.stack = ItemStack.EMPTY;
         return FluidStack.EMPTY;

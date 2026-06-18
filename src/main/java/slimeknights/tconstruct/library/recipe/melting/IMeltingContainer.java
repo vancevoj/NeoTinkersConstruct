@@ -18,6 +18,12 @@ public interface IMeltingContainer extends ISingleStackContainer, RecipeInput {
     return getContainerSize();
   }
 
+  /** Resolves the clash between {@link RecipeInput#isEmpty()} and the legacy container */
+  @Override
+  default boolean isEmpty() {
+    return getStack().isEmpty();
+  }
+
   /** Ore rate logic in a melting container */
   interface IOreRate {
     /** Boosts the given integer by the rate */

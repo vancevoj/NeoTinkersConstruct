@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.library.modifiers.fluid.entity;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -47,13 +48,13 @@ public record PotionFluidEffect(float scale, TagPredicate predicate) implements 
         // report whichever effect used the most
         float used = 0;
         for (MobEffectInstance instance : effects) {
-          MobEffect effect = instance.getEffect();
-          if (effect.isInstantenous()) {
+          Holder<MobEffect> effect = instance.getEffect();
+          if (effect.value().isInstantenous()) {
             // instant effects just apply full value always
             used = level.value();
             if (action.execute()) {
               target.invulnerableTime = 0;
-              effect.applyInstantenousEffect(directSource, attacker, target, instance.getAmplifier(), used * scale);
+              effect.value().applyInstantenousEffect(directSource, attacker, target, instance.getAmplifier(), used * scale);
             }
           } else {
             // if the potion already exists, we scale up the existing time

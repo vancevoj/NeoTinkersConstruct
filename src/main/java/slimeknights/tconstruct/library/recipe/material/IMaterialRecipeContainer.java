@@ -13,4 +13,10 @@ public interface IMaterialRecipeContainer extends ISingleStackContainer, RecipeI
   default int size() {
     return getContainerSize();
   }
+
+  /** Resolves the clash between {@link RecipeInput#isEmpty()} and the legacy container */
+  @Override
+  default boolean isEmpty() {
+    return getStack().isEmpty();
+  }
 }

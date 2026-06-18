@@ -65,10 +65,10 @@ public interface ICastCreationHelper extends IRecipeHelper {
                          .setPatternItem(Ingredient.of(TinkerTags.Items.RED_SAND_CASTS))
                          .save(consumer, location(folder + "red_sand/builder_cast/" + name));
     ItemPartRecipeBuilder.item(pattern, ItemOutput.fromItem(cast.getSand(), 4))
-                         .setPatternItem(Ingredient.of(Tags.Items.SAND_COLORLESS))
+                         .setPatternItem(Ingredient.of(Tags.Items.SANDS_COLORLESS))
                          .save(consumer, location(folder + "sand/builder_block/" + name));
     ItemPartRecipeBuilder.item(pattern, ItemOutput.fromItem(cast.getRedSand(), 4))
-                         .setPatternItem(Ingredient.of(Tags.Items.SAND_RED))
+                         .setPatternItem(Ingredient.of(Tags.Items.SANDS_RED))
                          .save(consumer, location(folder + "red_sand/builder_block/" + name));
   }
 }

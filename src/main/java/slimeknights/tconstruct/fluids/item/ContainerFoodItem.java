@@ -16,6 +16,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import slimeknights.tconstruct.fluids.util.ConstantFluidContainerWrapper;
 
 import java.util.List;
 import java.util.function.Supplier;

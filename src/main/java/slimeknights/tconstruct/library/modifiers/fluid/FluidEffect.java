@@ -74,7 +74,7 @@ public interface FluidEffect<C extends FluidEffectContext> extends IHaveLoader, 
     BlockState state = context.getBlockState();
     if (level.isFull() && state.getBlock() instanceof WeatheringCopper copper) {
       if (action.execute() && context.getLevel() instanceof ServerLevel world) {
-        copper.applyChangeOverTime(state, world, context.getBlockPos(), world.getRandom());
+        copper.changeOverTime(state, world, context.getBlockPos(), world.getRandom());
       }
       return 1;
     }

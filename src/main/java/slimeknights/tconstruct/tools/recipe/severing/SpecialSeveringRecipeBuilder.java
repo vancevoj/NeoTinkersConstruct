@@ -47,7 +47,7 @@ public class SpecialSeveringRecipeBuilder extends AbstractRecipeBuilder<SpecialS
   @Override
   public void save(RecipeOutput output, ResourceLocation id) {
     AdvancementHolder advancement = buildOptionalAdvancement(id, "modifier");
-    output.accept(id, new Finished(id), advancement);
+    output.accept(id, new Finished(id, baseChance, lootingBonus), advancement);
   }
 
   /**
@@ -56,7 +56,7 @@ public class SpecialSeveringRecipeBuilder extends AbstractRecipeBuilder<SpecialS
    * overridden so the loadable serializer wired by the builder is used to encode the recipe.
    */
   private class Finished extends SeveringRecipe {
-    public Finished(ResourceLocation id) {
+    public Finished(ResourceLocation id, float baseChance, float lootingBonus) {
       super(id, EntityIngredient.of(EntityType.PLAYER), ItemOutput.fromItem(Items.AIR), baseChance, lootingBonus);
     }
 

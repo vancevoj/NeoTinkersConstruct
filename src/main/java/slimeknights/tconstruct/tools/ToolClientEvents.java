@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColors;
-import net.minecraft.client.gui.screens.MenuScreens;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.renderer.entity.ItemEntityRenderer;
@@ -121,9 +121,9 @@ public class ToolClientEvents extends ClientEventBase {
 
   @SubscribeEvent
   static void registerModelLoaders(RegisterGeometryLoaders event) {
-    event.register("material", MaterialModel.LOADER);
-    event.register("tool", ToolModel.LOADER);
-    event.register("material_block", MaterialBlockModel.LOADER);
+    event.register(getResource("material"), MaterialModel.LOADER);
+    event.register(getResource("tool"), ToolModel.LOADER);
+    event.register(getResource("material_block"), MaterialBlockModel.LOADER);
   }
 
   @SubscribeEvent
@@ -161,6 +161,11 @@ public class ToolClientEvents extends ClientEventBase {
   }
 
   @SubscribeEvent
+  static void registerScreens(RegisterMenuScreensEvent event) {
+    event.register(TinkerTools.toolContainer.get(), ToolContainerScreen::new);
+  }
+
+  @SubscribeEvent
   static void clientSetupEvent(FMLClientSetupEvent event) {
     NeoForge.EVENT_BUS.addListener(ToolClientEvents::handleKeyBindings);
     NeoForge.EVENT_BUS.addListener(ToolClientEvents::handleInput);
@@ -171,8 +176,6 @@ public class ToolClientEvents extends ClientEventBase {
       // fake ingot showing in the book is a little nicer than the repair kits
       AbstractMaterialContent.registerFallbackPart(TinkerToolParts.fakeIngot);
       AbstractMaterialContent.registerFallbackPart(TinkerToolParts.fakeStorageBlockItem);
-      // screens
-      MenuScreens.register(TinkerTools.toolContainer.get(), ToolContainerScreen::new);
 
       // properties
       // stone
@@ -306,10 +309,10 @@ public class ToolClientEvents extends ClientEventBase {
       // ensure we pressed the key since the last tick, holding should not use all your jumps at once
       boolean isJumping = minecraft.options.keyJump.isDown();
       if (!wasJumping && isJumping) {
-        if (TinkerEffects.antigravity.get().antigravityJump(event.player)) {
+        if (TinkerEffects.antigravity.get().antigravityJump(event.getEntity())) {
           TinkerNetwork.getInstance().sendToServer(TinkerControlPacket.ANTIGRAVITY_JUMP);
         }
-        else if (DoubleJumpHandler.extraJump(event.player)) {
+        else if (DoubleJumpHandler.extraJump(event.getEntity())) {
           TinkerNetwork.getInstance().sendToServer(TinkerControlPacket.DOUBLE_JUMP);
         }
       }
@@ -319,12 +322,12 @@ public class ToolClientEvents extends ClientEventBase {
       boolean isHelmetInteracting = HELMET_INTERACT.isDown();
       if (!wasHelmetInteracting && isHelmetInteracting) {
         TooltipKey key = SafeClientAccess.getTooltipKey();
-        if (InteractionHandler.startArmorInteract(event.player, EquipmentSlot.HEAD, key)) {
+        if (InteractionHandler.startArmorInteract(event.getEntity(), EquipmentSlot.HEAD, key)) {
           TinkerNetwork.getInstance().sendToServer(TinkerControlPacket.getStartHelmetInteract(key));
         }
       }
       if (wasHelmetInteracting && !isHelmetInteracting) {
-        if (InteractionHandler.stopArmorInteract(event.player, EquipmentSlot.HEAD)) {
+        if (InteractionHandler.stopArmorInteract(event.getEntity(), EquipmentSlot.HEAD)) {
           TinkerNetwork.getInstance().sendToServer(TinkerControlPacket.STOP_HELMET_INTERACT);
         }
       }
@@ -333,12 +336,12 @@ public class ToolClientEvents extends ClientEventBase {
       boolean isLeggingsInteract = LEGGINGS_INTERACT.isDown();
       if (!wasLeggingsInteracting && isLeggingsInteract) {
         TooltipKey key = SafeClientAccess.getTooltipKey();
-        if (InteractionHandler.startArmorInteract(event.player, EquipmentSlot.LEGS, key)) {
+        if (InteractionHandler.startArmorInteract(event.getEntity(), EquipmentSlot.LEGS, key)) {
           TinkerNetwork.getInstance().sendToServer(TinkerControlPacket.getStartLeggingsInteract(key));
         }
       }
       if (wasLeggingsInteracting && !isLeggingsInteract) {
-        if (InteractionHandler.stopArmorInteract(event.player, EquipmentSlot.LEGS)) {
+        if (InteractionHandler.stopArmorInteract(event.getEntity(), EquipmentSlot.LEGS)) {
           TinkerNetwork.getInstance().sendToServer(TinkerControlPacket.STOP_LEGGINGS_INTERACT);
         }
       }
@@ -354,7 +357,7 @@ public class ToolClientEvents extends ClientEventBase {
     if (player.isUsingItem() && !player.isPassenger()) {
       ItemStack using = player.getUseItem();
       // start with the attribute
-      double speed = player.getAttributeValue(TinkerAttributes.USE_ITEM_SPEED.get());
+      double speed = player.getAttributeValue(TinkerAttributes.USE_ITEM_SPEED);
       // start by calculating tool stat, not an attribute to ensure both hands get their say
       if (using.is(TinkerTags.Items.HELD)) {
         ToolStack tool = ToolStack.from(using);

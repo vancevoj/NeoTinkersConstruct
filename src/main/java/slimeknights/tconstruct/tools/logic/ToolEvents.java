@@ -401,19 +401,17 @@ public class ToolEvents {
   }
 
   @SubscribeEvent
-  static void livingDamage(LivingDamageEvent event) {
+  static void livingDamage(LivingDamageEvent.Pre event) {
     LivingEntity entity = event.getEntity();
     DamageSource source = event.getSource();
 
     // give modifiers a chance to respond to damage happening
-    float amount = event.getAmount();
+    float amount = event.getNewDamage();
     EquipmentContext context = new EquipmentContext(entity);
     if (context.hasModifiableArmor()) {
       amount = ModifyDamageModifierHook.modifyDamageTaken(ModifierHooks.MODIFY_DAMAGE, context, source, amount, OnAttackedModifierHook.isDirectDamage(source));
-      event.setAmount(amount);
-      if (amount <= 0) {
-        event.setCanceled(true);
-      }
+      // Pre is not cancellable; zeroing the damage is the equivalent of canceling
+      event.setNewDamage(Math.max(amount, 0));
     }
 
     // for remaining code, ensure amount is not more than they will take
@@ -436,7 +434,7 @@ public class ToolEvents {
     }
 
     // when damaging ender dragons, may drop scales - must be player caused explosion, end crystals and TNT are examples
-    if (amount > 0 && Config.COMMON.dropDragonScales.get() && entity.getType() == EntityType.ENDER_DRAGON && event.getAmount() > 0
+    if (amount > 0 && Config.COMMON.dropDragonScales.get() && entity.getType() == EntityType.ENDER_DRAGON && event.getNewDamage() > 0
         && source.is(DamageTypeTags.IS_EXPLOSION) && source.getEntity() != null && source.getEntity().getType() == EntityType.PLAYER) {
       // drops 1 - 8 scales
       ModifierUtil.dropItem(entity, new ItemStack(TinkerModifiers.dragonScale, 1 + entity.level().random.nextInt(8)));

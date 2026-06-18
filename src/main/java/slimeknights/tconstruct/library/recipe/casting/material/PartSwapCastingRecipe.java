@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.library.recipe.casting.material;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -151,12 +152,12 @@ public class PartSwapCastingRecipe extends AbstractMaterialCastingRecipe impleme
   }
 
   @Override
-  public ItemStack getResultItem(RegistryAccess registryAccess) {
+  public ItemStack getResultItem(HolderLookup.Provider registryAccess) {
     return getCast().getItems()[0].copy();
   }
 
   @Override
-  public ItemStack assemble(ICastingContainer inv, RegistryAccess access) {
+  public ItemStack assemble(ICastingContainer inv, HolderLookup.Provider access) {
     MaterialFluidRecipe fluidRecipe = getFluidRecipe(inv);
     MaterialVariant material = fluidRecipe.getOutput();
     ItemStack cast = inv.getStack();

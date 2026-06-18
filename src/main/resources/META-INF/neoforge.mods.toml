@@ -8,6 +8,7 @@ license="MIT"
     modId="tconstruct"
     version="${version}"
     displayName="Tinkers' Construct"
+    enumExtensions="META-INF/enumextensions.json"
     authors="Slime Knights"
     description='''
 A little of this, a little of that, a lot of tinkering, and a lot of tools. NeoForge 1.21.1 port.

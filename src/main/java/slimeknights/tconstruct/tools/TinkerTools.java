@@ -1,6 +1,6 @@
 package slimeknights.tconstruct.tools;
 
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
@@ -17,11 +17,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
-import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -44,7 +45,6 @@ import slimeknights.tconstruct.library.json.predicate.tool.PersistentDataPredica
 import slimeknights.tconstruct.library.json.predicate.tool.StatInRangePredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.StatInSetPredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.ToolContextPredicate;
-import slimeknights.tconstruct.library.json.predicate.tool.ToolStackItemPredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.ToolStackPredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.ToolVariableRangePredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.VolatileDataPredicate;
@@ -166,6 +166,8 @@ public final class TinkerTools extends TinkerModule {
     BlockSideHitListener.init();
     ModifierLootingHandler.init();
     RandomMaterial.init();
+    // register the equipment watcher attachment on the mod bus during construction (DeferredRegisters must be added before registry events fire)
+    EquipmentChangeWatcher.register(ModLoadingContext.get().getActiveContainer().getEventBus());
   }
 
   /** Creative tab for complete tools */
@@ -178,7 +180,7 @@ public final class TinkerTools extends TinkerModule {
                                   .build());
 
   /** Loot function type for tool add data */
-  public static final DeferredHolder<? super LootItemFunctionType, LootItemFunctionType> lootAddToolData = LOOT_FUNCTIONS.register("add_tool_data", () -> new LootItemFunctionType(AddToolDataFunction.SERIALIZER));
+  public static final DeferredHolder<? super LootItemFunctionType<?>, LootItemFunctionType<AddToolDataFunction>> lootAddToolData = LOOT_FUNCTIONS.register("add_tool_data", () -> new LootItemFunctionType<>(AddToolDataFunction.CODEC));
 
   /*
    * Items
@@ -285,7 +287,6 @@ public final class TinkerTools extends TinkerModule {
 
   @SubscribeEvent
   void commonSetup(FMLCommonSetupEvent event) {
-    EquipmentChangeWatcher.register();
     ToolCapabilityProvider.register(ToolFluidCapability.Provider::new);
     ToolCapabilityProvider.register(ToolInventoryCapability.Provider::new);
     ToolCapabilityProvider.register((stack, tool) -> new ToolEnergyCapability.Provider(tool));
@@ -299,7 +300,7 @@ public final class TinkerTools extends TinkerModule {
       DispenserBlock.registerBehavior(TinkerTools.throwingAxe.get(), ModifiableShurikenDispenserBehavior.INSTANCE);
       ModifierUtil.registerShieldDisabler(entity -> {
         if (entity instanceof Player player && player.isBlocking()) {
-          player.disableShield(true);
+          player.disableShield();
         }
       }, EntityType.PLAYER);
     });
@@ -308,11 +309,19 @@ public final class TinkerTools extends TinkerModule {
   }
 
   @SubscribeEvent
+  void registerIngredientTypes(RegisterEvent event) {
+    // 1.21: custom ingredients are registered as IngredientType on the NeoForge registry (was CraftingHelper.register)
+    if (event.getRegistryKey() == NeoForgeRegistries.Keys.INGREDIENT_TYPES) {
+      event.register(NeoForgeRegistries.Keys.INGREDIENT_TYPES, ToolHookIngredient.ID, () -> ToolHookIngredient.TYPE);
+    }
+    // TODO(neoport): cross-package - ToolStackItemPredicate needs an ItemSubPredicate.Type<> (BuiltInRegistries.ITEM_SUB_PREDICATE_TYPE)
+    //  with a Codec bridge for the mantle ToolStackPredicate loadable, owned by the mantle/registration agent. The legacy
+    //  ItemPredicate.register(ID, deserialize) API was removed in 1.21, so the registration is dropped until that Type exists.
+  }
+
+  @SubscribeEvent
   void registerRecipeSerializers(RegisterEvent event) {
     if (event.getRegistryKey() == Registries.RECIPE_SERIALIZER) {
-      ItemPredicate.register(ToolStackItemPredicate.ID, ToolStackItemPredicate::deserialize);
-      CraftingHelper.register(ToolHookIngredient.Serializer.ID, ToolHookIngredient.Serializer.INSTANCE);
-
       // register tool stats that are not defined directly in the class; safer than static init registration
       ToolStats.register(OverslimeModule.OVERSLIME_STAT);
       ToolStats.register(ToolTankHelper.CAPACITY_STAT);
@@ -491,7 +500,7 @@ public final class TinkerTools extends TinkerModule {
           efln.addModifier(ModifierIds.redirected, 1);
         }
         ItemStack stack = efln.createStack();
-        stack.setHoverName(TConstruct.makeTranslation("item", "efln_ball"));
+        stack.set(DataComponents.CUSTOM_NAME, TConstruct.makeTranslation("item", "efln_ball"));
         tab.accept(stack);
       }
     }

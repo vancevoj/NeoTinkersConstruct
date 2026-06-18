@@ -125,7 +125,7 @@ public class FluidCannonBlockEntity extends TankBlockEntity implements ITankInve
             tank.setFluid(fluid);
             tank.onContentsChanged();
             itemHandler.setStack(stack);
-            level.levelEvent(LevelEvent.PARTICLES_SHOOT, worldPosition, facing.get3DDataValue());
+            level.levelEvent(LevelEvent.PARTICLES_SHOOT_SMOKE, worldPosition, facing.get3DDataValue());
             return;
           }
         }
@@ -147,7 +147,7 @@ public class FluidCannonBlockEntity extends TankBlockEntity implements ITankInve
           fluid.shrink(amount);
           tank.setFluid(fluid);
           tank.onContentsChanged();
-          level.levelEvent(LevelEvent.PARTICLES_SHOOT, worldPosition, facing.get3DDataValue());
+          level.levelEvent(LevelEvent.PARTICLES_SHOOT_SMOKE, worldPosition, facing.get3DDataValue());
           return;
         }
       }

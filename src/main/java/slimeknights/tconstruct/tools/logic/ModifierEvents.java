@@ -5,6 +5,7 @@ import com.google.common.collect.Multiset;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -225,7 +226,7 @@ public class ModifierEvents {
   static void onExperienceDrop(LivingExperienceDropEvent event) {
     // boost entity experience if they are under the effects of experienced
     LivingEntity entity = event.getEntity();
-    MobEffectInstance instance = entity.getEffect(TinkerEffects.experienced);
+    MobEffectInstance instance = entity.getEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(TinkerEffects.experienced.get()));
     double multiplier = 1 + (instance != null ? instance.getAmplifier() : 0);
 
     // always add armor boost, unfortunately no good way to stop shield stuff here
@@ -534,7 +535,7 @@ public class ModifierEvents {
 
   @SubscribeEvent
   static void onTeleport(EntityTeleportEvent event) {
-    if (event.getEntity() instanceof LivingEntity living && living.hasEffect(TinkerEffects.enderference)) {
+    if (event.getEntity() instanceof LivingEntity living && living.hasEffect(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(TinkerEffects.enderference.get()))) {
       event.setCanceled(true);
     }
   }

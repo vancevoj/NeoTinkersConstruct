@@ -499,7 +499,7 @@ public abstract class HeatingStructureBlockEntity extends NameableBlockEntity im
     this.setChangedFast();
   }
 
-  @Override
+  /** Gets the render bounding box for this multiblock; called from the renderer in 1.21 (was a BlockEntity override) */
   public AABB getRenderBoundingBox() {
     if (structure != null) {
       return structure.getBounds();

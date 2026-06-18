@@ -112,7 +112,7 @@ public class CrystalshotItem extends ArrowItem {
     }
 
     @Override
-    protected ItemStack getPickupItem() {
+    public ItemStack getPickupItem() {
       return withVariant(getVariant(), 1);
     }
 

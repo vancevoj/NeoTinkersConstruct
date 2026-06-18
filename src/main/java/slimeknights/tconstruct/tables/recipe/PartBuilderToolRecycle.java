@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -204,7 +205,7 @@ public class PartBuilderToolRecycle implements IPartBuilderRecipe, IMultiRecipe<
   /** @deprecated use {@link IPartBuilderRecipe#assemble(IPartBuilderContainer, RegistryAccess, Pattern)} */
   @Deprecated
   @Override
-  public ItemStack getResultItem(RegistryAccess access) {
+  public ItemStack getResultItem(HolderLookup.Provider access) {
     return ItemStack.EMPTY;
   }
 

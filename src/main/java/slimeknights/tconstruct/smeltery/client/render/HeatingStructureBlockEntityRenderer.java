@@ -35,6 +35,11 @@ public class HeatingStructureBlockEntityRenderer implements BlockEntityRenderer<
   public HeatingStructureBlockEntityRenderer(Context context) {}
 
   @Override
+  public net.minecraft.world.phys.AABB getRenderBoundingBox(HeatingStructureBlockEntity smeltery) {
+    return smeltery.getRenderBoundingBox();
+  }
+
+  @Override
   public void render(HeatingStructureBlockEntity smeltery, float partialTicks, PoseStack matrices, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
     Level world = smeltery.getLevel();
     if (world == null) return;

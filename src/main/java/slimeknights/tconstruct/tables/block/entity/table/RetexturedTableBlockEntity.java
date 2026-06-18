@@ -26,7 +26,8 @@ public abstract class RetexturedTableBlockEntity extends TableBlockEntity implem
   public RetexturedTableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Component name, int size) {
     super(type, pos, state, name, size);
   }
-  @Override
+  /** Render bounding box for this table; called from the renderer in 1.21 (was a BlockEntity override) */
+  // TODO(neoport): wire into the table BlockEntityRenderer's getRenderBoundingBox (client package) to restore the enlarged cull box
   public AABB getRenderBoundingBox() {
     return AABB.encapsulatingFullBlocks(worldPosition, worldPosition.offset(1, 2, 1));
   }

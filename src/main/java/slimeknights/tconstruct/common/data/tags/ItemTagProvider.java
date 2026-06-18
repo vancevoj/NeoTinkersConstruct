@@ -128,6 +128,18 @@ import static slimeknights.tconstruct.common.TinkerTags.Items.WORN_ARMOR;
 public class ItemTagProvider extends ItemTagsProvider {
   /** Twlight forest uncrafting table blacklist */
   private static final TagKey<Item> BANNED_UNCRAFTABLE = ItemTags.create(ResourceLocation.fromNamespaceAndPath("twilightforest", "banned_uncraftables"));
+
+  /* Common glass tags removed from NeoForge in 1.21; recreated here under their original {@code c:} IDs to preserve behavior */
+  private static final TagKey<Block> GLASS_SILICA_BLOCK = BlockTags.create(commonResource("glass/silica"));
+  private static final TagKey<Item> GLASS_SILICA_ITEM = ItemTags.create(commonResource("glass/silica"));
+  private static final TagKey<Block> GLASS_TINTED_BLOCK = BlockTags.create(commonResource("glass/tinted"));
+  private static final TagKey<Item> GLASS_TINTED_ITEM = ItemTags.create(commonResource("glass/tinted"));
+  private static final TagKey<Block> GLASS_COLORLESS_BLOCK = BlockTags.create(commonResource("glass/colorless"));
+  private static final TagKey<Item> GLASS_COLORLESS_ITEM = ItemTags.create(commonResource("glass/colorless"));
+  private static final TagKey<Block> STAINED_GLASS_BLOCK = BlockTags.create(commonResource("stained_glass"));
+  private static final TagKey<Item> STAINED_GLASS_ITEM = ItemTags.create(commonResource("stained_glass"));
+  private static final TagKey<Block> STAINED_GLASS_PANES_BLOCK = BlockTags.create(commonResource("stained_glass_panes"));
+  private static final TagKey<Item> STAINED_GLASS_PANES_ITEM = ItemTags.create(commonResource("stained_glass_panes"));
   private final Function<ResourceLocation,IntrinsicTagAppender<Item>> MAKE_TAG = tag -> tag(ItemTags.create(tag));
 
   public ItemTagProvider(PackOutput output, CompletableFuture<Provider> lookupProvider, CompletableFuture<TagLookup<Block>> blockTagProvider, ExistingFileHelper existingFileHelper) {
@@ -197,13 +209,13 @@ public class ItemTagProvider extends ItemTagsProvider {
     this.copy(Tags.Blocks.STORAGE_BLOCKS, Tags.Items.STORAGE_BLOCKS);
 
     // glass
-    copy(Tags.Blocks.GLASS_SILICA, Tags.Items.GLASS_SILICA);
-    copy(Tags.Blocks.GLASS_TINTED, Tags.Items.GLASS_TINTED);
+    copy(GLASS_SILICA_BLOCK, GLASS_SILICA_ITEM);
+    copy(GLASS_TINTED_BLOCK, GLASS_TINTED_ITEM);
     copy(TinkerTags.Blocks.GLASS_PANES_SILICA, TinkerTags.Items.GLASS_PANES_SILICA);
-    copy(Tags.Blocks.GLASS_COLORLESS, Tags.Items.GLASS_COLORLESS);
+    copy(GLASS_COLORLESS_BLOCK, GLASS_COLORLESS_ITEM);
     copy(Tags.Blocks.GLASS_PANES_COLORLESS, Tags.Items.GLASS_PANES_COLORLESS);
-    copy(Tags.Blocks.STAINED_GLASS, Tags.Items.STAINED_GLASS);
-    copy(Tags.Blocks.STAINED_GLASS_PANES, Tags.Items.STAINED_GLASS_PANES);
+    copy(STAINED_GLASS_BLOCK, STAINED_GLASS_ITEM);
+    copy(STAINED_GLASS_PANES_BLOCK, STAINED_GLASS_PANES_ITEM);
     for (DyeColor color : DyeColor.values()) {
       ResourceLocation name = commonResource("glass/" + color.getSerializedName());
       copy(TagKey.create(Registries.BLOCK, name), TagKey.create(Registries.ITEM, name));
@@ -272,7 +284,7 @@ public class ItemTagProvider extends ItemTagsProvider {
   }
 
   private void addWorld() {
-    IntrinsicTagAppender<Item> heads = this.tag(Tags.Items.HEADS);
+    IntrinsicTagAppender<Item> heads = this.tag(ItemTags.SKULLS);
     heads.add(Items.PIGLIN_HEAD);
     TinkerWorld.heads.forEach(head -> heads.add(head.asItem()));
 
@@ -346,10 +358,10 @@ public class ItemTagProvider extends ItemTagsProvider {
     addToolTags(TinkerTools.sword,   MULTIPART_TOOL, DURABILITY, HARVEST, MELEE_PRIMARY, INTERACTABLE_RIGHT, SWORD, SMALL_TOOLS, BONUS_SLOTS, ItemTags.SWORDS, AOE);
     addToolTags(TinkerTools.cleaver, MULTIPART_TOOL, DURABILITY, HARVEST, MELEE_PRIMARY, INTERACTABLE_RIGHT, SWORD, BROAD_TOOLS, BONUS_SLOTS, ItemTags.SWORDS, AOE);
     // ranged
-    addToolTags(TinkerTools.crossbow,   MULTIPART_TOOL, DURABILITY, MELEE_WEAPON, CROSSBOWS,    INTERACTABLE_LEFT,  SMALL_RANGED, BONUS_SLOTS, Tags.Items.TOOLS_CROSSBOWS);
-    addToolTags(TinkerTools.longbow,    MULTIPART_TOOL, DURABILITY, MELEE_WEAPON, LONGBOWS,     INTERACTABLE_LEFT,  BROAD_RANGED, BONUS_SLOTS, Tags.Items.TOOLS_BOWS, BALLISTAS);
-    addToolTags(TinkerTools.fishingRod, MULTIPART_TOOL, DURABILITY, MELEE_WEAPON, FISHING_RODS, INTERACTABLE_DUAL,  SMALL_RANGED, BONUS_SLOTS, Tags.Items.TOOLS_FISHING_RODS);
-    addToolTags(TinkerTools.javelin,    MULTIPART_TOOL, DURABILITY, MELEE_PRIMARY, RANGED,      INTERACTABLE_RIGHT, BROAD_RANGED, BONUS_SLOTS, Tags.Items.TOOLS_TRIDENTS);
+    addToolTags(TinkerTools.crossbow,   MULTIPART_TOOL, DURABILITY, MELEE_WEAPON, CROSSBOWS,    INTERACTABLE_LEFT,  SMALL_RANGED, BONUS_SLOTS, Tags.Items.TOOLS_CROSSBOW);
+    addToolTags(TinkerTools.longbow,    MULTIPART_TOOL, DURABILITY, MELEE_WEAPON, LONGBOWS,     INTERACTABLE_LEFT,  BROAD_RANGED, BONUS_SLOTS, Tags.Items.TOOLS_BOW, BALLISTAS);
+    addToolTags(TinkerTools.fishingRod, MULTIPART_TOOL, DURABILITY, MELEE_WEAPON, FISHING_RODS, INTERACTABLE_DUAL,  SMALL_RANGED, BONUS_SLOTS, Tags.Items.TOOLS_FISHING_ROD);
+    addToolTags(TinkerTools.javelin,    MULTIPART_TOOL, DURABILITY, MELEE_PRIMARY, RANGED,      INTERACTABLE_RIGHT, BROAD_RANGED, BONUS_SLOTS, Tags.Items.TOOLS_SPEAR);
     addToolTags(TinkerTools.arrow,       MULTIPART_TOOL, AMMO,        UNSALVAGABLE, UNSWAPPABLE, SINGLE_USE, DYEABLE, ItemTags.ARROWS);
     addToolTags(TinkerTools.shuriken,    MULTIPART_TOOL, THROWN_AMMO, UNSALVAGABLE, UNSWAPPABLE, SINGLE_USE);
     addToolTags(TinkerTools.throwingAxe, MULTIPART_TOOL, THROWN_AMMO, UNSALVAGABLE, UNSWAPPABLE, SINGLE_USE);
@@ -361,8 +373,8 @@ public class ItemTagProvider extends ItemTagsProvider {
     addToolTags(TinkerTools.enderStaff,    DURABILITY, STAFFS, SPECIAL_TOOLS, HELD_ARMOR, INTERACTABLE_DUAL, AOE, DYEABLE, EMBELLISHMENT_WOOD, BONUS_SLOTS);
     // ancient
     addToolTags(TinkerTools.meltingPan, MULTIPART_TOOL, DURABILITY, ANCIENT_TOOLS, TRADER_TOOLS, HARVEST_PRIMARY, STAFFS, HELD_ARMOR, INTERACTABLE_DUAL, AOE, BONUS_SLOTS);
-    addToolTags(TinkerTools.warPick,    MULTIPART_TOOL, DURABILITY, ANCIENT_TOOLS, TRADER_TOOLS, HARVEST_PRIMARY, STONE_HARVEST, MELEE_WEAPON, HELD, AOE, CLUSTER_MAX_HARVESTABLES, CROSSBOWS, BONUS_SLOTS, ItemTags.PICKAXES, Tags.Items.TOOLS_CROSSBOWS);
-    addToolTags(TinkerTools.battlesign, MULTIPART_TOOL, DURABILITY, ANCIENT_TOOLS, TRADER_TOOLS, MELEE_PRIMARY, SHIELDS, BONUS_SLOTS, Tags.Items.TOOLS_SHIELDS);
+    addToolTags(TinkerTools.warPick,    MULTIPART_TOOL, DURABILITY, ANCIENT_TOOLS, TRADER_TOOLS, HARVEST_PRIMARY, STONE_HARVEST, MELEE_WEAPON, HELD, AOE, CLUSTER_MAX_HARVESTABLES, CROSSBOWS, BONUS_SLOTS, ItemTags.PICKAXES, Tags.Items.TOOLS_CROSSBOW);
+    addToolTags(TinkerTools.battlesign, MULTIPART_TOOL, DURABILITY, ANCIENT_TOOLS, TRADER_TOOLS, MELEE_PRIMARY, SHIELDS, BONUS_SLOTS, Tags.Items.TOOLS_SHIELD);
     addToolTags(TinkerTools.swasher,    MULTIPART_TOOL, DURABILITY, ANCIENT_TOOLS, TRADER_TOOLS, HARVEST, MELEE_PRIMARY, LAUNCHERS, HELD, BONUS_SLOTS, ItemTags.SWORDS, RANGED_POWER, RANGED_QUICK_CHARGE, RANGED_BOUNCE, INTERACTABLE_CHARGE_MODIFIER);
     optionalToolTags(TinkerTools.minotaurAxe, MULTIPART_TOOL, DURABILITY, ANCIENT_TOOLS, HARVEST_PRIMARY, MELEE_PRIMARY, INTERACTABLE_RIGHT, AOE, BONUS_SLOTS, ItemTags.AXES);
 
@@ -370,12 +382,12 @@ public class ItemTagProvider extends ItemTagsProvider {
     addArmorTags(TinkerTools.travelersGear, SINGLEPART_TOOL, DURABILITY, BONUS_SLOTS, DYEABLE, TRIM, ItemTags.FREEZE_IMMUNE_WEARABLES);
     addArmorTags(TinkerTools.plateArmor,    MULTIPART_TOOL, DURABILITY, BONUS_SLOTS, DYEABLE, TRIM);
     addArmorTags(TinkerTools.slimesuit,     DURABILITY, BONUS_SLOTS, TRIM, SINGLEPART_TOOL, UNRECYCLABLE);
-    addToolTags(TinkerTools.slimeWings, DURABILITY, BONUS_SLOTS, TRIM, SINGLEPART_TOOL, CHESTPLATES, Tags.Items.ARMORS_CHESTPLATES);
+    addToolTags(TinkerTools.slimeWings, DURABILITY, BONUS_SLOTS, TRIM, SINGLEPART_TOOL, CHESTPLATES, ItemTags.CHEST_ARMOR);
     addToolTags(TinkerTools.slimesuit.get(ArmorItem.Type.HELMET), SWAPPABLE_SKULLS);
 
     // shields
-    addToolTags(TinkerTools.travelersShield, DURABILITY, BONUS_SLOTS, SHIELDS, INTERACTABLE_LEFT, Tags.Items.TOOLS_SHIELDS, SINGLEPART_TOOL, UNRECYCLABLE, DYEABLE);
-    addToolTags(TinkerTools.plateShield,     DURABILITY, BONUS_SLOTS, SHIELDS, INTERACTABLE_LEFT, Tags.Items.TOOLS_SHIELDS, SINGLEPART_TOOL, UNRECYCLABLE, BANNER);
+    addToolTags(TinkerTools.travelersShield, DURABILITY, BONUS_SLOTS, SHIELDS, INTERACTABLE_LEFT, Tags.Items.TOOLS_SHIELD, SINGLEPART_TOOL, UNRECYCLABLE, DYEABLE);
+    addToolTags(TinkerTools.plateShield,     DURABILITY, BONUS_SLOTS, SHIELDS, INTERACTABLE_LEFT, Tags.Items.TOOLS_SHIELD, SINGLEPART_TOOL, UNRECYCLABLE, BANNER);
 
     // care about order for armor in the book
     tag(BASIC_ARMOR);
@@ -446,7 +458,7 @@ public class ItemTagProvider extends ItemTagsProvider {
     this.tag(TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("parry", "excluded_shields"))).addTag(HELD);
 
     // kamas are a shear type, when broken we don't pass it to loot tables
-    this.tag(Tags.Items.SHEARS).add(TinkerTools.kama.get());
+    this.tag(Tags.Items.TOOLS_SHEAR).add(TinkerTools.kama.get());
     // mark kama and scythe for mods like thermal to use
     this.tag(TinkerTags.Items.SCYTHES).add(TinkerTools.kama.get(), TinkerTools.scythe.get());
     // nothing to blacklist, just want the empty tag so it appears in datapacks
@@ -489,11 +501,11 @@ public class ItemTagProvider extends ItemTagsProvider {
 
     // contains any ground stones
     this.tag(TinkerTags.Items.STONESHIELDS)
-        .addTag(Tags.Items.STONE)
-        .addTag(Tags.Items.COBBLESTONE)
-        .addTag(Tags.Items.SANDSTONE)
+        .addTag(Tags.Items.STONES)
+        .addTag(Tags.Items.COBBLESTONES)
+        .addTag(Tags.Items.SANDSTONE_BLOCKS)
         .addTag(Tags.Items.END_STONES)
-        .addTag(Tags.Items.GRAVEL) // for shovels and axes to use
+        .addTag(Tags.Items.GRAVELS) // for shovels and axes to use
         .add(Items.NETHERRACK, Items.BASALT, Items.POLISHED_BASALT, Items.BLACKSTONE, Items.POLISHED_BLACKSTONE);
     this.tag(TinkerTags.Items.FIREBALLS).add(Items.FIRE_CHARGE);
     this.tag(TinkerTags.Items.TOOL_INVENTORY_BLACKLIST)
@@ -775,10 +787,10 @@ public class ItemTagProvider extends ItemTagsProvider {
 
   private TagKey<Item> getForgeArmorTag(ArmorItem.Type slotType) {
     return switch (slotType) {
-      case BOOTS -> Tags.Items.ARMORS_BOOTS;
-      case LEGGINGS -> Tags.Items.ARMORS_LEGGINGS;
-      case CHESTPLATE -> Tags.Items.ARMORS_CHESTPLATES;
-      case HELMET -> Tags.Items.ARMORS_HELMETS;
+      case BOOTS -> ItemTags.FOOT_ARMOR;
+      case LEGGINGS -> ItemTags.LEG_ARMOR;
+      case CHESTPLATE -> ItemTags.CHEST_ARMOR;
+      case HELMET -> ItemTags.HEAD_ARMOR;
     };
   }
 

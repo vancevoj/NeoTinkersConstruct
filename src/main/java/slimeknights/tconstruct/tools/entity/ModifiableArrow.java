@@ -155,7 +155,7 @@ public class ModifiableArrow extends AbstractArrow implements ToolProjectile, Re
   }
 
   @Override
-  protected void doKnockback(LivingEntity entity, DamageSource damageSource) {
+  public void doKnockback(LivingEntity entity, DamageSource damageSource) {
     // run vanilla enchantment-driven knockback first
     super.doKnockback(entity, damageSource);
     // then apply our modifier knockback on top, scaled like vanilla arrow knockback (see AbstractArrow#doKnockback)

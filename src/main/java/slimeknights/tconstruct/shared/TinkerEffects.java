@@ -103,18 +103,23 @@ public class TinkerEffects extends TinkerModule {
     }
   }
 
+  /** Gets the enderference effect as a {@link Holder} of {@link net.minecraft.world.effect.MobEffect} for the 1.21 effect API */
+  private static Holder<net.minecraft.world.effect.MobEffect> enderferenceHolder() {
+    return BuiltInRegistries.MOB_EFFECT.wrapAsHolder(enderference.get());
+  }
+
   /** Checks if the given entity can be hit considering enderman enderference */
   public static boolean canHitWithProjectile(@Nullable LivingEntity living) {
-    return living == null || living.getType() != EntityType.ENDERMAN || living.hasEffect(enderference.get());
+    return living == null || living.getType() != EntityType.ENDERMAN || living.hasEffect(enderferenceHolder());
   }
 
   /** Checks if the given entity needs special casing for enderference */
   public static boolean needsEnderferenceOverride(@Nullable Entity entity) {
-    return entity != null && entity.getType() == EntityType.ENDERMAN && entity instanceof LivingEntity living && living.hasEffect(enderference.get());
+    return entity != null && entity.getType() == EntityType.ENDERMAN && entity instanceof LivingEntity living && living.hasEffect(enderferenceHolder());
   }
 
   /** Checks if the given entity needs special casing for enderference */
   public static boolean needsEnderferenceOverride(@Nullable LivingEntity living) {
-    return living != null && living.getType() == EntityType.ENDERMAN && living.hasEffect(enderference.get());
+    return living != null && living.getType() == EntityType.ENDERMAN && living.hasEffect(enderferenceHolder());
   }
 }

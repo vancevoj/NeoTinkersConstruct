@@ -495,7 +495,7 @@ public final class TinkerFluids extends TinkerModule {
     acceptCompat(output, moltenSteeleaf, MaterialIds.steeleaf);
     acceptCompat(output, fieryLiquid, "fiery", MaterialIds.fiery);
     BuiltInRegistries.POTION.holders()
-      .filter(holder -> holder != Potions.EMPTY && holder != Potions.WATER)
+      .filter(holder -> holder != Potions.WATER)
       .forEachOrdered(holder -> output.accept(PotionFluidType.potionBucket(holder.key())));
 
     // add copper cans, tanks, and lanterns for all the fluids
