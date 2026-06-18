@@ -6,7 +6,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.ToolActions;
+import net.neoforged.neoforge.common.ToolActions;
 import slimeknights.mantle.data.predicate.block.BlockPredicate;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;

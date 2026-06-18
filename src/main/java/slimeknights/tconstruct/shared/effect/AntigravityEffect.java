@@ -13,9 +13,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
+import net.neoforged.neoforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import slimeknights.tconstruct.common.TinkerEffect;
 import slimeknights.tconstruct.shared.TinkerAttributes;
 
@@ -31,7 +31,7 @@ public class AntigravityEffect extends TinkerEffect {
   public AntigravityEffect() {
     super(MobEffectCategory.HARMFUL, 0xff970d, true);
     this.addAttributeModifier(ForgeMod.ENTITY_GRAVITY.get(), "5bd6b8c8-8de9-4357-a74e-afb2a8f00c20", -2, Operation.MULTIPLY_TOTAL);
-    MinecraftForge.EVENT_BUS.addListener(this::onLivingJump);
+    NeoForge.EVENT_BUS.addListener(this::onLivingJump);
   }
 
   @Override

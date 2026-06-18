@@ -10,10 +10,10 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemDamageFunction;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
+import net.neoforged.neoforge.common.crafting.conditions.ICondition;
+import net.neoforged.neoforge.common.crafting.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
 import slimeknights.mantle.data.predicate.IJsonPredicate;
 import slimeknights.mantle.loot.AbstractLootTableInjectionProvider;
 import slimeknights.mantle.loot.LootTableInjection;
@@ -179,7 +179,7 @@ public class LootTableInjectionProvider extends AbstractLootTableInjectionProvid
                                   .apply(ancientToolData3)
                                  .apply(setFluid)
                                   .build());
-    inject("fishing_treasure", new ResourceLocation("gameplay/fishing/treasure"))
+    inject("fishing_treasure", ResourceLocation.parse("gameplay/fishing/treasure"))
       .addToPool("main", LootItem.lootTableItem(TinkerTools.swasher.get())
                                  .setWeight(1) // all treasure from fishing is the same weight
                                  .apply(ancientToolData3)
@@ -200,7 +200,7 @@ public class LootTableInjectionProvider extends AbstractLootTableInjectionProvid
       .setWeight(1) // TF tends to use 1 for its weight
       .apply(ancientToolData3)
       .build();
-    inject("labyrinth_room", new ResourceLocation(tf, "chests/labyrinth_room"), tfLoaded)
+    inject("labyrinth_room", ResourceLocation.fromNamespaceAndPath(tf, "chests/labyrinth_room"), tfLoaded)
       .addToPool("pool1", minotaurAxe)
       .addToPool("pool2", minotaurAxe);
   }

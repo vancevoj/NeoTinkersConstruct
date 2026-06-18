@@ -16,7 +16,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ToolActions;
+import net.neoforged.neoforge.common.ToolActions;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import slimeknights.tconstruct.TConstruct;

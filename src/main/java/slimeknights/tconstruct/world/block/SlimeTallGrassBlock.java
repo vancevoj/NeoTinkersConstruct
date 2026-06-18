@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.IForgeShearable;
-import net.minecraftforge.common.PlantType;
+import net.neoforged.neoforge.common.IForgeShearable;
+import net.neoforged.neoforge.common.PlantType;
 import slimeknights.tconstruct.world.TinkerWorld;
 
 import javax.annotation.Nonnull;

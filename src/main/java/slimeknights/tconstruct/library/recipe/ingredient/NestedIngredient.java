@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.crafting.AbstractIngredient;
+import net.neoforged.neoforge.common.crafting.AbstractIngredient;
 
 import javax.annotation.Nullable;
 

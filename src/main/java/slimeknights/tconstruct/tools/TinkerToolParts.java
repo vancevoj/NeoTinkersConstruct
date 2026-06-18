@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryType;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.ItemObject;
 import slimeknights.tconstruct.TConstruct;
@@ -41,7 +41,7 @@ import java.util.function.Supplier;
 
 public final class TinkerToolParts extends TinkerModule {
   /** Tab for all tool parts or tool components with many variants */
-  public static final RegistryObject<CreativeModeTab> tabToolParts = CREATIVE_TABS.register(
+  public static final DeferredHolder<?, CreativeModeTab> tabToolParts = CREATIVE_TABS.register(
     "tool_parts", () -> CreativeModeTab.builder().title(TConstruct.makeTranslation("itemGroup", "tool_parts"))
                                        .icon(() -> {
                                          MaterialVariantId material;
@@ -103,10 +103,10 @@ public final class TinkerToolParts extends TinkerModule {
 
 
   // block entities
-  public static final RegistryObject<BlockEntityType<MaterialBlockEntity>> materialBlock = BLOCK_ENTITIES.register("material_block", MaterialBlockEntity::new, fakeStorageBlock);
+  public static final DeferredHolder<?, BlockEntityType<MaterialBlockEntity>> materialBlock = BLOCK_ENTITIES.register("material_block", MaterialBlockEntity::new, fakeStorageBlock);
 
   // loot
-  public static final RegistryObject<LootPoolEntryType> toolPartLootEntry = LOOT_ENTRIES.register("tool_part", () -> new LootPoolEntryType(new ToolPartLootEntry.Serializer()));
+  public static final DeferredHolder<?, LootPoolEntryType> toolPartLootEntry = LOOT_ENTRIES.register("tool_part", () -> new LootPoolEntryType(new ToolPartLootEntry.Serializer()));
 
   /** Adds all relevant items to the creative tab */
   private static void addTabItems(ItemDisplayParameters itemDisplayParameters, CreativeModeTab.Output tab) {

@@ -10,11 +10,11 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import slimeknights.tconstruct.TConstruct;
 //import slimeknights.tconstruct.library.utils.TagUtil;
 //import slimeknights.tconstruct.tools.common.entity.EntityArrow;
@@ -61,7 +61,7 @@ public final class AchievementEvents {
   private static void grantAdvancement(ServerPlayer playerMP, String advancementResource) {
     MinecraftServer server = playerMP.getServer();
     if (server != null) {
-      Advancement advancement = server.getAdvancements().getAdvancement(new ResourceLocation(advancementResource));
+      Advancement advancement = server.getAdvancements().getAdvancement(ResourceLocation.parse(advancementResource));
       if (advancement != null) {
         AdvancementProgress advancementProgress = playerMP.getAdvancements().getOrStartProgress(advancement);
         if (!advancementProgress.isDone()) {

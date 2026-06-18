@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 /**
- * Builder for a container filling recipe. Takes an arbitrary fluid for a specific amount to fill a Forge {@link net.minecraftforge.fluids.capability.IFluidHandlerItem}
+ * Builder for a container filling recipe. Takes an arbitrary fluid for a specific amount to fill a Forge {@link net.neoforged.neoforge.fluids.capability.IFluidHandlerItem}
  */
 @AllArgsConstructor(staticName = "castingRecipe")
 @SuppressWarnings({"WeakerAccess", "unused"})

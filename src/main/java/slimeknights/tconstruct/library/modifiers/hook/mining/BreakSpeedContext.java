@@ -13,7 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent.BreakSpeed;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
@@ -38,7 +38,7 @@ public sealed interface BreakSpeedContext {
   /** If true, the tool is effective against this block type */
   boolean isEffective();
 
-  /** Original mining speed before modifiers applied. Includes modifiers from other listeners to {@link net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed}. */
+  /** Original mining speed before modifiers applied. Includes modifiers from other listeners to {@link net.neoforged.neoforge.event.entity.player.PlayerEvent.BreakSpeed}. */
   float originalSpeed();
 
   /** Calculated modifier from potion effects such as haste and environment such as water, use for additive bonuses to ensure consistency with the mining speed stat. */

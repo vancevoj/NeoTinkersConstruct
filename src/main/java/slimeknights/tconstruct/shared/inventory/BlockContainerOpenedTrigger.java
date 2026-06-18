@@ -14,7 +14,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import slimeknights.tconstruct.TConstruct;
 
 import javax.annotation.Nullable;

@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.ForgeHooksClient;
+import net.neoforged.neoforge.client.ForgeHooksClient;
 import org.joml.Quaternionf;
 import slimeknights.tconstruct.smeltery.client.util.TintedVertexBuilder;
 

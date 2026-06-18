@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 import slimeknights.mantle.fluid.FluidTransferHelper;
 import slimeknights.mantle.util.BlockEntityHelper;
 import slimeknights.tconstruct.library.recipe.FluidValues;

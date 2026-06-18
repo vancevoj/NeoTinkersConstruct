@@ -7,10 +7,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LootingLevelEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.living.LootingLevelEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
+import net.neoforged.bus.api.EventPriority;
 import slimeknights.tconstruct.common.TinkerDamageTypes;
 import slimeknights.tconstruct.common.TinkerEffect;
 import slimeknights.tconstruct.common.TinkerTags;
@@ -46,8 +46,8 @@ public class ModifierLootingHandler {
     }
     init = true;
     // we overwrite looting values from vanilla in a couple cases, but mod effects that globally boost looting should still boost us
-    MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, ModifierLootingHandler::onLooting);
-    MinecraftForge.EVENT_BUS.addListener(ModifierLootingHandler::onLeaveServer);
+    NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ModifierLootingHandler::onLooting);
+    NeoForge.EVENT_BUS.addListener(ModifierLootingHandler::onLeaveServer);
   }
 
   /**

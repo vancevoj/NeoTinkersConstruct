@@ -35,7 +35,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.AbstractSkullBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.SkullBlock.Type;
-import net.minecraftforge.client.ForgeHooksClient;
+import net.neoforged.neoforge.client.ForgeHooksClient;
 
 import java.util.Map;
 
@@ -139,7 +139,7 @@ public class SlimeArmorLayer<T extends Slime, M extends HierarchicalModel<T>, A 
     path = ForgeHooksClient.getArmorTexture(entity, stack, path, EquipmentSlot.HEAD, type);
     ResourceLocation location = HumanoidArmorLayer.ARMOR_LOCATION_CACHE.get(path);
     if (location == null) {
-      location = new ResourceLocation(path);
+      location = ResourceLocation.parse(path);
       HumanoidArmorLayer.ARMOR_LOCATION_CACHE.put(path, location);
     }
 

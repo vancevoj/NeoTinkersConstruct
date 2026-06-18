@@ -45,16 +45,16 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraftforge.common.PlantType;
-import net.minecraftforge.common.world.BiomeModifier;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
-import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent.Operation;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.PlantType;
+import net.neoforged.neoforge.common.world.BiomeModifier;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.SpawnPlacementRegisterEvent;
+import net.neoforged.neoforge.event.entity.SpawnPlacementRegisterEvent.Operation;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import slimeknights.mantle.registration.object.EntityObject;
 import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.ItemObject;
@@ -121,7 +121,7 @@ public final class TinkerWorld extends TinkerModule {
   public static final PlantType SLIME_PLANT_TYPE = PlantType.get("slime");
 
   /** Creative tab for anything that is naturally found in the world */
-  public static final RegistryObject<CreativeModeTab> tabWorld = CREATIVE_TABS.register(
+  public static final DeferredHolder<?, CreativeModeTab> tabWorld = CREATIVE_TABS.register(
     "world", () -> CreativeModeTab.builder().title(TConstruct.makeTranslation("itemGroup", "world"))
                                   .icon(() -> new ItemStack(TinkerWorld.cobaltOre))
                                   .displayItems(TinkerWorld::addTabItems)
@@ -309,9 +309,9 @@ public final class TinkerWorld extends TinkerModule {
   /*
    * Particles
    */
-  public static final RegistryObject<SimpleParticleType> skySlimeParticle = PARTICLE_TYPES.register("sky_slime", () -> new SimpleParticleType(false));
-  public static final RegistryObject<SimpleParticleType> enderSlimeParticle = PARTICLE_TYPES.register("ender_slime", () -> new SimpleParticleType(false));
-  public static final RegistryObject<SimpleParticleType> terracubeParticle = PARTICLE_TYPES.register("terracube", () -> new SimpleParticleType(false));
+  public static final DeferredHolder<?, SimpleParticleType> skySlimeParticle = PARTICLE_TYPES.register("sky_slime", () -> new SimpleParticleType(false));
+  public static final DeferredHolder<?, SimpleParticleType> enderSlimeParticle = PARTICLE_TYPES.register("ender_slime", () -> new SimpleParticleType(false));
+  public static final DeferredHolder<?, SimpleParticleType> terracubeParticle = PARTICLE_TYPES.register("terracube", () -> new SimpleParticleType(false));
 
   /*
    * Features

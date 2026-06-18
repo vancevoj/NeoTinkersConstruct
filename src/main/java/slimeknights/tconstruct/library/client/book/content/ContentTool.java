@@ -17,9 +17,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.common.ForgeI18n;
-import net.minecraftforge.common.crafting.IShapedRecipe;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.ForgeI18n;
+import net.neoforged.neoforge.common.crafting.IShapedRecipe;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import slimeknights.mantle.client.book.HTMLUtils;
 import slimeknights.mantle.client.book.data.BookData;
 import slimeknights.mantle.client.book.data.content.PageContent;
@@ -131,7 +131,7 @@ public class ContentTool extends PageContent {
       if (this.toolName == null) {
         this.toolName = this.parent.name;
       }
-      Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.toolName));
+      Item item = ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(this.toolName));
       if (item instanceof IModifiableDisplay tool) {
         this.tool = tool;
       } else {

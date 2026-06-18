@@ -2,7 +2,7 @@ package slimeknights.tconstruct.tools.network;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 /** Serializer for fluid stack data in entities */
 public class FluidDataSerializer implements EntityDataSerializer<FluidStack> {

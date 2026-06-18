@@ -1,7 +1,7 @@
 package slimeknights.tconstruct.library.tools.definition.module.build;
 
 import com.google.common.collect.ImmutableSet;
-import net.minecraftforge.common.ToolAction;
+import net.neoforged.neoforge.common.ToolAction;
 import slimeknights.mantle.data.loadable.Loadables;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.tconstruct.library.module.ModuleHook;

@@ -96,9 +96,9 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
     buildMaterial(MaterialIds.ice)
       .shieldCore().arrowHead()
       .transformer(GreyToSpriteTransformer.builderFromBlack()
-        .addTexture(63, new ResourceLocation("block/blue_ice"))
-        .addTexture(102, new ResourceLocation("block/packed_ice"))
-        .addTexture(140, new ResourceLocation("block/ice"))
+        .addTexture(63, ResourceLocation.parse("block/blue_ice"))
+        .addTexture(102, ResourceLocation.parse("block/packed_ice"))
+        .addTexture(140, ResourceLocation.parse("block/ice"))
         .build());
     buildMaterial(MaterialIds.cactus)
       .ranged().arrowShaft().shieldCore().statType(WOOD)

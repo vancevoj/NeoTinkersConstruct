@@ -7,22 +7,22 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.TickEvent.PlayerTickEvent;
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.capabilities.CapabilityManager;
+import net.neoforged.neoforge.common.capabilities.CapabilityToken;
+import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.event.AttachCapabilitiesEvent;
+import net.neoforged.neoforge.event.TickEvent.Phase;
+import net.neoforged.neoforge.event.TickEvent.PlayerTickEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.fml.loading.FMLEnvironment;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.events.ToolEquipmentChangeEvent;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
@@ -52,12 +52,12 @@ public class EquipmentChangeWatcher {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.NORMAL, false, RegisterCapabilitiesEvent.class, event -> event.register(PlayerLastEquipment.class));
 
     // equipment change is used on both sides
-    MinecraftForge.EVENT_BUS.addListener(EquipmentChangeWatcher::onEquipmentChange);
+    NeoForge.EVENT_BUS.addListener(EquipmentChangeWatcher::onEquipmentChange);
 
     // only need to use the cap and the player tick on the client
     if (FMLEnvironment.dist == Dist.CLIENT) {
-      MinecraftForge.EVENT_BUS.addListener(EquipmentChangeWatcher::onPlayerTick);
-      MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, EquipmentChangeWatcher::attachCapability);
+      NeoForge.EVENT_BUS.addListener(EquipmentChangeWatcher::onPlayerTick);
+      NeoForge.EVENT_BUS.addGenericListener(Entity.class, EquipmentChangeWatcher::attachCapability);
     }
   }
 
@@ -122,7 +122,7 @@ public class EquipmentChangeWatcher {
       }
     }
     // fire event for modifiers that want to watch equipment when not equipped
-    MinecraftForge.EVENT_BUS.post(new ToolEquipmentChangeEvent(context));
+    NeoForge.EVENT_BUS.post(new ToolEquipmentChangeEvent(context));
   }
 
   /* Required methods */

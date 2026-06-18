@@ -2,8 +2,8 @@ package slimeknights.tconstruct.plugin.jsonthings;
 
 import dev.gigaherz.jsonthings.things.client.ItemColorHandler;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.model.TinkerItemProperties;
 import slimeknights.tconstruct.library.client.model.tools.ToolModel;

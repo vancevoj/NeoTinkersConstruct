@@ -71,7 +71,7 @@ public class ArmorUtil {
   }
 
   /**
-   * Calculates the final damage for use in {@link net.minecraftforge.event.entity.living.LivingHurtEvent}. Requires applying several inverse functions to cancel out vanilla formulas that are applied later
+   * Calculates the final damage for use in {@link net.neoforged.neoforge.event.entity.living.LivingHurtEvent}. Requires applying several inverse functions to cancel out vanilla formulas that are applied later
    * @param originalDamage     Original damage to be dealt
    * @param armor              Armor amount on the player
    * @param toughness          Armor toughness attribute

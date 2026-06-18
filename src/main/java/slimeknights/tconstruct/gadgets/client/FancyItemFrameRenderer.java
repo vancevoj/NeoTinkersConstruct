@@ -16,10 +16,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.RenderItemInFrameEvent;
-import net.minecraftforge.client.event.RenderNameTagEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.Event.Result;
+import net.neoforged.neoforge.client.event.RenderItemInFrameEvent;
+import net.neoforged.neoforge.client.event.RenderNameTagEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.bus.api.Event.Result;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.gadgets.entity.FancyItemFrameEntity;
 import slimeknights.tconstruct.gadgets.entity.FrameType;
@@ -56,7 +56,7 @@ public class FancyItemFrameRenderer<T extends FancyItemFrameEntity> extends Item
 
     // base entity rendering logic, since calling super gives us the item frame renderer that we are replacing
     RenderNameTagEvent renderNameplate = new RenderNameTagEvent(frame, frame.getDisplayName(), this, matrices, bufferIn, packedLight, partialTicks);
-    MinecraftForge.EVENT_BUS.post(renderNameplate);
+    NeoForge.EVENT_BUS.post(renderNameplate);
     if (renderNameplate.getResult() == Result.ALLOW || (renderNameplate.getResult() != Result.DENY && this.shouldShowName(frame))) {
       this.renderNameTag(frame, renderNameplate.getContent(), matrices, bufferIn, packedLight);
     }
@@ -103,7 +103,7 @@ public class FancyItemFrameRenderer<T extends FancyItemFrameEntity> extends Item
         int rotation = mapdata != null ? (frameRotation + 2) % 4 * 2 : frameRotation;
         matrices.mulPose(Axis.ZP.rotationDegrees(rotation * 360f / 8f));
       }
-      if (!MinecraftForge.EVENT_BUS.post(new RenderItemInFrameEvent(frame, this, matrices, bufferIn, packedLight))) {
+      if (!NeoForge.EVENT_BUS.post(new RenderItemInFrameEvent(frame, this, matrices, bufferIn, packedLight))) {
         if (mapdata != null) {
           matrices.scale(0.0078125F, 0.0078125F, 0.0078125F);
           matrices.translate(-64.0D, -64.0D, -1.0D);

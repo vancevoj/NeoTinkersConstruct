@@ -1,6 +1,6 @@
 package slimeknights.tconstruct.library.modifiers.hook.behavior;
 
-import net.minecraftforge.common.ToolAction;
+import net.neoforged.neoforge.common.ToolAction;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 

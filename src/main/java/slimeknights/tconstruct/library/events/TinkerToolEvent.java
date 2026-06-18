@@ -11,8 +11,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.bus.api.Event;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.InteractionSource;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
@@ -76,7 +76,7 @@ public abstract class TinkerToolEvent extends Event {
 
     /** Fires this event and posts the result */
     public Result fire() {
-      MinecraftForge.EVENT_BUS.post(this);
+      NeoForge.EVENT_BUS.post(this);
       return this.getResult();
     }
   }
@@ -101,7 +101,7 @@ public abstract class TinkerToolEvent extends Event {
 
     /** Fires this event and posts the result */
     public Result fire() {
-      MinecraftForge.EVENT_BUS.post(this);
+      NeoForge.EVENT_BUS.post(this);
       return this.getResult();
     }
   }

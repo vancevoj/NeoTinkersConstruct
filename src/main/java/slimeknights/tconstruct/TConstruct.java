@@ -10,19 +10,19 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.MissingMappingsEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.DistExecutor;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.registries.MissingMappingsEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import slimeknights.mantle.registration.RegistrationHelper;
@@ -106,7 +106,7 @@ public class TConstruct {
     MaterialRegistry.init();
 
     // initialize modules, done this way rather than with annotations to give us control over the order
-    MinecraftForge.EVENT_BUS.addListener(TConstruct::missingMappings);
+    NeoForge.EVENT_BUS.addListener(TConstruct::missingMappings);
     IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
     // base
     bus.register(new TinkerCommons());
@@ -231,7 +231,7 @@ public class TConstruct {
    */
   @SuppressWarnings("removal")
   public static ResourceLocation getResource(String name) {
-    return new ResourceLocation(MOD_ID, name);
+    return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
   }
 
   /**

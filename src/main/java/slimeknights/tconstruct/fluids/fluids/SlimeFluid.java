@@ -3,7 +3,7 @@ package slimeknights.tconstruct.fluids.fluids;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.neoforged.neoforge.fluids.ForgeFlowingFluid;
 
 public abstract class SlimeFluid extends ForgeFlowingFluid {
 

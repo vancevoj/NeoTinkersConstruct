@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.PlantType;
+import net.neoforged.neoforge.common.PlantType;
 import slimeknights.tconstruct.world.TinkerWorld;
 
 import javax.annotation.Nonnull;

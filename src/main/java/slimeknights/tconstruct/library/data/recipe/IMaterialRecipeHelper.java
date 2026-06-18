@@ -5,7 +5,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.crafting.conditions.OrCondition;
+import net.neoforged.neoforge.common.crafting.conditions.OrCondition;
 import slimeknights.mantle.recipe.data.IRecipeHelper;
 import slimeknights.mantle.recipe.helper.ItemOutput;
 import slimeknights.mantle.registration.object.FluidObject;

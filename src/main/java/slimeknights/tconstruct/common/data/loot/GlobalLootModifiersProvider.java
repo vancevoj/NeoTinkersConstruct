@@ -17,8 +17,8 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraftforge.common.data.GlobalLootModifierProvider;
-import net.minecraftforge.common.loot.LootTableIdCondition;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 import slimeknights.mantle.loot.AddEntryLootModifier;
 import slimeknights.mantle.loot.ReplaceItemLootModifier;
 import slimeknights.mantle.loot.condition.BlockTagLootCondition;
@@ -53,7 +53,7 @@ public class GlobalLootModifiersProvider extends GlobalLootModifierProvider {
   @Override
   protected void start() {
     add("wither_bone", ReplaceItemLootModifier.builder(Ingredient.of(Items.BONE), ItemOutput.fromItem(TinkerMaterials.necroticBone))
-      .addCondition(LootTableIdCondition.builder(new ResourceLocation("entities/wither_skeleton")).build())
+      .addCondition(LootTableIdCondition.builder(ResourceLocation.parse("entities/wither_skeleton")).build())
       .addCondition(ConfigEnabledCondition.WITHER_BONE_DROP)
       .build());
 

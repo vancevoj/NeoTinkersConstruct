@@ -21,7 +21,7 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import slimeknights.tconstruct.world.TinkerStructures;
 import slimeknights.tconstruct.world.TinkerWorld;
 import slimeknights.tconstruct.world.block.FoliageType;
@@ -146,7 +146,7 @@ public class IslandStructure extends Structure {
     }
 
     /** Adds a new grass type to the builder with the given weight */
-    public Builder vines(RegistryObject<? extends Block> block) {
+    public Builder vines(DeferredHolder<?, ? extends Block> block) {
       return vines(block.get());
     }
 
@@ -157,7 +157,7 @@ public class IslandStructure extends Structure {
     }
 
     /** Adds a new grass type to the builder with the given weight */
-    public Builder addGrass(RegistryObject<? extends Block> block, int weight) {
+    public Builder addGrass(DeferredHolder<?, ? extends Block> block, int weight) {
       return addGrass(block.get(), weight);
     }
 
