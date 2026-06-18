@@ -16,7 +16,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbilities;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import slimeknights.tconstruct.TConstruct;
@@ -119,7 +119,7 @@ public class CombatFishingHookRenderer extends EntityRenderer<CombatFishingHook>
       // handle hand side
       int sideOffset = player.getMainArm() == HumanoidArm.RIGHT ? 1 : -1;
       ItemStack itemstack = player.getMainHandItem();
-      if (!itemstack.canPerformAction(ToolActions.FISHING_ROD_CAST)) {
+      if (!itemstack.canPerformAction(ItemAbilities.FISHING_ROD_CAST)) {
         sideOffset = -sideOffset;
       }
 

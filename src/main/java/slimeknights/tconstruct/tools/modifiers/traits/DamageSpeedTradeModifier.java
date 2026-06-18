@@ -78,7 +78,7 @@ public class DamageSpeedTradeModifier extends Modifier implements AttributesModi
       double boost = getMultiplier(tool, modifier.getLevel());
       if (boost != 0) {
         // half boost for attack speed, its
-        consumer.accept(Attributes.ATTACK_DAMAGE, new AttributeModifier(uuid.get(), attributeName.get(), boost / 2, Operation.MULTIPLY_TOTAL));
+        consumer.accept(Attributes.ATTACK_DAMAGE, new AttributeModifier(uuid.get(), attributeName.get(), boost / 2, Operation.ADD_MULTIPLIED_TOTAL));
       }
     }
   }

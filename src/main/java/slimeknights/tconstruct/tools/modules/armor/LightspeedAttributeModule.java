@@ -130,7 +130,7 @@ public record LightspeedAttributeModule(String unique, UUID uuid, Attribute attr
     }
     float boost = amount * (light - minLight) * entry.getEffectiveLevel();
     if (boost > 0) {
-      if (operation == Operation.ADDITION) {
+      if (operation == Operation.ADD_VALUE) {
         // multiplies addition boost by 10 and displays as a percent as the players base movement speed is 0.1 and is in unknown units
         // percentages make sense
         boost *= 10;

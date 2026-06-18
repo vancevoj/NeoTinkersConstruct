@@ -104,7 +104,7 @@ public class GoldGuardModifier extends NoLevelsModifier implements EquipmentChan
           instance.removeModifier(GOLD_GUARD_UUID);
         }
         // +2 hearts per level, and a bonus of 2 for having the modifier
-        instance.addTransientModifier(new AttributeModifier(GOLD_GUARD_UUID, "tconstruct.gold_guard", getTotalGold() * 4, Operation.ADDITION));
+        instance.addTransientModifier(new AttributeModifier(GOLD_GUARD_UUID, "tconstruct.gold_guard", getTotalGold() * 4, Operation.ADD_VALUE));
       }
     }
 

@@ -11,8 +11,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.IForgeShearable;
-import net.neoforged.neoforge.common.ToolAction;
-import net.neoforged.neoforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.bus.api.Event.Result;
 import slimeknights.mantle.data.loadable.primitive.FloatLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
@@ -64,12 +64,12 @@ public record ShearsModule(float flatBonus, float perLevelBonus, float expandedB
   }
 
   @Override
-  public boolean canPerformAction(IToolStackView tool, ModifierEntry modifier, ToolAction toolAction) {
+  public boolean canPerformAction(IToolStackView tool, ModifierEntry modifier, ItemAbility toolAction) {
     return condition.matches(tool, modifier) && (
-      toolAction == ToolActions.SHEARS_DIG ||
-      toolAction == ToolActions.SHEARS_HARVEST ||
-      toolAction == ToolActions.SHEARS_CARVE ||
-      toolAction == ToolActions.SHEARS_DISARM);
+      toolAction == ItemAbilities.SHEARS_DIG ||
+      toolAction == ItemAbilities.SHEARS_HARVEST ||
+      toolAction == ItemAbilities.SHEARS_CARVE ||
+      toolAction == ItemAbilities.SHEARS_DISARM);
   }
 
   /** Runs the hook after shearing an entity */

@@ -30,7 +30,7 @@ public class AntigravityEffect extends TinkerEffect {
 
   public AntigravityEffect() {
     super(MobEffectCategory.HARMFUL, 0xff970d, true);
-    this.addAttributeModifier(ForgeMod.ENTITY_GRAVITY.get(), "5bd6b8c8-8de9-4357-a74e-afb2a8f00c20", -2, Operation.MULTIPLY_TOTAL);
+    this.addAttributeModifier(ForgeMod.ENTITY_GRAVITY.get(), "5bd6b8c8-8de9-4357-a74e-afb2a8f00c20", -2, Operation.ADD_MULTIPLIED_TOTAL);
     NeoForge.EVENT_BUS.addListener(this::onLivingJump);
   }
 
