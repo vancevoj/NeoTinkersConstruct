@@ -142,23 +142,24 @@ OPEN ISSUES / TODO(neoport): <cross-package wiring, behavioral gaps>
 ## 8. Current Project State
 
 ```
-NEW PROJECT STATE — 2026-06-18
-PHASE: TConstruct compiling (Mantle DONE)
-TCON head: f8f29621   MANTLE head: 3581c40e (DONE — builds Mantle-1.21.1-1.21.0.jar)
-TCON errors: ~6000 (cap) — by pkg: library 1894, tools 1672, smeltery 916, tables 343, shared 319, common 315, world 197, fluids 196, gadgets 128
+NEW PROJECT STATE — 2026-06-18 (GREEN COMPILE + JAR)
+PHASE: TConstruct BUILDS. `./gradlew :compileJava` = 0 errors; `./gradlew build` produces TinkersConstruct-1.21.1-3.11.2.jar. (Mantle DONE.)
+TCON head: 35109e7a (+ test-defer + this doc)   MANTLE head: 673db196 (DONE; builds jar)
+TCON errors: 0 (main source, was ~6000). src/test (50 files) is a DEFERRED port (still 1.20/Forge + ModDevGradle test classpath not wired); compileTestJava/test disabled in build.gradle so the mod jar builds.
 
 ARCH DECISIONS (don't re-litigate):
-- TOOL_DATA = single CompoundTag DataComponentType (library/tools/nbt/ToolDataComponents); ToolStack swaps getTag/setTag → component get/set + write-back; ToolStack PUBLIC API UNCHANGED.
-- Entity data: Forge caps → data attachments (TinkerDataCapability/PersistentDataCapability/EntityModifierCapability, all .getData(entity), NOT getCapability).
-- Networking: TinkerNetwork (common/network) → Mantle NetworkWrapper payload system; packets = CustomPacketPayload (Type+StreamCodec+handle(IPayloadContext)).
-- accesstransformer.cfg = mojmap names (converted; perl recipe in PORTING_STATUS.md). Composite build incl. ../Mantle. JDK 21.
-- build.gradle EXCLUDES plugin/jei, plugin/jsonthings, plugin/craftingtweaks, ImmersiveEngineeringPlugin, DietPlugin, DummmmmmyPlugin (deps unavailable on 1.21).
-- Mechanical codemods DONE: forge-imports, RegistryObject→DeferredHolder, ToolAction→ItemAbility, AttributeModifier.Operation enum, crafting.conditions→conditions pkg, ForgeMod→NeoForgeMod.
+- TOOL_DATA = single CompoundTag DataComponentType (library/tools/nbt/ToolDataComponents); ToolStack swaps getTag/setTag → component get/set; ToolStack PUBLIC API UNCHANGED.
+- Entity data: Forge caps → data attachments (TinkerDataCapability/PersistentDataCapability/EntityModifierCapability + gadgets PiggybackCapability), all .getData(entity); registered on the mod bus from the constructor.
+- Central wiring (TConstruct.java): NeoForge constructor `TConstruct(IEventBus bus, ModContainer container)`; `@EventBusSubscriber` (not @Mod.EventBusSubscriber); calls ToolDataComponents.init(bus) + the 3 attachment registers + TinkerModule.initRegisters(bus) + `new TinkerGadgets(bus)` + TinkerNetwork.setup() + `bus.addListener(TinkerNetwork::registerPackets)`; FMLEnvironment.dist client check; missing-mappings handler DROPPED (no NeoForge equivalent).
+- ItemDisplayContext is now an EXTENSIBLE ENUM, not a registry: TinkerItemDisplays uses EnumProxy + META-INF/enumextensions.json.
+- DeferredHolder<R, T extends R>: the codemod produced 161 illegal `DeferredHolder<?, X>`; fixed to `DeferredHolder<? super X, X>` (codemod-able). `DeferredHolder<?, ?>` is fine.
+- ICommonRecipeHelper (Mantle): vanilla RecipeProvider.has/inventoryTrigger are now STATIC; the interface's criteria helpers are now PRIVATE (criterion/hasItem/hasTag) so a `extends RecipeProvider implements ICommonRecipeHelper` subclass no longer clashes; providers call the inherited vanilla statics.
+- GOTCHA (critical): gradle INCREMENTAL compilation HID latent errors in unchanged files, giving false-low counts (a "72" that was really 635). ALWAYS clean-compile for a true count: `rm -rf build/classes/java/main build/tmp/compileJava` before `./gradlew :compileJava -I /tmp/maxerrs.init.gradle`.
+- accesstransformer.cfg = mojmap names; Slot fields are x/y (1.21, not xPos/yPos). build.gradle EXCLUDES jei/jsonthings/craftingtweaks/IE/diet/dummmmmmy. Composite build incl. ../Mantle. JDK 21.
 
-DONE: Mantle (full, builds jar). TConstruct: build system, AT conversion, all codemods, data-component tool model (gate), library/materials, library/tools (nbt/helper/capability/item), tools/data.
-IN PROGRESS (partial agent edits committed, not compiling): library/{recipe,modifiers,client,json,events,utils}, smeltery/{block,data,client,item,network,menu}, tools/{modules,logic,modifiers,recipe,entity,client,item,network}, common (TinkerNetwork partial), shared, tables, gadgets, fluids, world.
-NEXT: 1) recompile (tcon-compileN.log) → fresh map. 2) re-fan agents on partial pkgs (esp. common/TinkerNetwork — every packet depends on it). 3) central TConstruct.java wiring: register ToolDataComponents + the 3 attachment DeferredRegisters + TinkerNetwork.registerPackets on the mod bus; register tool/block item+fluid caps in RegisterCapabilitiesEvent; DELETE item initCapabilities/verifyTagAfterLoad overrides. 4) reconcile to green compile. 5) ./gradlew build + datagen. 6) runServer smoke. 7) in-game test all features.
-OPEN ISSUES / TODO(neoport): tool-break XP (BreakEvent no longer carries exp); hide-flags → DataComponents.TOOLTIP_DISPLAY; AoE block-break via game-bus BreakEvent; dynamic rarity via RARITY component; model-loader API (client) some deeper redesign; re-enable+port JEI later.
+DONE: Mantle (full, builds jar). TConstruct: FULL main source compiles + builds jar — ALL packages (library, tools, smeltery, tables, shared, common, world, fluids, gadgets; runtime AND datagen), central wiring, AT, all codemods, data-component tool model.
+NEXT: 1) `./gradlew runData` (datagen) + verify generated assets/data. 2) RegisterCapabilitiesEvent wiring (see OPEN ISSUES) then `./gradlew runServer` smoke test. 3) in-game test all features. 4) port src/test + wire ModDevGradle test classpath, re-enable compileTestJava/test. 5) re-enable + port JEI plugin.
+OPEN ISSUES / TODO(neoport): (1) RegisterCapabilitiesEvent central wiring for smeltery BE item/fluid handlers NOT yet added — compiles without it, but smeltery/tank/casting caps won't expose at runtime (BE getter methods exist: Heater/Melter.getItemHandler, *.getTank, etc.; fluids item caps self-register via FluidEvents @EventBusSubscriber). (2) potion-fluid TagPredicate filtering dropped (PotionFluidEffect/PotionCloudFluidEffect read POTION_CONTENTS, predicate ignored). (3) ConsumerWrapperBuilder ceramics-kiln serializer redirect dropped (SmelteryRecipeProvider:195/643 — grout still emits, as vanilla blasting not ceramics:kiln). (4) looting via new enchantment-value system (ModifierLootingHandler.getLootingLevel). (5) tool-break XP; hide-flags → TOOLTIP_DISPLAY; dynamic rarity. (6) JEI deferred.
 ```
 
 ---
