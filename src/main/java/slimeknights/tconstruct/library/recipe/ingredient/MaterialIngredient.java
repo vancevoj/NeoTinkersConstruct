@@ -1,21 +1,16 @@
 package slimeknights.tconstruct.library.recipe.ingredient;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.crafting.CraftingHelper;
-import net.neoforged.neoforge.common.crafting.IIngredientSerializer;
-import net.neoforged.neoforge.common.crafting.VanillaIngredientSerializer;
+import net.neoforged.neoforge.common.crafting.IngredientType;
+import slimeknights.mantle.data.loadable.common.IngredientLoadable;
 import slimeknights.mantle.data.loadable.field.LoadableField;
+import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.mantle.data.predicate.IJsonPredicate;
-import slimeknights.tconstruct.TConstruct;
-import slimeknights.tconstruct.library.json.TinkerLoadables;
+import slimeknights.mantle.recipe.helper.LoadableIngredientSerializer;
 import slimeknights.tconstruct.library.json.predicate.material.MaterialPredicate;
 import slimeknights.tconstruct.library.json.predicate.material.MaterialPredicateField;
 import slimeknights.tconstruct.library.materials.MaterialRegistry;
@@ -32,6 +27,17 @@ import java.util.stream.Stream;
  * Extension of the vanilla ingredient to display materials on items and support matching by materials
  */
 public class MaterialIngredient extends NestedIngredient {
+  /** Field for the material predicate */
+  private static final LoadableField<IJsonPredicate<MaterialVariantId>,MaterialIngredient> MATERIAL_FIELD = new MaterialPredicateField<>("material", i -> i.material);
+  /** Loadable for parsing and serializing this ingredient */
+  public static final RecordLoadable<MaterialIngredient> LOADABLE = RecordLoadable.create(
+    IngredientLoadable.DISALLOW_EMPTY.requiredField("match", i -> i.nested),
+    MATERIAL_FIELD,
+    MaterialIngredient::new);
+  /** Ingredient type instance */
+  // TODO(neoport): register this IngredientType on NeoForgeRegistries.Keys.INGREDIENT_TYPES under id tconstruct:material
+  public static final IngredientType<MaterialIngredient> TYPE = new LoadableIngredientSerializer<>(LOADABLE).type();
+
   private final IJsonPredicate<MaterialVariantId> material;
   @Nullable
   private ItemStack[] materialStacks;
@@ -148,42 +154,23 @@ public class MaterialIngredient extends NestedIngredient {
   }
 
   @Override
-  public ItemStack[] getItems() {
+  public Stream<ItemStack> getItems() {
+    // until materials load, just defer to the nested stacks; do not cache as the cache would be incomplete
+    if (!MaterialRegistry.isFullyLoaded()) {
+      return Arrays.stream(nested.getItems());
+    }
     if (materialStacks == null) {
-      if (!MaterialRegistry.isFullyLoaded()) {
-        return nested.getItems();
-      }
       // no material? apply all materials for variants
-      Stream<ItemStack> items = Arrays.stream(nested.getItems());
       // find all materials matching the filter; note this only shows craftable material variants
-      items = items.flatMap(stack -> MaterialRecipeCache.getAllVariants().stream()
-        .filter(material::matches)
-        .map(mat -> IMaterialItem.withMaterial(stack, mat))
-        .filter(ItemStack::hasTag));
-      materialStacks = items.distinct().toArray(ItemStack[]::new);
+      materialStacks = Arrays.stream(nested.getItems())
+        .flatMap(stack -> MaterialRecipeCache.getAllVariants().stream()
+          .filter(material::matches)
+          .map(mat -> IMaterialItem.withMaterial(stack, mat))
+          .filter(matStack -> !IMaterialItem.getMaterialFromStack(matStack).equals(IMaterial.UNKNOWN_ID)))
+        .distinct()
+        .toArray(ItemStack[]::new);
     }
-    return materialStacks;
-  }
-
-  @Override
-  public JsonElement toJson() {
-    JsonElement parent = nested.toJson();
-    JsonObject result;
-    if (nested.isVanilla() && parent.isJsonObject()) {
-      result = parent.getAsJsonObject();
-    } else {
-      result = new JsonObject();
-      result.add("match", parent);
-    }
-    result.addProperty("type", Serializer.ID.toString());
-    Serializer.MATERIAL_FIELD.serialize(this, result);
-    return result;
-  }
-
-  @Override
-  protected void invalidate() {
-    super.invalidate();
-    this.materialStacks = null;
+    return Arrays.stream(materialStacks);
   }
 
   @Override
@@ -192,51 +179,7 @@ public class MaterialIngredient extends NestedIngredient {
   }
 
   @Override
-  public IIngredientSerializer<? extends Ingredient> getSerializer() {
-    return Serializer.INSTANCE;
-  }
-
-  /** Serializer instance */
-  public enum Serializer implements IIngredientSerializer<MaterialIngredient> {
-    INSTANCE;
-    public static final ResourceLocation ID = TConstruct.getResource("material");
-    private static final LoadableField<IJsonPredicate<MaterialVariantId>,MaterialIngredient> MATERIAL_FIELD = new MaterialPredicateField<>("material", i -> i.material);
-
-    @Override
-    public MaterialIngredient parse(JsonObject json) {
-      // if we have match, parse as a nested object. Without match, just parse the object as vanilla
-      Ingredient ingredient;
-      if (json.has("match")) {
-        ingredient = CraftingHelper.getIngredient(json.get("match"), false);
-      } else {
-        ingredient = VanillaIngredientSerializer.INSTANCE.parse(json);
-      }
-      IJsonPredicate<MaterialVariantId> material = MATERIAL_FIELD.get(json);
-      // deprecated tag field
-      if (json.has("tag")) {
-        TConstruct.LOG.warn("Using deprecated tag field on material ingredient");
-        IJsonPredicate<MaterialVariantId> tagPredicate = MaterialPredicate.tag(TinkerLoadables.MATERIAL_TAGS.getIfPresent(json, "tag"));
-        if (material == MaterialPredicate.ANY) {
-          material = tagPredicate;
-        } else {
-          material = MaterialPredicate.and(material, tagPredicate);
-        }
-      }
-      return new MaterialIngredient(ingredient, material);
-    }
-
-    @Override
-    public MaterialIngredient parse(FriendlyByteBuf buffer) {
-      return new MaterialIngredient(
-        Ingredient.fromNetwork(buffer),
-        MATERIAL_FIELD.decode(buffer)
-      );
-    }
-
-    @Override
-    public void write(FriendlyByteBuf buffer, MaterialIngredient ingredient) {
-      ingredient.nested.toNetwork(buffer);
-      MATERIAL_FIELD.encode(buffer, ingredient);
-    }
+  public IngredientType<?> getType() {
+    return TYPE;
   }
 }

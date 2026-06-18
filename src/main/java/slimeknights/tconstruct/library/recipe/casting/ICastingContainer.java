@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.recipe.casting;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.material.Fluid;
 import slimeknights.mantle.recipe.container.ISingleStackContainer;
 
@@ -9,7 +10,12 @@ import javax.annotation.Nullable;
 /**
  * Inventory containing a single item and a fluid
  */
-public interface ICastingContainer extends ISingleStackContainer {
+public interface ICastingContainer extends ISingleStackContainer, RecipeInput {
+  @Override
+  default int size() {
+    return 1;
+  }
+
   /**
    * Gets the contained fluid in this inventory
    * @return  Contained fluid

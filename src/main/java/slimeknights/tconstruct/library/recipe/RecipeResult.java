@@ -1,8 +1,5 @@
 package slimeknights.tconstruct.library.recipe;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
@@ -15,7 +12,6 @@ import javax.annotation.Nullable;
  *   <li>Pass: acts like a non-match recipe</li>
  * </ul>
  */
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class RecipeResult<T> {
   /** Single pass instance */
   @SuppressWarnings("rawtypes")
@@ -61,8 +57,16 @@ public class RecipeResult<T> {
   }
 
   /** If true, this recipe passed and can be crafted for the given input */
-  @Getter
   private final boolean success;
+
+  private RecipeResult(boolean success) {
+    this.success = success;
+  }
+
+  /** If true, this recipe passed and can be crafted for the given input */
+  public boolean isSuccess() {
+    return success;
+  }
 
   /**
    * Gets the result, throws if unavailable
@@ -91,23 +95,31 @@ public class RecipeResult<T> {
 
   /** Class for success, which has an item stack */
   private static class Success<T> extends RecipeResult<T> {
-    @Getter
     private final T result;
 
     private Success(T result) {
       super(true);
       this.result = result;
     }
+
+    @Override
+    public T getResult() {
+      return result;
+    }
   }
 
   /** Class for failure, which has a message */
   private static class Failure<T> extends RecipeResult<T> {
-    @Getter
     private final Component message;
 
     private Failure(Component message) {
       super(false);
       this.message = message;
+    }
+
+    @Override
+    public Component getMessage() {
+      return message;
     }
 
     @Override

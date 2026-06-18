@@ -17,6 +17,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
@@ -81,9 +82,9 @@ public class FluidTextureModel implements IUnbakedGeometry<FluidTextureModel> {
   }
 
   @Override
-  public BakedModel bake(IGeometryBakingContext owner, ModelBaker baker, Function<Material,TextureAtlasSprite> spriteGetter, ModelState transform, ItemOverrides overrides, ResourceLocation modelLocation) {
+  public BakedModel bake(IGeometryBakingContext owner, ModelBaker baker, Function<Material,TextureAtlasSprite> spriteGetter, ModelState transform, ItemOverrides overrides) {
     // start by baking the model, handing UV lock
-    BakedModel baked = model.bake(owner, baker, spriteGetter, transform, overrides, modelLocation);
+    BakedModel baked = model.bake(owner, baker, spriteGetter, transform, overrides);
 
     // determine which block parts are fluids
     Set<String> fluidTextures = this.fluids.isEmpty() ? Collections.emptySet() : RetexturedModel.getAllRetextured(owner, model, this.fluids);
@@ -94,13 +95,13 @@ public class FluidTextureModel implements IUnbakedGeometry<FluidTextureModel> {
       for (int i = 0; i < size; i++) {
         BlockElement part = elements.get(i);
         long fluidFaces = part.faces.values().stream()
-                                    .filter(face -> fluidTextures.contains(trimTextureName(face.texture)))
+                                    .filter(face -> fluidTextures.contains(trimTextureName(face.texture())))
                                     .count();
         // for simplicity, each part is either a fluid or not. If for some reason it contains both we mark it as a fluid, meaning it may get colored
         // if this is undesired, just use separate elements
         if (fluidFaces > 0) {
           if (fluidFaces < part.faces.size()) {
-            TConstruct.LOG.warn("Mixed fluid and non-fluid elements in model {}, may cause unexpected results", modelLocation);
+            TConstruct.LOG.warn("Mixed fluid and non-fluid elements in model {}, may cause unexpected results", TankModel.BAKE_LOCATION);
           }
           fluidParts.set(i);
         }
@@ -212,7 +213,7 @@ public class FluidTextureModel implements IUnbakedGeometry<FluidTextureModel> {
       @Nullable
       @Override
       public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int pSeed) {
-        if (stack.isEmpty() || !stack.hasTag()) {
+        if (stack.isEmpty() || !stack.has(DataComponents.CUSTOM_DATA)) {
           return originalModel;
         }
 

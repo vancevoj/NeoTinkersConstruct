@@ -2,24 +2,16 @@ package slimeknights.tconstruct.library.tools.capability;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.event.AttachCapabilitiesEvent;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import slimeknights.mantle.registration.object.IdAwareObject;
 import slimeknights.tconstruct.TConstruct;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -29,67 +21,35 @@ import java.util.function.Supplier;
 /**
  * Capability to make it easy for Tinkers to store common data on the player, primarily used for armor
  * Data stored in this capability is not saved to NBT, most often its filled by the relevant equipment events
+ * <p>
+ * In NeoForge 1.21 this is backed by a transient {@link AttachmentType data attachment} (no serialization), replacing the
+ * old Forge capability. The {@link Holder}, {@link TinkerDataKey} and {@link ComputableDataKey} public types and their
+ * API are unchanged.
  */
 public class TinkerDataCapability {
   private TinkerDataCapability() {}
 
-  /** Capability ID */
-  private static final ResourceLocation ID = TConstruct.getResource("modifier_data");
-  /** Capability type */
-  public static final Capability<Holder> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+  /** Deferred register for the attachment type. Must be registered on the mod bus during construction via {@link #register(IEventBus)}. */
+  private static final DeferredRegister<AttachmentType<?>> ATTACHMENTS = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, TConstruct.MOD_ID);
 
-  /** Registers this capability */
-  public static void register() {
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.NORMAL, false, RegisterCapabilitiesEvent.class, TinkerDataCapability::register);
-    NeoForge.EVENT_BUS.addGenericListener(Entity.class, TinkerDataCapability::attachCapability);
+  /** Attachment holding the tinker data. Transient (not serialized), as it is rebuilt from equipment change events. */
+  public static final DeferredHolder<AttachmentType<?>, AttachmentType<Holder>> ATTACHMENT =
+    ATTACHMENTS.register("modifier_data", () -> AttachmentType.builder(holder -> new Holder()).build());
+
+  /** Registers the attachment type with the mod event bus. Call during mod construction. */
+  public static void register(IEventBus bus) {
+    ATTACHMENTS.register(bus);
   }
 
-  /** Registers the capability with the event bus */
-  private static void register(RegisterCapabilitiesEvent event) {
-    event.register(Holder.class);
-  }
-
-  /** Event listener to attach the capability */
-  private static void attachCapability(AttachCapabilitiesEvent<Entity> event) {
-    if (event.getObject() instanceof LivingEntity) {
-      Provider provider = new Provider();
-      event.addCapability(ID, provider);
-      event.addListener(provider);
-    }
-  }
-
-  /** Gets the data capability from an entity, or null if missing */
-  @SuppressWarnings("DataFlowIssue")
+  /**
+   * Gets the data capability from an entity. Will never be null for a living entity, matching the previous behavior where
+   * the capability was attached to all living entities (the default {@link Holder} is created and stored on first access).
+   */
   @Nullable
   public static TinkerDataCapability.Holder getData(LivingEntity entity) {
-    return entity.getCapability(CAPABILITY).orElse(null);
+    return entity.getData(ATTACHMENT);
   }
 
-
-  /* Required methods */
-
-  /** Capability provider instance */
-  private static class Provider implements ICapabilityProvider, Runnable {
-    private LazyOptional<Holder> data;
-    private Provider() {
-      this.data = LazyOptional.of(Holder::new);
-    }
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-      return CAPABILITY.orEmpty(cap, data);
-    }
-
-    @Override
-    public void run() {
-      // called when capabilities invalidate, just invalidate but preserve the old data
-      // (as if they revive the equipment change event does not fire again, see dimension change)
-      Holder oldData = data.orElse(new Holder());
-      data.invalidate();
-      data = LazyOptional.of(() -> oldData);
-    }
-  }
 
   /** Class for generic keys */
   @SuppressWarnings("unused")

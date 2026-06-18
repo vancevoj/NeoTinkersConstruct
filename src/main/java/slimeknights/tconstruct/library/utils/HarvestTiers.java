@@ -4,14 +4,14 @@ import com.google.common.collect.Maps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
-import net.neoforged.neoforge.common.TierSortingRegistry;
 import slimeknights.mantle.client.ResourceColorManager;
 import slimeknights.mantle.data.listener.ISafeManagerReloadListener;
 import slimeknights.tconstruct.TConstruct;
 
-import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -25,9 +25,35 @@ public class HarvestTiers {
   /** Listener to clear name cache so we get new colors */
   public static final ISafeManagerReloadListener RELOAD_LISTENER = manager -> harvestLevelNames.clear();
 
+  /**
+   * Gets a name for the given tier.
+   * <p>
+   * TODO(neoport): TierSortingRegistry was removed in 1.21 along with its name registry. Vanilla tiers are mapped to a
+   * minecraft namespaced ID by their enum name; any other tier falls back to a generic ID so a translation key still resolves.
+   */
+  private static ResourceLocation tierId(Tier tier) {
+    if (tier instanceof Tiers vanilla) {
+      return ResourceLocation.fromNamespaceAndPath("minecraft", vanilla.name().toLowerCase(Locale.ROOT));
+    }
+    return TConstruct.getResource("unknown");
+  }
+
+  /**
+   * Gets a numeric sort key for a tier so the larger and smaller helpers keep working without a sorting registry.
+   * <p>
+   * TODO(neoport): TierSortingRegistry removed in 1.21, true cross mod tier ordering is no longer available. We approximate
+   * ordering using the vanilla Tiers ordinal; unknown tiers sort below all vanilla tiers.
+   */
+  private static int sortKey(Tier tier) {
+    if (tier instanceof Tiers vanilla) {
+      return vanilla.ordinal();
+    }
+    return -1;
+  }
+
   /** Makes a translation key for the given name */
   private static MutableComponent makeLevelKey(Tier tier) {
-    String key = Util.makeTranslationKey("harvest_tier", TierSortingRegistry.getName(tier));
+    String key = Util.makeTranslationKey("harvest_tier", tierId(tier));
     TextColor color = ResourceColorManager.getTextColor(key);
     return TConstruct.makeTranslation("stat", key).withStyle(style -> style.withColor(color));
   }
@@ -43,9 +69,8 @@ public class HarvestTiers {
 
   /** Gets the larger of two tiers */
   public static Tier max(Tier a, Tier b) {
-    List<Tier> sorted = TierSortingRegistry.getSortedTiers();
-    // note indexOf returns -1 if the tier is missing, so the larger of an unsorted tier and a sorted one is the sorted one
-    if (sorted.indexOf(b) > sorted.indexOf(a)) {
+    // note an unknown tier sorts below vanilla tiers, so the larger of an unknown tier and a vanilla one is the vanilla one
+    if (sortKey(b) > sortKey(a)) {
       return b;
     }
     return a;
@@ -53,21 +78,16 @@ public class HarvestTiers {
 
   /** Gets the smaller of two tiers */
   public static Tier min(Tier a, Tier b) {
-    List<Tier> sorted = TierSortingRegistry.getSortedTiers();
-    // note indexOf returns -1 if the tier is missing, so the smaller of an unsorted tier and a sorted one is the unsorted one
-    if (sorted.indexOf(b) < sorted.indexOf(a)) {
+    // note an unknown tier sorts below vanilla tiers, so the smaller of an unknown tier and a vanilla one is the unknown one
+    if (sortKey(b) < sortKey(a)) {
       return b;
     }
     return a;
   }
 
-  /** Gets the smallest tier in the sorting registry */
+  /** Gets the smallest tier */
   public static Tier minTier() {
-    List<Tier> sortedTiers = TierSortingRegistry.getSortedTiers();
-    if (sortedTiers.isEmpty()) {
-      TConstruct.LOG.error("No sorted tiers exist, this should not happen");
-      return Tiers.WOOD;
-    }
-    return sortedTiers.get(0);
+    // TODO(neoport): TierSortingRegistry removed in 1.21, the registry sorted list is gone so we default to the lowest vanilla tier
+    return Tiers.WOOD;
   }
 }

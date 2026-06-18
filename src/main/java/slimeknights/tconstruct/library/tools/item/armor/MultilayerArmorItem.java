@@ -27,20 +27,20 @@ public class MultilayerArmorItem extends ModifiableArmorItem {
     this.name = name;
   }
 
-  @SuppressWarnings("removal")
-  public MultilayerArmorItem(ArmorMaterial material, ArmorItem.Type slot, Properties properties, ToolDefinition toolDefinition) {
-    this(material, slot, properties, toolDefinition, new ResourceLocation(material.getName()));
+  public MultilayerArmorItem(DummyArmorMaterial material, ArmorItem.Type slot, Properties properties, ToolDefinition toolDefinition) {
+    this(material, slot, properties, toolDefinition, material.getId());
   }
 
-  public MultilayerArmorItem(ArmorMaterial material, ArmorItem.Type slot, Properties properties, ToolDefinition toolDefinition, ResourceLocation name) {
+  public MultilayerArmorItem(DummyArmorMaterial material, ArmorItem.Type slot, Properties properties, ToolDefinition toolDefinition, ResourceLocation name) {
     super(material, slot, properties, toolDefinition);
     this.name = name;
   }
 
   @Nullable
   @Override
-  public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-    return ArmorUtil.getDummyArmorTexture(slot);
+  public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+    // bypasses vanilla's missing-texture errors; our own model dispatcher handles the real rendering
+    return ResourceLocation.parse(ArmorUtil.getDummyArmorTexture(slot));
   }
 
   @Override

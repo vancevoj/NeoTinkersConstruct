@@ -11,12 +11,23 @@ import java.util.function.BiFunction;
  * @see IdParser
  */
 public abstract class ResourceId extends ResourceLocation {
+  /**
+   * Marker type replacing the vanilla {@code ResourceLocation.Dummy} that backed the validation-skipping constructor in
+   * 1.20. In 1.21 {@link ResourceLocation} is a final class with a single private {@code (String, String)} constructor;
+   * that constructor is widened to public via the access transformer and {@link ResourceLocation} is de-finalized so we
+   * may still subclass it. Subclasses inherit this marker and keep their {@code (String, String, Dummy)} constructors
+   * unchanged.
+   */
+  protected static final class Dummy {
+    private Dummy() {}
+  }
+
   protected ResourceId(String namespace, String path, @Nullable Dummy pDummy) {
-    super(namespace, path, pDummy);
+    super(namespace, path);
   }
 
   public ResourceId(ResourceLocation location) {
-    this(location.getNamespace(), location.getPath(), null);
+    super(location.getNamespace(), location.getPath());
   }
 
   public ResourceId(String namespace, String path) {
@@ -24,7 +35,7 @@ public abstract class ResourceId extends ResourceLocation {
   }
 
   public ResourceId(String location) {
-    super(location);
+    this(parse(location));
   }
 
 
@@ -37,7 +48,7 @@ public abstract class ResourceId extends ResourceLocation {
    */
   @Nullable
   protected static <T extends ResourceLocation> T tryParse(String string, BiFunction<String,String,T> constructor) {
-    String[] parts = decompose(string, ':');
+    String[] parts = IdParser.decompose(DEFAULT_NAMESPACE, string, ':');
     return tryBuild(parts[0], parts[1], constructor);
   }
 

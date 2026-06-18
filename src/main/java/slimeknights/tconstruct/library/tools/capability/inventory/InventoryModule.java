@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -145,7 +148,7 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
       for (int i = 0; i < list.size(); i++) {
         CompoundTag compound = list.getCompound(i);
         if (compound.getInt(TAG_SLOT) == slot) {
-          return ItemStack.of(compound);
+          return readStack(compound);
         }
       }
     }
@@ -259,6 +262,25 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
   /* Helpers */
 
   /**
+   * Registry lookup used to (de)serialize stored item stacks. Tool inventories store stacks in the tool's persistent data
+   * compound without a level reference, so we serialize against the static built-in registries. Initialized lazily.
+   */
+  private static HolderLookup.Provider itemLookup;
+
+  /** Gets the registry lookup used to serialize stored stacks */
+  private static HolderLookup.Provider itemLookup() {
+    if (itemLookup == null) {
+      itemLookup = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
+    }
+    return itemLookup;
+  }
+
+  /** Reads a stack from the given compound, the inverse of {@link #writeStack(ItemStack, int, CompoundTag)} */
+  static ItemStack readStack(CompoundTag compound) {
+    return ItemStack.parseOptional(itemLookup(), compound);
+  }
+
+  /**
    * Writes a stack to NBT, including the slot
    * @param stack  Stack to write
    * @param slot   Target slot
@@ -266,7 +288,8 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
    * @return Tag written to, same as {@code compound}.
    */
   public static CompoundTag writeStack(ItemStack stack, int slot, CompoundTag compound) {
-    stack.save(compound);
+    // save encodes the stack into the passed compound (non-empty guaranteed by callers) and returns it
+    stack.save(itemLookup(), compound);
     compound.putInt(TAG_SLOT, slot);
     return compound;
   }
@@ -286,7 +309,7 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
           // slot must be valid
           int slot = compound.getInt(TAG_SLOT);
           if (slot < max) {
-            ItemStack stack = ItemStack.of(compound);
+            ItemStack stack = readStack(compound);
             if (!stack.isEmpty() && predicate.test(stack)) {
               return new StackMatch(stack, slot);
             }
@@ -314,7 +337,7 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
           // slot must be valid
           int slot = compound.getInt(TAG_SLOT);
           if (slot < max) {
-            parsed[slot] = ItemStack.of(compound);
+            parsed[slot] = readStack(compound);
           }
         }
         // add stacks into the list

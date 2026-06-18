@@ -110,7 +110,7 @@ public class MaterialIdNBT {
    * @return  MaterialNBT instance
    */
   public static MaterialIdNBT from(ItemStack stack) {
-    CompoundTag nbt = stack.getTag();
+    CompoundTag nbt = ToolDataComponents.getTag(stack);
     if (nbt != null) {
       return readFromNBT(nbt.getList(ToolStack.TAG_MATERIALS, Tag.TAG_STRING));
     }
@@ -119,8 +119,7 @@ public class MaterialIdNBT {
 
   /** Writes this material list to the given stack */
   public ItemStack updateStack(ItemStack stack) {
-    stack.getOrCreateTag().put(ToolStack.TAG_MATERIALS, serializeToNBT());
-    return stack;
+    return ToolDataComponents.update(stack, tag -> tag.put(ToolStack.TAG_MATERIALS, serializeToNBT()));
   }
 
   /** Writes this material list to the given stack */

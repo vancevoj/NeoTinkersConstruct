@@ -2,30 +2,27 @@ package slimeknights.tconstruct.library.tools.capability;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
-import net.neoforged.neoforge.common.capabilities.ICapabilitySerializable;
-import net.neoforged.neoforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.event.AttachCapabilitiesEvent;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.tools.nbt.ModifierNBT;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-/** Capability to allow an entity to store modifiers, used on projectiles fired from modifiable items */
+/**
+ * Capability to allow an entity to store modifiers, used on projectiles fired from modifiable items.
+ * <p>
+ * In NeoForge 1.21 this is backed by a serialized {@link AttachmentType data attachment} replacing the old Forge capability.
+ */
 public class EntityModifierCapability {
   /** Default instance to use with orElse */
   public static final EntityModifiers EMPTY = new EntityModifiers() {
@@ -48,19 +45,26 @@ public class EntityModifierCapability {
   /** List of predicates to check if the entity supports this capability */
   private static final List<Predicate<Entity>> ENTITY_PREDICATES = new ArrayList<>();
 
-  /** Capability ID */
-  private static final ResourceLocation ID = TConstruct.getResource("modifiers");
-  /** Capability type */
-  public static final Capability<EntityModifiers> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {});
+  /** Deferred register for the attachment type. Must be registered on the mod bus during construction via {@link #register(IEventBus)}. */
+  private static final DeferredRegister<AttachmentType<?>> ATTACHMENTS = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, TConstruct.MOD_ID);
+
+  /** Attachment holding the entity modifiers. Serialized so projectiles keep their modifiers across save/load. */
+  public static final DeferredHolder<AttachmentType<?>, AttachmentType<Storage>> ATTACHMENT =
+    ATTACHMENTS.register("modifiers", () -> AttachmentType.serializable(Storage::new).build());
 
   /** Gets the capability for the entity or an empty instance if missing */
   public static EntityModifiers getCapability(Entity entity) {
-    return entity.getCapability(CAPABILITY).orElse(EMPTY);
+    // only create the attachment for supported entities, returning the read-only empty instance otherwise to preserve old behavior
+    if (entity.hasData(ATTACHMENT) || supportCapability(entity)) {
+      return entity.getData(ATTACHMENT);
+    }
+    return EMPTY;
   }
 
   /** Gets the data or an empty instance if missing */
   public static ModifierNBT getOrEmpty(Entity entity) {
-    return entity.getCapability(CAPABILITY).orElse(EMPTY).getModifiers();
+    Storage storage = entity.getExistingDataOrNull(ATTACHMENT);
+    return storage != null ? storage.getModifiers() : ModifierNBT.EMPTY;
   }
 
   /** Checks if the given entity supports this capability */
@@ -78,52 +82,24 @@ public class EntityModifierCapability {
     ENTITY_PREDICATES.add(predicate);
   }
 
-  /** Registers this capability with relevant busses*/
-  public static void register() {
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.NORMAL, false, RegisterCapabilitiesEvent.class, event -> event.register(ModifierNBT.class));
-    NeoForge.EVENT_BUS.addGenericListener(Entity.class, EntityModifierCapability::attachCapability);
+  /** Registers the attachment type with the mod event bus. Call during mod construction. */
+  public static void register(IEventBus bus) {
+    ATTACHMENTS.register(bus);
   }
 
-  /** Event listener to attach the capability */
-  private static void attachCapability(AttachCapabilitiesEvent<Entity> event) {
-    if (supportCapability(event.getObject())) {
-      Provider provider = new Provider();
-      event.addCapability(ID, provider);
-      event.addListener(provider);
-    }
-  }
-
-  /** Capability provider instance */
-  private static class Provider implements ICapabilitySerializable<ListTag>, Runnable, EntityModifiers {
+  /** Mutable storage backing the attachment, serialized via the modifier NBT list. */
+  public static class Storage implements INBTSerializable<ListTag>, EntityModifiers {
     @Getter @Setter
     private ModifierNBT modifiers = ModifierNBT.EMPTY;
-    private LazyOptional<EntityModifiers> capability;
-    private Provider() {
-      this.capability = LazyOptional.of(() -> this);
-    }
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-      return CAPABILITY.orEmpty(cap, capability);
-    }
 
     @Override
-    public void run() {
-      // called when capabilities invalidate, create a new cap just in case they are revived later
-      capability.invalidate();
-      capability = LazyOptional.of(() -> this);
-    }
-
-    @Override
-    public ListTag serializeNBT() {
+    public ListTag serializeNBT(HolderLookup.Provider provider) {
       return modifiers.serializeToNBT();
     }
 
     @Override
-    public void deserializeNBT(ListTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider provider, ListTag nbt) {
       modifiers = ModifierNBT.readFromNBT(nbt);
-      run();
     }
   }
 

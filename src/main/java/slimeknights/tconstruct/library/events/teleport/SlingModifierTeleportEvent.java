@@ -2,12 +2,10 @@ package slimeknights.tconstruct.library.events.teleport;
 
 import lombok.Getter;
 import net.minecraft.world.entity.Entity;
-import net.neoforged.bus.api.Cancelable;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 
 /** Event fired when an entity teleports using the ender sling modifier */
-@Cancelable
 @Getter
 public class SlingModifierTeleportEvent extends ModifierTeleportEvent {
   private final IToolStackView tool;

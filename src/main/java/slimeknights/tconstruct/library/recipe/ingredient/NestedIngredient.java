@@ -1,18 +1,20 @@
 package slimeknights.tconstruct.library.recipe.ingredient;
 
-import it.unimi.dsi.fastutil.ints.IntList;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.neoforge.common.crafting.AbstractIngredient;
+import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 /** Ingredient that contains another ingredient nested inside */
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class NestedIngredient extends AbstractIngredient {
+public abstract class NestedIngredient implements ICustomIngredient {
   protected final Ingredient nested;
+
+  protected NestedIngredient(Ingredient nested) {
+    this.nested = nested;
+  }
 
 
   /* Defer to nested */
@@ -23,24 +25,8 @@ public abstract class NestedIngredient extends AbstractIngredient {
   }
 
   @Override
-  public ItemStack[] getItems() {
-    return nested.getItems();
-  }
-
-  @Override
-  public IntList getStackingIds() {
-    return nested.getStackingIds();
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return nested.isEmpty();
-  }
-
-  @Override
-  protected void invalidate() {
-    super.invalidate();
-    nested.checkInvalidation();
+  public Stream<ItemStack> getItems() {
+    return Arrays.stream(nested.getItems());
   }
 
   @Override

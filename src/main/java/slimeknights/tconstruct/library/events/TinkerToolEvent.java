@@ -1,7 +1,7 @@
 package slimeknights.tconstruct.library.events;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -19,20 +19,36 @@ import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 
 import javax.annotation.Nullable;
 
-@AllArgsConstructor
 @Getter
 public abstract class TinkerToolEvent extends Event {
   private final ItemStack stack;
   private final IToolStackView tool;
+  /**
+   * Result of the event, replacing the removed NeoForge event result.
+   * ALLOW means a listener handled the action, DENY means the action cannot be performed, DEFAULT means pass to vanilla logic.
+   */
+  @Setter
+  private Result result = Result.DEFAULT;
+  public TinkerToolEvent(ItemStack stack, IToolStackView tool) {
+    this.stack = stack;
+    this.tool = tool;
+  }
   public TinkerToolEvent(ItemStack stack) {
     this.stack = stack;
     this.tool = ToolStack.from(stack);
   }
 
   /**
+   * Result of a tinker tool event.
+   * ALLOW means a listener handled the action, DENY means the action cannot be performed, DEFAULT means pass to vanilla logic.
+   */
+  public enum Result {
+    ALLOW, DEFAULT, DENY
+  }
+
+  /**
    * Event fired when a kama tries to harvest a crop. Set result to {@link Result#ALLOW} if you handled the harvest yourself. Set the result to {@link Result#DENY} if the block cannot be harvested.
    */
-  @HasResult
   @Getter
   public static class ToolHarvestEvent extends TinkerToolEvent {
     /** Item context, note this is the original context, so some information (such as position) may not be accurate */
@@ -84,7 +100,6 @@ public abstract class TinkerToolEvent extends Event {
   /**
    * Event fired when a kama or scythe tries to shear an entity
    */
-  @HasResult
   @Getter
   public static class ToolShearEvent extends TinkerToolEvent {
     private final Level world;

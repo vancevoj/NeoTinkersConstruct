@@ -9,7 +9,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.LeftClickBlock.Action;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.bus.api.EventPriority;
 
 import java.util.HashMap;
@@ -50,8 +50,11 @@ public class BlockSideHitListener {
   }
 
   /** Called on block break to store the last break XP */
-  private static void breakBlock(BlockEvent.BreakEvent event) {
-    LAST_XP.put(event.getPlayer().getUUID(), event.getExpToDrop());
+  private static void breakBlock(BlockDropsEvent event) {
+    // BlockEvent.BreakEvent no longer carries the experience to drop; BlockDropsEvent now exposes the post-enchantment value
+    if (event.getBreaker() instanceof Player player) {
+      LAST_XP.put(player.getUUID(), event.getDroppedExperience());
+    }
   }
 
   /** Called when a player leaves the server to clear the face */

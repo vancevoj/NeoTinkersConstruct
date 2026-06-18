@@ -143,7 +143,7 @@ public class TankModule implements HookProvider, FluidModifierHook, VolatileData
       FluidStack current = helper.getFluid(tool);
       if (!current.isEmpty() && current.isFluidEqual(resource)) {
         // create the drained stack
-        FluidStack drained = new FluidStack(current, Math.min(current.getAmount(), resource.getAmount()));
+        FluidStack drained = current.copyWithAmount(Math.min(current.getAmount(), resource.getAmount()));
         // if executing, removing it
         if (action.execute()) {
           if (drained.getAmount() == current.getAmount()) {
@@ -167,7 +167,7 @@ public class TankModule implements HookProvider, FluidModifierHook, VolatileData
       FluidStack current = helper.getFluid(tool);
       if (!current.isEmpty()) {
         // create the drained stack
-        FluidStack drained = new FluidStack(current, Math.min(current.getAmount(), maxDrain));
+        FluidStack drained = current.copyWithAmount(Math.min(current.getAmount(), maxDrain));
         // if executing, removing it
         if (action.execute()) {
           if (drained.getAmount() == current.getAmount()) {

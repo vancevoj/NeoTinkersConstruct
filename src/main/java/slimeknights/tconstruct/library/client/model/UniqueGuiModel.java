@@ -38,10 +38,10 @@ public class UniqueGuiModel implements IUnbakedGeometry<UniqueGuiModel> {
   }
 
   @Override
-  public BakedModel bake(IGeometryBakingContext owner, ModelBaker baker, Function<Material,TextureAtlasSprite> spriteGetter, ModelState transform, ItemOverrides overrides, ResourceLocation location) {
+  public BakedModel bake(IGeometryBakingContext owner, ModelBaker baker, Function<Material,TextureAtlasSprite> spriteGetter, ModelState transform, ItemOverrides overrides) {
     return new Baked(
-      model.bake(owner, baker, spriteGetter, transform, overrides, location),
-      gui.bake(owner, baker, spriteGetter, transform, overrides, location)
+      model.bake(owner, baker, spriteGetter, transform, overrides),
+      gui.bake(owner, baker, spriteGetter, transform, overrides)
     );
   }
 

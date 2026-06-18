@@ -2,7 +2,7 @@ package slimeknights.tconstruct.library.json.variable.mining;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.common.crafting.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.BreakSpeed;
 import slimeknights.mantle.data.loadable.mapping.ConditionalLoadable.ConditionalObject;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;

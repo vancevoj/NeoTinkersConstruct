@@ -4,47 +4,42 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.EquipmentSlot.Type;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.common.ToolAction;
-import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.common.ItemAbility;
 import slimeknights.mantle.client.SafeClientAccess;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.client.item.ModifiableItemClientExtension;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.hook.behavior.AttributesModifierHook;
-import slimeknights.tconstruct.library.modifiers.hook.behavior.EnchantmentModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.display.DurabilityDisplayModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.EntityInteractionModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.InventoryTickModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.SlotStackModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.UsingToolModifierHook;
-import slimeknights.tconstruct.library.modifiers.modules.build.RarityModule;
 import slimeknights.tconstruct.library.tools.IndestructibleItemEntity;
-import slimeknights.tconstruct.library.tools.capability.ToolCapabilityProvider;
 import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
 import slimeknights.tconstruct.library.tools.definition.module.display.ToolNameHook;
 import slimeknights.tconstruct.library.tools.definition.module.mining.IsEffectiveToolHook;
@@ -63,7 +58,6 @@ import slimeknights.tconstruct.tools.TinkerToolActions;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 import static slimeknights.tconstruct.library.modifiers.hook.interaction.GeneralInteractionModifierHook.KEY_DRAWTIME;
@@ -112,38 +106,15 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
   }
 
   @Override
-  public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-    return enchantment.isCurse() && super.canApplyAtEnchantingTable(stack, enchantment);
-  }
-
-  @Override
-  public int getEnchantmentValue() {
+  public int getEnchantmentValue(ItemStack stack) {
     return 0;
   }
-
-  @Override
-  public int getEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
-    return EnchantmentModifierHook.getEnchantmentLevel(stack, enchantment);
-  }
-
-  @Override
-  public Map<Enchantment,Integer> getAllEnchantments(ItemStack stack) {
-    return EnchantmentModifierHook.getAllEnchantments(stack);
-  }
+  // TODO(neoport): enchantment-modifier integration (getEnchantmentLevel/getAllEnchantments/curse-only enchanting)
+  //  moved to the ItemEnchantments data component in 1.21; EnchantmentModifierHook (library/modifiers) owns the new
+  //  wiring once ported. Removed the dead Item-level overrides that no longer exist in the vanilla/NeoForge API.
 
 
   /* Loading */
-
-  @Nullable
-  @Override
-  public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-    return new ToolCapabilityProvider(stack);
-  }
-
-  @Override
-  public void verifyTagAfterLoad(CompoundTag nbt) {
-    ToolStack.verifyTag(this, nbt, getToolDefinition());
-  }
 
   @Override
   public void onCraftedBy(ItemStack stack, Level worldIn, Player playerIn) {
@@ -159,11 +130,8 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
     // however, if a modifier wants to glow let them
     return ModifierUtil.checkVolatileFlag(stack, SHINY);
   }
-
-  @Override
-  public Rarity getRarity(ItemStack stack) {
-    return RarityModule.getRarity(stack);
-  }
+  // TODO(neoport): dynamic rarity (RarityModule.getRarity) now lives in the RARITY data component (getRarity override
+  //  removed in 1.21); applied at tool build time. Owned by the build pipeline.
 
 
   /* Indestructible items */
@@ -189,33 +157,26 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
   }
 
   @Override
-  public boolean canBeDepleted() {
-    return true;
-  }
-
-  @Override
   public int getMaxDamage(ItemStack stack) {
     return ToolDamageUtil.getFakeMaxDamage(stack);
   }
 
   @Override
   public int getDamage(ItemStack stack) {
-    if (!canBeDepleted()) {
-      return 0;
-    }
     return ToolStack.from(stack).getDamage();
   }
 
   @Override
   public void setDamage(ItemStack stack, int damage) {
-    if (canBeDepleted()) {
-      ToolStack.from(stack).setDamage(damage);
-    }
+    ToolStack.from(stack).setDamage(damage);
   }
 
   @Override
-  public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T damager, Consumer<T> onBroken) {
-    ToolDamageUtil.handleDamageItem(stack, amount, damager, onBroken);
+  public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T damager, Consumer<Item> onBroken) {
+    // emulate ItemStack.hurtAndBreak; we always return 0 to skip vanilla's handling so tools use our damage logic
+    if (stack.isDamageableItem() && ToolDamageUtil.damage(ToolStack.from(stack), amount, damager, stack)) {
+      onBroken.accept(stack.getItem());
+    }
     return 0;
   }
 
@@ -264,8 +225,8 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
   }
 
   @Override
-  public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
-    return ModifierUtil.canPerformAction(ToolStack.from(stack), toolAction);
+  public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
+    return ModifierUtil.canPerformAction(ToolStack.from(stack), itemAbility);
   }
 
   @Override
@@ -274,12 +235,8 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
   }
 
   @Override
-  public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-    CompoundTag nbt = stack.getTag();
-    if (nbt == null || slot.getType() != Type.HAND) {
-      return ImmutableMultimap.of();
-    }
-    return getAttributeModifiers(ToolStack.from(stack), slot);
+  public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
+    return buildAttributeModifiers(stack, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND);
   }
 
   @Override
@@ -287,11 +244,18 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
     return canPerformAction(stack, TinkerToolActions.SHIELD_DISABLE);
   }
 
+  /**
+   * Vanilla's mob-firing entry point. Tinkers' launchers fire entirely through {@link #use}/{@link #releaseUsing}, so
+   * this is never invoked; implemented as a no-op to satisfy the abstract {@link ProjectileWeaponItem} contract.
+   */
+  @Override
+  protected void shootProjectile(LivingEntity shooter, Projectile projectile, int index, float velocity, float inaccuracy, float angle, @Nullable LivingEntity target) {}
+
 
   /* Arrow logic */
 
   @Override
-  public int getUseDuration(ItemStack pStack) {
+  public int getUseDuration(ItemStack stack, LivingEntity entity) {
     return 72000;
   }
 
@@ -301,7 +265,7 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
   @Override
   public ItemStack finishUsingItem(ItemStack stack, Level pLevel, LivingEntity living) {
     ToolStack tool = ToolStack.from(stack);
-    int duration = getUseDuration(stack);
+    int duration = getUseDuration(stack, living);
     for (ModifierEntry entry : tool.getModifiers()) {
       entry.getHook(ModifierHooks.TOOL_USING).beforeReleaseUsing(tool, entry, living, duration, 0, ModifierEntry.EMPTY);
     }
@@ -324,7 +288,7 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
   @Override
   public void onUseTick(Level level, LivingEntity living, ItemStack bow, int chargeRemaining) {
     // play the sound at the end of loading as an indicator its loaded, texture is another indicator
-    int duration = getUseDuration(bow);
+    int duration = getUseDuration(bow, living);
     if (!level.isClientSide) {
       if (duration - chargeRemaining == ModifierUtil.getPersistentInt(bow, KEY_DRAWTIME, -1)) {
         level.playSound(null, living.getX(), living.getY(), living.getZ(), SoundEvents.CROSSBOW_LOADING_MIDDLE, SoundSource.PLAYERS, 0.75F, 1.0F);
@@ -345,14 +309,10 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
   }
 
   @Override
-  public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-    TooltipUtil.addInformation(this, stack, level, tooltip, SafeClientAccess.getTooltipKey(), flag);
+  public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+    TooltipUtil.addInformation(this, stack, context.level(), tooltip, SafeClientAccess.getTooltipKey(), flag);
   }
-
-  @Override
-  public int getDefaultTooltipHideFlags(ItemStack stack) {
-    return TooltipUtil.getModifierHideFlags(getToolDefinition());
-  }
+  // TODO(neoport): getDefaultTooltipHideFlags removed in 1.21; tooltip visibility is now per-component (showInTooltip).
 
 
   /* Display */
@@ -400,11 +360,9 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
   public float getDestroySpeed(ItemStack stack, BlockState state) {
     return MiningSpeedToolHook.getDestroySpeed(stack, state);
   }
-
-  @Override
-  public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, Player player) {
-    return ToolHarvestLogic.handleBlockBreak(stack, pos, player);
-  }
+  // TODO(neoport): Item#onBlockStartBreak was removed in NeoForge 1.21; AoE/expanded block breaking
+  //  (ToolHarvestLogic.handleBlockBreak) must be re-wired through a game-bus event handler (BlockEvent.BreakEvent)
+  //  in the events/harvest package. Removed the dead override here.
 
 
   /* Multishot helper */

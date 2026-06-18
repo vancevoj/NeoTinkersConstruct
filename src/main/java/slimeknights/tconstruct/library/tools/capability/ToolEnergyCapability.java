@@ -2,9 +2,8 @@ package slimeknights.tconstruct.library.tools.capability;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.modules.ModifierModule;
@@ -15,6 +14,7 @@ import slimeknights.tconstruct.library.tools.stat.CapacityStat;
 import slimeknights.tconstruct.library.tools.stat.ToolStatId;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 /** Standard implementation of energy capability on a tool. Not currently used in the mod directly, but should help addons have more unity. */
@@ -126,19 +126,21 @@ public record ToolEnergyCapability(Supplier<? extends IToolStackView> tool) impl
     return true;
   }
 
-  /** Provider instance for a fluid cap */
+  /** Provider instance for an energy cap */
   public static class Provider implements IToolCapabilityProvider {
-    private final LazyOptional<IEnergyStorage> energyCap;
+    private final IEnergyStorage energyCap;
     public Provider(Supplier<? extends IToolStackView> toolStack) {
-      this.energyCap = LazyOptional.of(() -> new ToolEnergyCapability(toolStack));
+      this.energyCap = new ToolEnergyCapability(toolStack);
     }
 
+    @SuppressWarnings("unchecked")
+    @Nullable
     @Override
-    public <T> LazyOptional<T> getCapability(IToolStackView tool, Capability<T> cap) {
-      if (cap == ForgeCapabilities.ENERGY && tool.getStats().getInt(MAX_STAT) > 0) {
-        return energyCap.cast();
+    public <T> T getCapability(IToolStackView tool, ItemCapability<T, ?> cap) {
+      if (cap == Capabilities.EnergyStorage.ITEM && tool.getStats().getInt(MAX_STAT) > 0) {
+        return (T) energyCap;
       }
-      return LazyOptional.empty();
+      return null;
     }
   }
 }

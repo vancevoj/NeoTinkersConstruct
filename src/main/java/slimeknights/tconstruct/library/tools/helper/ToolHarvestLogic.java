@@ -20,8 +20,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.ForgeHooks;
-import net.neoforged.neoforge.common.ToolActions;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.network.TinkerNetwork;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
@@ -67,7 +68,7 @@ public class ToolHarvestLogic {
   public static int getDamage(IToolStackView tool, Level world, BlockPos pos, BlockState state) {
     if (state.getDestroySpeed(world, pos) == 0 || !tool.hasTag(TinkerTags.Items.HARVEST)) {
       // tools that can shear take damage from instant break for non-fire
-      return (!state.is(BlockTags.FIRE) && ModifierUtil.canPerformAction(tool, ToolActions.SHEARS_DIG)) ? 1 : 0;
+      return (!state.is(BlockTags.FIRE) && ModifierUtil.canPerformAction(tool, ItemAbilities.SHEARS_DIG)) ? 1 : 0;
     }
     // if it lacks the harvest tag, it takes double damage (swords for instance)
     return tool.hasTag(TinkerTags.Items.HARVEST_PRIMARY) ? 1 : 2;
@@ -129,12 +130,24 @@ public class ToolHarvestLogic {
     ServerLevel world = context.getWorld();
     BlockPos pos = context.getPos();
     GameType type = player.gameMode.getGameModeForPlayer();
-    int exp = useLastXP ? BlockSideHitListener.getLastXP(player) : ForgeHooks.onBlockBreakEvent(world, type, player, pos);
-    if (exp == -1) {
-      return false;
+    BlockState state = context.getState();
+    // 1.21: BlockEvent.BreakEvent no longer carries the experience to drop (ForgeHooks.onBlockBreakEvent is gone), so we
+    // fire it only for its veto and recompute the experience from the block. TODO(neoport): experience boosting that used
+    // to run via BreakEvent#setExpToDrop (ModifierEvents#beforeBlockBreak, experienced modifier) does not apply on this path.
+    int exp;
+    if (useLastXP) {
+      exp = BlockSideHitListener.getLastXP(player);
+      if (exp == -1) {
+        return false;
+      }
+    } else {
+      BlockEvent.BreakEvent breakEvent = CommonHooks.fireBlockBreak(world, type, player, pos, state);
+      if (breakEvent.isCanceled()) {
+        return false;
+      }
+      exp = state.getExpDrop(world, pos, world.getBlockEntity(pos), player, stack);
     }
-    // checked after the Forge hook, so we have to recheck
-    // TODO: is this needed? Seems its called inside ForgeHooks.onBlockBreakEvent
+    // checked after the break event, so we have to recheck
     if (player.blockActionRestricted(world, pos, type)) {
       return false;
     }
@@ -146,7 +159,6 @@ public class ToolHarvestLogic {
     }
 
     // determine damage to do
-    BlockState state = context.getState();
     int damage = getDamage(tool, world, pos, state);
 
     // remove the block

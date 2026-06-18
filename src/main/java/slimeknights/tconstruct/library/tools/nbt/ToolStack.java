@@ -85,6 +85,13 @@ public class ToolStack implements IToolStackView {
   /** Original tool NBT */
   @Getter(AccessLevel.PROTECTED)
   private CompoundTag nbt;
+  /**
+   * Item stack backing this tool, if any. When set, all NBT mutations are written back to this stack's
+   * {@link ToolDataComponents#TOOL_DATA} component, replacing the legacy behavior of sharing the item's NBT tag.
+   * Null for tool stacks created from raw item+definition+NBT (e.g. during stat rebuild from {@link #verifyTag}).
+   */
+  @Nullable
+  private ItemStack stack;
   /** Public view of the internal NBT, to give to modifier hooks */
   private RestrictedCompoundTag restrictedNBT;
 
@@ -127,6 +134,13 @@ public class ToolStack implements IToolStackView {
     this.nbt = nbt;
   }
 
+  /** Writes the current NBT back to the backing item stack's data component, if a backing stack is present */
+  private void syncToStack() {
+    if (stack != null) {
+      ToolDataComponents.setTag(stack, nbt);
+    }
+  }
+
 
   /**
    * Creates a new tool stack from item and NBT
@@ -150,15 +164,17 @@ public class ToolStack implements IToolStackView {
     ToolDefinition definition = item instanceof IModifiable mod
                                 ? mod.getToolDefinition()
                                 : ToolDefinition.EMPTY;
-    CompoundTag nbt = stack.getTag();
+    // in 1.21 tool data lives in the TOOL_DATA data component rather than the item NBT tag
+    CompoundTag nbt = ToolDataComponents.getTag(stack);
+    ToolStack tool;
     if (nbt == null) {
       nbt = new CompoundTag();
       if (!copyNbt) {
         // only a wrongly made tool will have an empty definition. check preferred to a tag check as tags may not be loaded when this is first called
         if (definition != ToolDefinition.EMPTY) {
-          // bypass the setter as vanilla insists on setting damage values there, along with verifying the tag
-          // both are things we will do later, doing so now causes us to recursively call this method (though not infinite)
-          stack.tag = nbt;
+          // store the empty compound onto the component so the tool stack and item stack stay in sync
+          // both damage and tag verification are done later, doing so now causes us to recursively call this method (though not infinite)
+          ToolDataComponents.setTag(stack, nbt);
           // no need to set the damage value, if the tool wanted it set the stack would have had a tag already
         } else {
           switch (Config.COMMON.logInvalidToolStack.get()) {
@@ -171,8 +187,16 @@ public class ToolStack implements IToolStackView {
       }
     } else if (copyNbt) {
       nbt = nbt.copy();
+    } else {
+      // mutations should be local to the tool stack, copy out of the component (which is treated as immutable) and write back on change
+      nbt = nbt.copy();
     }
-    return from(item, definition, nbt);
+    tool = from(item, definition, nbt);
+    // a non-copied tool stack writes its mutations back to the source stack, mirroring the legacy shared-tag behavior
+    if (!copyNbt) {
+      tool.stack = stack;
+    }
+    return tool;
   }
 
   /**
@@ -245,20 +269,24 @@ public class ToolStack implements IToolStackView {
   /** Updates the tool stack instance to match the given item stack */
   @Internal
   public void refreshTag(ItemStack stack) {
-    CompoundTag tag = stack.getTag();
+    // read the tool data from the component; copy it out so mutations stay local and write back on change
+    CompoundTag tag = ToolDataComponents.getTag(stack);
     if (tag == null) {
       tag = new CompoundTag();
-      stack.setTag(tag);
+      ToolDataComponents.setTag(stack, tag);
+    } else {
+      tag = tag.copy();
     }
     this.nbt = tag;
+    this.stack = stack;
     clearCache();
   }
 
   /** Creates an item stack from this tool stack */
   public ItemStack createStack(int size) {
     ItemStack stack = new ItemStack(item, size);
-    // set the raw tag to avoid going through verifyTagAfterLoad and rebuilding stats again
-    stack.tag = nbt;
+    // store the tool data onto the component to avoid going through verifyTagAfterLoad and rebuilding stats again
+    ToolDataComponents.setTag(stack, nbt);
     // damage value is already enforced via the stack creation above
     return stack;
   }
@@ -287,17 +315,14 @@ public class ToolStack implements IToolStackView {
     if (stack.getItem() != item) {
       throw new IllegalArgumentException("Wrong item in stack");
     }
-    // set the raw tag to avoid going through verifyTagAfterLoad and rebuilding stats again
+    // store the tool data onto the component to avoid going through verifyTagAfterLoad and rebuilding stats again
     // TODO: is there any reason we copy NBT here? might be worth never copying
-    if (copyNBT) {
-      stack.tag = nbt.copy();
-    } else {
-      stack.tag = nbt;
-    }
+    CompoundTag tag = copyNBT ? nbt.copy() : nbt;
     // ensure the damage value is set on the stack for the sake of stacking, since bypassing the vanilla setter skips that
-    if (!stack.tag.contains(TAG_DAMAGE, Tag.TAG_ANY_NUMERIC) && stack.getItem().isDamageable(stack)) {
-      stack.tag.putInt(TAG_DAMAGE, 0);
+    if (!tag.contains(TAG_DAMAGE, Tag.TAG_ANY_NUMERIC) && stack.getItem().isDamageable(stack)) {
+      tag.putInt(TAG_DAMAGE, 0);
     }
+    ToolDataComponents.setTag(stack, tag);
     return stack;
   }
 
@@ -324,9 +349,9 @@ public class ToolStack implements IToolStackView {
 
   @Override
   public boolean isSameStack(ItemStack stack) {
-    // tool stacks share NBT with their stack instance unless copied so changes are mirrored
-    // item check allows empty as empty stacks change their item to air. This won't false positive with ItemStack#EMPTY as the NBT won't match.
-    return nbt == stack.getTag() && (stack.isEmpty() || stack.getItem() == item);
+    // non-copied tool stacks track their backing stack instance, so changes are mirrored via the data component
+    // item check allows empty as empty stacks change their item to air. This won't false positive with ItemStack#EMPTY as the backing stack won't match.
+    return this.stack == stack && (stack.isEmpty() || stack.getItem() == item);
   }
 
 
@@ -356,6 +381,7 @@ public class ToolStack implements IToolStackView {
   protected void setBrokenRaw(boolean broken) {
     this.broken = broken;
     nbt.putBoolean(TAG_BROKEN, broken);
+    syncToStack();
   }
 
   /**
@@ -419,6 +445,7 @@ public class ToolStack implements IToolStackView {
     }
     this.damage = damage;
     nbt.putInt(TAG_DAMAGE, damage);
+    syncToStack();
   }
 
   /* Stats */
@@ -442,6 +469,7 @@ public class ToolStack implements IToolStackView {
   protected void setStats(StatsNBT stats) {
     this.stats = stats;
     nbt.put(TAG_STATS, stats.serializeToNBT());
+    syncToStack();
     // if we no longer have enough durability, decrease the damage and mark it broken
     int newMax = getStats().getInt(ToolStats.DURABILITY);
     if (getDamageRaw() >= newMax) {
@@ -469,6 +497,7 @@ public class ToolStack implements IToolStackView {
       this.multipliers = multipliers;
       nbt.put(TAG_MULTIPLIERS, multipliers.serializeToNBT());
     }
+    syncToStack();
   }
 
 
@@ -496,6 +525,7 @@ public class ToolStack implements IToolStackView {
     } else {
       this.nbt.put(TAG_MATERIALS, materials.serializeToNBT());
     }
+    syncToStack();
   }
 
   /**
@@ -550,6 +580,7 @@ public class ToolStack implements IToolStackView {
   public void setUpgrades(ModifierNBT modifiers) {
     this.upgrades = modifiers;
     nbt.put(TAG_UPGRADES, modifiers.serializeToNBT());
+    syncToStack();
     rebuildStats();
   }
 
@@ -592,6 +623,7 @@ public class ToolStack implements IToolStackView {
     ModifierNBT newModifiers = getUpgrades().withoutModifier(modifier, level);
     this.upgrades = newModifiers;
     nbt.put(TAG_UPGRADES, newModifiers.serializeToNBT());
+    syncToStack();
     rebuildStats();
   }
 
@@ -610,6 +642,7 @@ public class ToolStack implements IToolStackView {
   protected void setModifiers(ModifierNBT modifiers) {
     this.modifiers = modifiers;
     nbt.put(TAG_MODIFIERS, this.modifiers.serializeToNBT());
+    syncToStack();
   }
 
 
@@ -620,12 +653,13 @@ public class ToolStack implements IToolStackView {
     if (persistentModData == null) {
       // parse if the tag already exists
       if (nbt.contains(TAG_PERSISTENT_MOD_DATA, Tag.TAG_COMPOUND)) {
-        persistentModData = ToolDataNBT.readFromNBT(nbt.getCompound(TAG_PERSISTENT_MOD_DATA));
+        // the returned compound is a live child of nbt, so mutations land on nbt; the dirty callback flushes to the component
+        persistentModData = ToolDataNBT.readFromNBT(nbt.getCompound(TAG_PERSISTENT_MOD_DATA), this::syncToStack);
       } else {
         // if no tag exists, create it
         CompoundTag tag = new CompoundTag();
         nbt.put(TAG_PERSISTENT_MOD_DATA, tag);
-        persistentModData = ToolDataNBT.readFromNBT(tag);
+        persistentModData = ToolDataNBT.readFromNBT(tag, this::syncToStack);
       }
     }
     return persistentModData;
@@ -658,6 +692,7 @@ public class ToolStack implements IToolStackView {
       volatileModData = modData;
       nbt.put(TAG_VOLATILE_MOD_DATA, data);
     }
+    syncToStack();
   }
 
 
@@ -775,6 +810,8 @@ public class ToolStack implements IToolStackView {
     for (ModifierEntry entry : modifierList) {
       entry.getHook(ModifierHooks.RAW_DATA).addRawData(this, entry, getRestrictedNBT());
     }
+    // flush any raw data mutations (which write directly to nbt via the restricted tag) back to the backing stack
+    syncToStack();
   }
 
 
@@ -786,7 +823,7 @@ public class ToolStack implements IToolStackView {
    * @return  True if initialized
    */
   public static boolean isInitialized(ItemStack stack) {
-    CompoundTag tag = stack.getTag();
+    CompoundTag tag = ToolDataComponents.getTag(stack);
     return tag != null && isInitialized(tag);
   }
 
@@ -819,7 +856,7 @@ public class ToolStack implements IToolStackView {
     if (!toolDefinition.isDataLoaded()) {
       return;
     }
-    CompoundTag tag = stack.getTag();
+    CompoundTag tag = ToolDataComponents.getTag(stack);
     // already initialized? nothing to do
     if (tag != null && isInitialized(tag)) {
       return;

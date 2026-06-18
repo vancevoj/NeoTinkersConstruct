@@ -2,6 +2,7 @@ package slimeknights.tconstruct.library.client.model;
 
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -10,8 +11,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbilities;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.GeneralInteractionModifierHook;
 import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
@@ -33,9 +35,9 @@ public class TinkerItemProperties {
   private static final ResourceLocation AMMO_ID = TConstruct.getResource("ammo");
   /** Int declaring ammo type */
   private static final ItemPropertyFunction AMMO = (stack, level, entity, seed) -> {
-    CompoundTag nbt = stack.getTag();
-    if (nbt != null) {
-      CompoundTag persistentData = nbt.getCompound(ToolStack.TAG_PERSISTENT_MOD_DATA);
+    CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
+    if (customData != null) {
+      CompoundTag persistentData = customData.copyTag().getCompound(ToolStack.TAG_PERSISTENT_MOD_DATA);
       if (!persistentData.isEmpty()) {
         CompoundTag ammo = persistentData.getCompound(ModifiableCrossbowItem.KEY_CROSSBOW_AMMO.toString());
         if (!ammo.isEmpty()) {
@@ -75,7 +77,7 @@ public class TinkerItemProperties {
       return 0.0F;
     }
     int drawtime = ModifierUtil.getPersistentInt(stack, GeneralInteractionModifierHook.KEY_DRAWTIME, -1);
-    return drawtime == -1 ? 0 : (float)(stack.getUseDuration() - holder.getUseItemRemainingTicks()) / drawtime;
+    return drawtime == -1 ? 0 : (float)(stack.getUseDuration(holder) - holder.getUseItemRemainingTicks()) / drawtime;
   };
   /** ID for the cast fishing rods */
   private static final ResourceLocation CAST_ID = TConstruct.getResource("cast");
@@ -83,10 +85,10 @@ public class TinkerItemProperties {
   private static final ItemPropertyFunction CAST = (stack, level, holder, seed) -> {
     // must be a fishing rod, and the player must be fishing
     // does player check first since its the fastest, avoids NBT parsing
-    if (holder instanceof Player player && player.fishing != null && stack.canPerformAction(ToolActions.FISHING_ROD_CAST)) {
+    if (holder instanceof Player player && player.fishing != null && stack.canPerformAction(ItemAbilities.FISHING_ROD_CAST)) {
       // must be in a hand, but if both hands have fishing rods, must be the one in the main hand
       ItemStack mainhand = holder.getMainHandItem();
-      if (mainhand == stack || holder.getOffhandItem() == stack && !mainhand.canPerformAction(ToolActions.FISHING_ROD_CAST)) {
+      if (mainhand == stack || holder.getOffhandItem() == stack && !mainhand.canPerformAction(ItemAbilities.FISHING_ROD_CAST)) {
         return 1;
       }
     }

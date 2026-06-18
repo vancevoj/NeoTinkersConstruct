@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.tools.nbt;
 
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.Nullable;
 import slimeknights.tconstruct.library.tools.SlotType;
 
 /**
@@ -8,10 +9,29 @@ import slimeknights.tconstruct.library.tools.SlotType;
  * Typically, slots are only directly modifiable by the tool, though all contexts are free to view them.
  */
 public class ToolDataNBT extends ModDataNBT {
-  public ToolDataNBT() {}
+  /** Callback invoked on mutation so an owning tool stack can flush the change to its data component. May be null. */
+  @Nullable
+  private final Runnable onDirty;
+
+  public ToolDataNBT() {
+    this.onDirty = null;
+  }
 
   protected ToolDataNBT(CompoundTag nbt) {
     super(nbt);
+    this.onDirty = null;
+  }
+
+  protected ToolDataNBT(CompoundTag nbt, @Nullable Runnable onDirty) {
+    super(nbt);
+    this.onDirty = onDirty;
+  }
+
+  @Override
+  protected void markDirty() {
+    if (onDirty != null) {
+      onDirty.run();
+    }
   }
 
   @Override
@@ -30,6 +50,7 @@ public class ToolDataNBT extends ModDataNBT {
     } else {
       getData().putInt(type.getName(), value);
     }
+    markDirty();
   }
 
   /**
@@ -51,5 +72,15 @@ public class ToolDataNBT extends ModDataNBT {
    */
   public static ToolDataNBT readFromNBT(CompoundTag data) {
     return new ToolDataNBT(data);
+  }
+
+  /**
+   * Parses the mod data from NBT, wiring a dirty callback so mutations can be flushed to an owning tool stack's component.
+   * @param data     data compound (a child of the tool's full NBT)
+   * @param onDirty  callback to run after any mutation, or null for standalone data
+   * @return  Parsed mod data
+   */
+  public static ToolDataNBT readFromNBT(CompoundTag data, @Nullable Runnable onDirty) {
+    return new ToolDataNBT(data, onDirty);
   }
 }

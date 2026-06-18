@@ -46,8 +46,9 @@ public record BannerModifierModel(@Nullable ResourceLocation smallPrefix, @Nulla
   public void validate(Function<Material, TextureAtlasSprite> spriteGetter) {
     // since these are dynamically loaded, condition based on the config option
     if (Config.CLIENT.logMissingModifierTextures.get()) {
-      for (ResourceKey<BannerPattern> key : Sheets.SHIELD_MATERIALS.keySet()) {
-        String suffix = MaterialRenderInfo.getSuffix(key.location());
+      // 1.21: Sheets.SHIELD_MATERIALS is keyed by ResourceLocation rather than ResourceKey<BannerPattern>
+      for (ResourceLocation key : Sheets.SHIELD_MATERIALS.keySet()) {
+        String suffix = MaterialRenderInfo.getSuffix(key);
         if (smallPrefix != null) {
           spriteGetter.apply(ModifierModel.blockAtlas(smallPrefix.withSuffix(suffix)));
         }
@@ -77,18 +78,17 @@ public record BannerModifierModel(@Nullable ResourceLocation smallPrefix, @Nulla
           // patterns are stored as short strings for some reason, for consistency we also store as hashes
           // map that back to the pattern
           CompoundTag tag = list.getCompound(i);
-          Holder<BannerPattern> pattern = BannerPattern.byHash(tag.getString(BannerModule.KEY_PATTERN));
           int color = tag.getInt(BannerModule.KEY_COLOR);
-          if (pattern != null) {
-            // why must holders be such a pain?
-            // TODO 1.21: will need to switch from using the ID to using the asset root for the texture
-            pattern.unwrapKey().ifPresent(id -> {
-              TextureAtlasSprite sprite = spriteGetter.apply(ModifierModel.blockAtlas(prefix.withSuffix(MaterialRenderInfo.getSuffix(id.location()))));
-              // skip if sprite is missing - deals with modded patterns that we haven't made textures for
-              if (!MissingTextureAtlasSprite.getLocation().equals(sprite.contents().name())) {
-                quads.add(MantleItemLayerModel.getQuadForGui(color, -1, sprite, transforms, 0));
-              }
-            });
+          // TODO(neoport): BannerPattern.byHash was removed in 1.21; banner patterns are now a registry keyed by
+          // ResourceKey/Holder requiring registry access to resolve the stored hash to a pattern location. Resolve the
+          // pattern (matching BannerModule's storage) and stitch prefix.withSuffix(getSuffix(patternLocation)) to render.
+          ResourceLocation patternLocation = null;
+          if (patternLocation != null) {
+            TextureAtlasSprite sprite = spriteGetter.apply(ModifierModel.blockAtlas(prefix.withSuffix(MaterialRenderInfo.getSuffix(patternLocation))));
+            // skip if sprite is missing - deals with modded patterns that we haven't made textures for
+            if (!MissingTextureAtlasSprite.getLocation().equals(sprite.contents().name())) {
+              quads.add(MantleItemLayerModel.getQuadForGui(color, -1, sprite, transforms, 0));
+            }
           }
         }
         if (!quads.isEmpty()) {

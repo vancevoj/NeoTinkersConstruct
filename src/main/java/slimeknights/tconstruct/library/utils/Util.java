@@ -6,11 +6,11 @@ package slimeknights.tconstruct.library.utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.DyeColor;
@@ -18,8 +18,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.ForgeI18n;
-import net.neoforged.neoforge.common.crafting.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -74,7 +73,7 @@ public class Util {
    * @return  True if it can be translated
    */
   public static boolean canTranslate(String key) {
-    return !ForgeI18n.getPattern(key).equals(key);
+    return Language.getInstance().has(key);
   }
 
   /**
@@ -176,8 +175,8 @@ public class Util {
 
   /** Calculates the given color */
   private static int calcColor(DyeColor color) {
-    float[] diffuse = color.getTextureDiffuseColors();
-    return FastColor.ARGB32.color(255, Math.round(255 * diffuse[0]), Math.round(255 * diffuse[1]), Math.round(255 * diffuse[2]));
+    // getTextureDiffuseColor now returns a packed ARGB int directly; force full alpha to match the previous behavior
+    return 0xFF000000 | color.getTextureDiffuseColor();
   }
 
   /** Array of tints for each dye color */

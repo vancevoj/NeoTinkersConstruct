@@ -4,11 +4,9 @@ import lombok.Getter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
-import net.neoforged.bus.api.Cancelable;
 
 /** @deprecated No longer used. See {@link SlingModifierTeleportEvent} */
 @Deprecated(forRemoval = true)
-@Cancelable
 public class SlimeslingTeleportEvent extends EntityTeleportEvent {
   @Getter
   private final ItemStack sling;

@@ -2,11 +2,18 @@ package slimeknights.tconstruct.tools.network;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
-import net.neoforged.neoforge.network.NetworkEvent.Context;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import slimeknights.mantle.network.packet.ISimplePacket;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
+import slimeknights.tconstruct.TConstruct;
 
 public class EntityMovementChangePacket implements IThreadsafePacket {
+  public static final Type<EntityMovementChangePacket> TYPE = new Type<>(TConstruct.getResource("entity_movement_change"));
+  public static final StreamCodec<RegistryFriendlyByteBuf,EntityMovementChangePacket> STREAM_CODEC = ISimplePacket.codec(EntityMovementChangePacket::new);
+
   private final int entityID;
   private final double x;
   private final double y;

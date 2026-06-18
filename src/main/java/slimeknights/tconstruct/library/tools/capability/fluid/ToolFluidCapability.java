@@ -4,9 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import slimeknights.tconstruct.TConstruct;
@@ -134,7 +133,7 @@ public class ToolFluidCapability extends FluidModifierHookIterator<ModifierEntry
     }
     int size = container.getCount();
     if (size > 1) {
-      resource = new FluidStack(resource, resource.getAmount() / size);
+      resource = resource.copyWithAmount(resource.getAmount() / size);
     }
     return scaleResult(drain(tool.get(), resource, action), size);
   }
@@ -318,17 +317,19 @@ public class ToolFluidCapability extends FluidModifierHookIterator<ModifierEntry
 
   /** Provider instance for a fluid cap */
   public static class Provider implements IToolCapabilityProvider {
-    private final LazyOptional<IFluidHandlerItem> fluidCap;
+    private final IFluidHandlerItem fluidCap;
     public Provider(ItemStack stack, Supplier<? extends IToolStackView> toolStack) {
-      this.fluidCap = LazyOptional.of(() -> new ToolFluidCapability(stack, toolStack));
+      this.fluidCap = new ToolFluidCapability(stack, toolStack);
     }
 
+    @SuppressWarnings("unchecked")
+    @Nullable
     @Override
-    public <T> LazyOptional<T> getCapability(IToolStackView tool, Capability<T> cap) {
-      if (cap == ForgeCapabilities.FLUID_HANDLER_ITEM && tool.getVolatileData().getInt(TOTAL_TANKS) > 0) {
-        return fluidCap.cast();
+    public <T> T getCapability(IToolStackView tool, ItemCapability<T, ?> cap) {
+      if (cap == Capabilities.FluidHandler.ITEM && tool.getVolatileData().getInt(TOTAL_TANKS) > 0) {
+        return (T) fluidCap;
       }
-      return LazyOptional.empty();
+      return null;
     }
   }
 }

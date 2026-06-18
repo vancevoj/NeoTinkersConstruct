@@ -24,7 +24,8 @@ public final class TagUtil {
   @Nullable
   public static BlockPos readOptionalPos(CompoundTag parent, String key, BlockPos offset) {
     if (parent.contains(key, Tag.TAG_COMPOUND)) {
-      return NbtUtils.readBlockPos(parent.getCompound(key)).offset(offset);
+      // readBlockPos now takes the key directly and returns an Optional, so read from the parent and offset if present
+      return NbtUtils.readBlockPos(parent, key).map(pos -> pos.offset(offset)).orElse(null);
     }
     return null;
   }

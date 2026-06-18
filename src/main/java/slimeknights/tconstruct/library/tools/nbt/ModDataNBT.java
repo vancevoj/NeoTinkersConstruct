@@ -30,6 +30,14 @@ public class ModDataNBT implements IModDataView {
     this(new CompoundTag());
   }
 
+  /**
+   * Called after any mutation to this data so an owner (e.g. a {@link ToolStack} backed by an item stack) can persist
+   * the change to its data component. The legacy implementation relied on the data tag being shared live with the item
+   * NBT; in 1.21 the tool data lives in a component, so mutations must be flushed back explicitly.
+   * Default implementation does nothing (standalone mod data, e.g. on a copied or detached tool).
+   */
+  protected void markDirty() {}
+
   @Override
   public <T> T get(ResourceLocation name, BiFunction<CompoundTag,String,T> function) {
     return function.apply(data, name.toString());
@@ -58,6 +66,7 @@ public class ModDataNBT implements IModDataView {
    */
   public void put(ResourceLocation name, Tag nbt) {
     data.put(name.toString(), nbt);
+    markDirty();
   }
 
   /**
@@ -67,6 +76,7 @@ public class ModDataNBT implements IModDataView {
    */
   public void putInt(ResourceLocation name, int value) {
     data.putInt(name.toString(), value);
+    markDirty();
   }
 
   /**
@@ -76,6 +86,7 @@ public class ModDataNBT implements IModDataView {
    */
   public void putBoolean(ResourceLocation name, boolean value) {
     data.putBoolean(name.toString(), value);
+    markDirty();
   }
 
   /**
@@ -85,6 +96,7 @@ public class ModDataNBT implements IModDataView {
    */
   public void putFloat(ResourceLocation name, float value) {
     data.putFloat(name.toString(), value);
+    markDirty();
   }
 
   /**
@@ -94,6 +106,7 @@ public class ModDataNBT implements IModDataView {
    */
   public void putString(ResourceLocation name, String value) {
     data.putString(name.toString(), value);
+    markDirty();
   }
 
   /**
@@ -102,6 +115,7 @@ public class ModDataNBT implements IModDataView {
    */
   public void remove(ResourceLocation name) {
     data.remove(name.toString());
+    markDirty();
   }
 
 
@@ -119,6 +133,7 @@ public class ModDataNBT implements IModDataView {
   public void copyFrom(CompoundTag data) {
     this.data.getAllKeys().clear();
     this.data.merge(data);
+    markDirty();
   }
 
   /**

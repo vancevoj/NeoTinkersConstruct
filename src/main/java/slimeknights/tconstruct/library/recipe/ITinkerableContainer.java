@@ -2,11 +2,12 @@ package slimeknights.tconstruct.library.recipe;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeInput;
 import slimeknights.mantle.recipe.container.IRecipeContainer;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 
 /** Container that contains a tinkerable stack and a number of inputs after */
-public interface ITinkerableContainer extends IRecipeContainer {
+public interface ITinkerableContainer extends IRecipeContainer, RecipeInput {
   /**
    * Gets the stack in the tinkerable slot.
    *
@@ -69,6 +70,11 @@ public interface ITinkerableContainer extends IRecipeContainer {
   @Override
   default int getContainerSize() {
     return getInputCount() + 1;
+  }
+
+  @Override
+  default int size() {
+    return getContainerSize();
   }
 
   interface Mutable extends ITinkerableContainer {

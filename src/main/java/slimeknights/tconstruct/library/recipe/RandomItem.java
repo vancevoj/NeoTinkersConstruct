@@ -4,11 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import io.netty.handler.codec.DecoderException;
-import lombok.RequiredArgsConstructor;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 import slimeknights.mantle.recipe.helper.ItemOutput;
 
 import java.util.Random;
@@ -66,7 +64,7 @@ public abstract class RandomItem {
   public abstract JsonElement serialize();
 
   /** Writes this object to the packet buffer */
-  public abstract void write(FriendlyByteBuf buffer);
+  public abstract void write(RegistryFriendlyByteBuf buffer);
 
   /**
    * Reads a random item from JSON
@@ -106,7 +104,7 @@ public abstract class RandomItem {
   }
 
   /** Reads the object from the packet buffer */
-  public static RandomItem read(FriendlyByteBuf buffer) {
+  public static RandomItem read(RegistryFriendlyByteBuf buffer) {
     ItemOutput result = ItemOutput.read(buffer);
     RandomType type = buffer.readEnum(RandomType.class);
     switch (type) {
@@ -123,12 +121,16 @@ public abstract class RandomItem {
   }
 
   /** Item that outputs with a uniform range */
-  @RequiredArgsConstructor
   private static class Range extends RandomItem {
     /** Item result, max count will be up to the the result stack size */
     private final ItemOutput result;
     /** Minimum count of the item */
     private final int minCount;
+
+    private Range(ItemOutput result, int minCount) {
+      this.result = result;
+      this.minCount = minCount;
+    }
 
     @Override
     public ItemStack get(Random random) {
@@ -141,7 +143,7 @@ public abstract class RandomItem {
           return ItemStack.EMPTY;
         }
       }
-      return ItemHandlerHelper.copyStackWithSize(result, newCount);
+      return result.copyWithCount(newCount);
     }
 
     @Override
@@ -162,7 +164,7 @@ public abstract class RandomItem {
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
+    public void write(RegistryFriendlyByteBuf buffer) {
       result.write(buffer);
       buffer.writeEnum(RandomType.RANGE);
       buffer.writeVarInt(minCount);
@@ -170,12 +172,16 @@ public abstract class RandomItem {
   }
 
   /** Item that outputs with a percent chance */
-  @RequiredArgsConstructor
   private static class Chance extends RandomItem {
     /** Item result */
     private final ItemOutput result;
     /** Percent chance of the result, from 0 to 1 */
     private final float chance;
+
+    private Chance(ItemOutput result, float chance) {
+      this.result = result;
+      this.chance = chance;
+    }
 
     @Override
     public ItemStack get(Random random) {
@@ -205,7 +211,7 @@ public abstract class RandomItem {
     }
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
+    public void write(RegistryFriendlyByteBuf buffer) {
       result.write(buffer);
       buffer.writeEnum(RandomType.CHANCE);
       buffer.writeFloat(chance);

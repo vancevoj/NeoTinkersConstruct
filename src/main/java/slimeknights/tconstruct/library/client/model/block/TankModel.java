@@ -19,6 +19,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
@@ -78,12 +79,12 @@ public class TankModel implements IUnbakedGeometry<TankModel> {
   }
 
   @Override
-  public BakedModel bake(IGeometryBakingContext owner, ModelBaker baker, Function<Material,TextureAtlasSprite> spriteGetter, ModelState transform, ItemOverrides overrides, ResourceLocation location) {
-    BakedModel baked = model.bake(owner, baker, spriteGetter, transform, overrides, location);
+  public BakedModel bake(IGeometryBakingContext owner, ModelBaker baker, Function<Material,TextureAtlasSprite> spriteGetter, ModelState transform, ItemOverrides overrides) {
+    BakedModel baked = model.bake(owner, baker, spriteGetter, transform, overrides);
     // bake the GUI model if present
     BakedModel bakedGui = baked;
     if (gui != null) {
-      bakedGui = gui.bake(owner, baker, spriteGetter, transform, overrides, location);
+      bakedGui = gui.bake(owner, baker, spriteGetter, transform, overrides);
     }
     return new Baked(owner, transform, baked, bakedGui, this);
   }
@@ -218,7 +219,7 @@ public class TankModel implements IUnbakedGeometry<TankModel> {
       @Override
       public BakedModel resolve(BakedModel model, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int seed) {
         // ensure we have a fluid
-        if (stack.isEmpty() || !stack.hasTag()) {
+        if (stack.isEmpty() || !stack.has(DataComponents.CUSTOM_DATA)) {
           return model;
         }
         // determine fluid

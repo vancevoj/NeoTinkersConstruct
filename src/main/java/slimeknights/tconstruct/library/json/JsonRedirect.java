@@ -1,10 +1,10 @@
 package slimeknights.tconstruct.library.json;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import lombok.Data;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.crafting.CraftingHelper;
-import net.neoforged.neoforge.common.crafting.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import slimeknights.mantle.util.JsonHelper;
 
 import javax.annotation.Nullable;
@@ -22,18 +22,23 @@ public class JsonRedirect {
     JsonObject json = new JsonObject();
     json.addProperty("id", id.toString());
     if (condition != null) {
-      json.add("condition", CraftingHelper.serialize(condition));
+      json.add("condition", ICondition.CODEC.encodeStart(JsonOps.INSTANCE, condition).getOrThrow(JsonRedirect::conditionError));
     }
     return json;
   }
 
-  /** Deserializes this to JSON */
+  /** Deserializes this from JSON */
   public static JsonRedirect fromJson(JsonObject json) {
     ResourceLocation id = JsonHelper.getResourceLocation(json, "id");
     ICondition condition = null;
     if (json.has("condition")) {
-      condition = CraftingHelper.getCondition(json);
+      condition = ICondition.CODEC.parse(JsonOps.INSTANCE, json.get("condition")).getOrThrow(JsonRedirect::conditionError);
     }
     return new JsonRedirect(id, condition);
+  }
+
+  /** Error factory for condition (de)serialization */
+  private static RuntimeException conditionError(String error) {
+    return new com.google.gson.JsonSyntaxException("Failed to handle redirect condition: " + error);
   }
 }
