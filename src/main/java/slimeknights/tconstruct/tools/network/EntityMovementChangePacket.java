@@ -50,10 +50,13 @@ public class EntityMovementChangePacket implements IThreadsafePacket {
   }
 
   @Override
-  public void handleThreadsafe(Context context) {
-    if (context.getSender() != null) {
-      HandleClient.handle(this);
-    }
+  public Type<EntityMovementChangePacket> type() {
+    return TYPE;
+  }
+
+  @Override
+  public void handleThreadsafe(IPayloadContext context) {
+    HandleClient.handle(this);
   }
 
   /** Safely runs client side only code in a method only called on client */

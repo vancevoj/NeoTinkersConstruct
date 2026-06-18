@@ -33,23 +33,21 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.ProjectileImpactEvent;
-import net.neoforged.neoforge.event.entity.living.LivingAttackEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent.LivingVisibilityEvent;
-import net.neoforged.neoforge.event.entity.living.LivingHurtEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.bus.api.Event.Result;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod.EventBusSubscriber;
-import net.neoforged.fml.common.Mod.EventBusSubscriber.Bus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import slimeknights.mantle.data.predicate.damage.DamageSourcePredicate;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerEffect;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.config.Config;
 import slimeknights.tconstruct.common.network.TinkerNetwork;
+import slimeknights.tconstruct.library.events.TinkerToolEvent;
 import slimeknights.tconstruct.library.events.TinkerToolEvent.ToolHarvestEvent;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
@@ -91,7 +89,7 @@ import java.util.Objects;
 /**
  * Event subscriber for tool events
  */
-@EventBusSubscriber(modid = TConstruct.MOD_ID, bus = Bus.FORGE)
+@Mod.EventBusSubscriber(modid = TConstruct.MOD_ID)
 public class ToolEvents {
   @SuppressWarnings("removal")
   @SubscribeEvent
@@ -129,7 +127,7 @@ public class ToolEvents {
     }
 
     // next, add in armor haste
-    double armorMultiplier = player.getAttributeValue(TinkerAttributes.MINING_SPEED_MULTIPLIER.get()) + ArmorStatModule.getStat(player, TinkerDataKeys.MINING_SPEED);
+    double armorMultiplier = player.getAttributeValue(TinkerAttributes.MINING_SPEED_MULTIPLIER) + ArmorStatModule.getStat(player, TinkerDataKeys.MINING_SPEED);
     if (armorMultiplier >= 0) {
       event.setNewSpeed((float) (event.getNewSpeed() * armorMultiplier));
     }
@@ -138,7 +136,7 @@ public class ToolEvents {
   @SubscribeEvent
   static void onHarvest(ToolHarvestEvent event) {
     // prevent processing if already processed
-    if (event.getResult() != Result.DEFAULT) {
+    if (event.getResult() != TinkerToolEvent.Result.DEFAULT) {
       return;
     }
     BlockState state = event.getState();
@@ -167,7 +165,7 @@ public class ToolEvents {
         0.05D,
         0.05D * facing.getStepZ() + world.random.nextDouble() * 0.02D);
       world.addFreshEntity(itemEntity);
-      event.setResult(Result.ALLOW);
+      event.setResult(TinkerToolEvent.Result.ALLOW);
     }
 
     // hives: get the honey
@@ -187,15 +185,15 @@ public class ToolEvents {
         } else {
           beehive.resetHoneyLevel(world, state, pos);
         }
-        event.setResult(Result.ALLOW);
+        event.setResult(TinkerToolEvent.Result.ALLOW);
       } else {
-        event.setResult(Result.DENY);
+        event.setResult(TinkerToolEvent.Result.DENY);
       }
     }
   }
 
   @SubscribeEvent(priority = EventPriority.LOW)
-  static void livingAttack(LivingAttackEvent event) {
+  static void livingAttack(LivingIncomingDamageEvent event) {
     LivingEntity entity = event.getEntity();
     // client side always returns false, so this should be fine?
     if (entity.level().isClientSide() || entity.isDeadOrDying()) {
@@ -267,7 +265,7 @@ public class ToolEvents {
   // low priority to minimize conflict as we apply reduction as if we are the final change to damage before vanilla
   @SuppressWarnings("removal")
   @SubscribeEvent(priority = EventPriority.LOW)
-  static void livingHurt(LivingHurtEvent event) {
+  static void livingHurt(LivingIncomingDamageEvent event) {
     LivingEntity entity = event.getEntity();
 
     // determine if there is any modifiable armor, if not nothing to do

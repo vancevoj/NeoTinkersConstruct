@@ -48,17 +48,17 @@ public record SoulSpeedModule(LevelingInt level, ModifierCondition<IToolStackVie
 
   @Override
   public int updateEnchantmentLevel(IToolStackView tool, ModifierEntry modifier, Enchantment enchantment, int level) {
-    if (enchantment == Enchantments.SOUL_SPEED && condition.matches(tool, modifier)) {
-      level += this.level.compute(modifier);
-    }
+    // TODO(neoport): EnchantmentModifierHook is mid-port; Enchantments.SOUL_SPEED is now ResourceKey<Enchantment>.
+    // When hook moves to Holder<Enchantment> change signature and compare with enchantment.is(Enchantments.SOUL_SPEED).
+    // For now cannot compare bare Enchantment to ResourceKey without registry access; skip comparison.
     return level;
   }
 
   @Override
   public void updateEnchantments(IToolStackView tool, ModifierEntry modifier, Map<Enchantment, Integer> map) {
-    if (condition.matches(tool, modifier)) {
-      EnchantmentModifierHook.addEnchantment(map, Enchantments.SOUL_SPEED, this.level.compute(modifier));
-    }
+    // TODO(neoport): EnchantmentModifierHook is mid-port; Enchantments.SOUL_SPEED is ResourceKey<Enchantment> and
+    // cannot be resolved to Enchantment without registry access. When the hook moves to Map<Holder<Enchantment>, Integer>
+    // replace with: EnchantmentModifierHook.addEnchantment(map, soulSpeedHolder, this.level.compute(modifier))
   }
 
   /** Gets the position this entity is standing on, cloned from protected living entity method */

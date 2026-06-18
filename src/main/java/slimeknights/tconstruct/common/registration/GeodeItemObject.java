@@ -33,7 +33,7 @@ public class GeodeItemObject extends ItemObject<Item> {
   private final Supplier<? extends Block> smallBud;
   private final Supplier<? extends Block> mediumBud;
   private final Supplier<? extends Block> largeBud;
-  public GeodeItemObject(DeferredHolder<?, ? extends Item> shard, BlockDeferredRegister register, MapColor color, SoundType blockSound, SoundEvent chimeSound, Map<BudSize,SoundType> clusterSounds, int baseLight, Properties props) {
+  public GeodeItemObject(DeferredHolder<? super Item, ? extends Item> shard, BlockDeferredRegister register, MapColor color, SoundType blockSound, SoundEvent chimeSound, Map<BudSize,SoundType> clusterSounds, int baseLight, Properties props) {
     super(shard);
     // allow the crystals to glow optionally
     IntFunction<ToIntFunction<BlockState>> light = extra -> {

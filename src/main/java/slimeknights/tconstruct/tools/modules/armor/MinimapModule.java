@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import slimeknights.mantle.client.TooltipKey;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
@@ -108,7 +109,7 @@ public enum MinimapModule implements ModifierModule, EquipmentChangeModifierHook
           holder.setItemInHand(InteractionHand.OFF_HAND, held);
           if (holder instanceof ServerPlayer player) {
             MapItemSavedData mapData = MapItem.getSavedData(map, world);
-            Integer id = MapItem.getMapId(map);
+            MapId id = MapItem.getMapId(map);
             if (mapData != null && id != null) {
               Packet<?> packet = mapData.getUpdatePacket(id, player);
               if (packet != null) {
@@ -128,7 +129,8 @@ public enum MinimapModule implements ModifierModule, EquipmentChangeModifierHook
 
   @Override
   public void onInventorySelect(IToolStackView tool, ModifierEntry modifier, Player player, int newIndex, ItemStack stack) {
-    player.displayClientMessage(Component.translatable(SELECTED, stack.getHoverName(), MapItem.getMapId(stack), newIndex + 1), true);
+    MapId mapId = MapItem.getMapId(stack);
+    player.displayClientMessage(Component.translatable(SELECTED, stack.getHoverName(), mapId != null ? mapId.id() : -1, newIndex + 1), true);
   }
 
   @Override

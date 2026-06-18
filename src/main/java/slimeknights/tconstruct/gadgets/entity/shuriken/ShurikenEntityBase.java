@@ -1,8 +1,6 @@
 package slimeknights.tconstruct.gadgets.entity.shuriken;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,16 +11,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.entity.IEntityAdditionalSpawnData;
-import net.neoforged.neoforge.network.NetworkHooks;
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import slimeknights.tconstruct.tools.entity.ThrownShuriken;
 import slimeknights.tconstruct.tools.entity.ToolProjectile;
 
-import javax.annotation.Nonnull;
-
 /** @deprecated use {@link ThrownShuriken} */
 @Deprecated
-public abstract class ShurikenEntityBase extends ThrowableItemProjectile implements IEntityAdditionalSpawnData, ToolProjectile {
+public abstract class ShurikenEntityBase extends ThrowableItemProjectile implements IEntityWithComplexSpawn, ToolProjectile {
 
   public ShurikenEntityBase(EntityType<? extends ShurikenEntityBase> type, Level worldIn) {
     super(type, worldIn);
@@ -86,18 +81,12 @@ public abstract class ShurikenEntityBase extends ThrowableItemProjectile impleme
   }
 
   @Override
-  public void writeSpawnData(FriendlyByteBuf buffer) {
-    buffer.writeItem(this.getItemRaw());
+  public void writeSpawnData(RegistryFriendlyByteBuf buffer) {
+    ItemStack.OPTIONAL_STREAM_CODEC.encode(buffer, this.getItemRaw());
   }
 
   @Override
-  public void readSpawnData(FriendlyByteBuf additionalData) {
-    this.setItem(additionalData.readItem());
-  }
-
-  @Nonnull
-  @Override
-  public Packet<ClientGamePacketListener> getAddEntityPacket() {
-    return NetworkHooks.getEntitySpawningPacket(this);
+  public void readSpawnData(RegistryFriendlyByteBuf additionalData) {
+    this.setItem(ItemStack.OPTIONAL_STREAM_CODEC.decode(additionalData));
   }
 }

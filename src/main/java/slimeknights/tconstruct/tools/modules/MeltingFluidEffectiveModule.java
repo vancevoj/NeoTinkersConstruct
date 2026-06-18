@@ -1,7 +1,6 @@
 package slimeknights.tconstruct.tools.modules;
 
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.TierSortingRegistry;
 import net.neoforged.neoforge.fluids.FluidStack;
 import slimeknights.mantle.data.loadable.primitive.BooleanLoadable;
 import slimeknights.mantle.data.loadable.primitive.IntLoadable;
@@ -56,9 +55,9 @@ public record MeltingFluidEffectiveModule(IJsonPredicate<BlockState> predicate, 
         if (capacity > currentFluid.getAmount()) {
           // new fluid must match current fluid
           FluidStack meltingResult = MeltingRecipeLookup.findResult(state.getBlock(), temperature);
-          return (!meltingResult.isEmpty() && (currentFluid.isEmpty() || currentFluid.isFluidEqual(meltingResult)))
-                 // tier must also match
-                 && (ignoreTier || TierSortingRegistry.isCorrectTierForDrops(MiningTierToolHook.getTier(tool), state));
+          return (!meltingResult.isEmpty() && (currentFluid.isEmpty() || FluidStack.isSameFluidSameComponents(currentFluid, meltingResult)))
+                 // tier must also match; TierSortingRegistry removed in 1.21, use vanilla tier tag check
+                 && (ignoreTier || !state.is(MiningTierToolHook.getTier(tool).getIncorrectBlocksForDrops()));
         }
       }
     }

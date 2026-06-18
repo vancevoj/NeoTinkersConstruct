@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.tools.modules.armor;
 
+import com.mojang.datafixers.util.Function7;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,7 +15,8 @@ import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 
 /** Module implementing the counterattack side of fiery */
 public record FieryCounterModule(LevelingValue chance, LevelingValue constant, LevelingValue random, int durabilityUsage, IJsonPredicate<LivingEntity> defender, IJsonPredicate<LivingEntity> attacker, ModifierCondition<IToolStackView> condition) implements CounterModule {
-  public static final RecordLoadable<FieryCounterModule> LOADER = CounterModule.makeLoader("seconds", FieryCounterModule::new);
+  public static final RecordLoadable<FieryCounterModule> LOADER = CounterModule.makeLoader("seconds",
+    (Function7<LevelingValue,LevelingValue,LevelingValue,Integer,IJsonPredicate<LivingEntity>,IJsonPredicate<LivingEntity>,ModifierCondition<IToolStackView>,FieryCounterModule>) FieryCounterModule::new);
 
   @Override
   public RecordLoadable<FieryCounterModule> getLoader() {
@@ -27,7 +29,7 @@ public record FieryCounterModule(LevelingValue chance, LevelingValue constant, L
 
   /** Creates a new builder instance */
   public static CounterModule.Builder<FieryCounterModule> builder() {
-    return new CounterModule.Builder<>(FieryCounterModule::new);
+    return new CounterModule.Builder<>((Function7<LevelingValue,LevelingValue,LevelingValue,Integer,IJsonPredicate<LivingEntity>,IJsonPredicate<LivingEntity>,ModifierCondition<IToolStackView>,FieryCounterModule>) FieryCounterModule::new);
   }
 
   @Override
@@ -37,6 +39,7 @@ public record FieryCounterModule(LevelingValue chance, LevelingValue constant, L
 
   @Override
   public void applyEffect(IToolStackView tool, ModifierEntry modifier, float value, EquipmentContext context, Entity attacker, DamageSource source, float damageDealt) {
-    attacker.setSecondsOnFire(Math.round(value));
+    // setSecondsOnFire removed in 1.21.1; use setRemainingFireTicks (1 second = 20 ticks)
+    attacker.setRemainingFireTicks(Math.round(value) * 20);
   }
 }

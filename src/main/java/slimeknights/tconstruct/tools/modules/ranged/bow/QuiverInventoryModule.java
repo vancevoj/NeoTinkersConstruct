@@ -26,6 +26,7 @@ public class QuiverInventoryModule extends InventoryModule {
   /** Loader instance */
   public static final RecordLoadable<QuiverInventoryModule> LOADER = RecordLoadable.create(KEY_FIELD, SLOTS_FIELD, LIMIT_FIELD, PATTERN_FIELD, ModifierCondition.CONTEXT_FIELD, VALIDATION_FIELD, QuiverInventoryModule::new);
 
+  // TODO(neoport): super ctor unavailable until InventoryModule.java compiles; @RequiredArgsConstructor not generated due to InventoryModule errors
   private QuiverInventoryModule(@Nullable ResourceLocation key, LevelingInt slots, LevelingInt slotLimit, @Nullable Pattern pattern, ModifierCondition<IToolContext> condition, IntRange validationLevel) {
     super(key, slots, slotLimit, ItemPredicate.ANY, pattern, condition, validationLevel);
   }
@@ -37,6 +38,7 @@ public class QuiverInventoryModule extends InventoryModule {
 
   @Override
   public boolean isItemValid(IToolStackView tool, ModifierEntry modifier, int slot, ItemStack stack) {
+    // TODO(neoport): condition() Lombok getter unavailable until InventoryModule.java compiles
     if (condition().matches(tool, modifier)) {
       return stack.is(ItemTags.ARROWS)
         || tool.hasTag(TinkerTags.Items.CROSSBOWS) && stack.is(Items.FIREWORK_ROCKET)
@@ -62,7 +64,7 @@ public class QuiverInventoryModule extends InventoryModule {
       throw new IllegalStateException("Cannot set filter on QuiverInventoryModule");
     }
 
-    @Override
+    // TODO(neoport): @Override removed; InventoryModule.Builder.slots(int,int) not resolvable until InventoryModule.java compiles
     public InventoryModule slots(int base, int perLevel) {
       return new QuiverInventoryModule(key, new LevelingInt(base, perLevel), slotLimit, pattern, condition, validationLevel);
     }

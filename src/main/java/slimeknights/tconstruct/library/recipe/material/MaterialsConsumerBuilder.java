@@ -1,21 +1,29 @@
 package slimeknights.tconstruct.library.recipe.material;
 
-import com.google.gson.JsonObject;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import slimeknights.mantle.recipe.data.ConsumerWrapperBuilder;
+import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
-import slimeknights.tconstruct.tables.TinkerTables;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
-/** Special variant of {@link ConsumerWrapperBuilder} for {@link ShapedMaterialsRecipe} and {@link ShapelessMaterialsRecipe} */
+/**
+ * Special variant of {@link ConsumerWrapperBuilder} for {@link ShapedMaterialsRecipe} and {@link ShapelessMaterialsRecipe}.
+ * <p>
+ * Wraps a {@link RecipeOutput}, converting any vanilla {@link ShapedRecipe} or {@link ShapelessRecipe} passed through it
+ * into the matching materials recipe with the configured parts and extra materials.
+ */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MaterialsConsumerBuilder {
   private final String parts;
@@ -44,45 +52,42 @@ public class MaterialsConsumerBuilder {
     return this;
   }
 
-  /** Builds the wrapped consumer */
-  public Consumer<FinishedRecipe> build(Consumer<FinishedRecipe> consumer) {
-    return (recipe) -> consumer.accept(new Wrapped(recipe, materials, parts, partCount));
+  /** Builds the wrapped output */
+  public RecipeOutput build(RecipeOutput output) {
+    return new Wrapped(output, List.copyOf(materials), parts, partCount);
   }
 
-  private record Wrapped(FinishedRecipe original, List<MaterialVariantId> materials, String parts, int partCount) implements FinishedRecipe {
+  private record Wrapped(RecipeOutput original, List<MaterialVariantId> materials, String parts, int partCount) implements RecipeOutput {
     @Override
-    public ResourceLocation getId() {
-      return original.getId();
+    public Advancement.Builder advancement() {
+      return original.advancement();
     }
 
     @Override
-    public RecipeSerializer<?> getType() {
-      return partCount > 0 ? TinkerTables.shapelessMaterialsRecipeSerializer.get() : TinkerTables.shapedMaterialsRecipeSerializer.get();
-    }
-
-    @Override
-    public void serializeRecipeData(JsonObject json) {
-      original.serializeRecipeData(json);
-      if (!materials.isEmpty()) {
-        json.add(ShapedMaterialsRecipe.Serializer.MATERIAL_FIELD.key(), ShapedMaterialsRecipe.Serializer.EXTRA_MATERIALS.serialize(materials));
-      }
-      if (!parts.isEmpty()) {
-        json.addProperty("parts", parts);
+    public void accept(ResourceLocation id, Recipe<?> recipe, @Nullable AdvancementHolder advancement, ICondition... conditions) {
+      Recipe<?> wrapped;
+      if (partCount > 0) {
+        // shapeless: wrap the vanilla shapeless recipe, the first partCount ingredients are the parts
+        if (recipe instanceof ShapelessRecipe shapeless) {
+          wrapped = new ShapelessMaterialsRecipe(shapeless, partCount, materials);
+        } else {
+          throw error(id, recipe, "shapeless");
+        }
       } else {
-        json.addProperty("parts", partCount);
+        // shaped: wrap the vanilla shaped recipe, mapping the part pattern symbols to ingredients
+        if (recipe instanceof ShapedRecipe shaped) {
+          wrapped = new ShapedMaterialsRecipe(shaped, parts, materials);
+        } else {
+          throw error(id, recipe, "shaped");
+        }
       }
+      original.accept(id, wrapped, advancement, conditions);
     }
 
-    @Nullable
-    @Override
-    public JsonObject serializeAdvancement() {
-      return original.serializeAdvancement();
-    }
-
-    @Nullable
-    @Override
-    public ResourceLocation getAdvancementId() {
-      return original.getAdvancementId();
+    /** Logs a useful error before failing the conversion */
+    private static IllegalStateException error(ResourceLocation id, Recipe<?> recipe, String type) {
+      TConstruct.LOG.error("Material consumer builder for {} expected a {} recipe but got {}", id, type, recipe.getClass().getName());
+      return new IllegalStateException("Material consumer builder for " + id + " expected a " + type + " recipe");
     }
   }
 }

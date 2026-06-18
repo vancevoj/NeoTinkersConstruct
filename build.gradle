@@ -84,10 +84,22 @@ sourceSets.main.resources {
     exclude 'assets/tconstruct/debug'
 }
 
-// TEMPORARY: JEI integration not yet ported to the 1.21.1 JEI API. Excluded so the
-// core mod builds; remove once slimeknights.tconstruct.plugin.jei is ported.
+// TEMPORARY: integrations whose 3rd-party APIs are not yet available for 1.21.1
+// (their compileOnly deps below are commented out). Excluded so the core mod builds;
+// re-enable each source tree when its dependency is restored in `dependencies`.
+//  - jei: recipe viewer (mezz.jei)
+//  - jsonthings: dev.gigaherz.jsonthings
+//  - ImmersiveEngineeringPlugin: blusunrize.immersiveengineering
+//  - craftingtweaks: net.blay09.mods.craftingtweaks
+//  - DietPlugin: com.illusivesoulworks.diet
+//  - DummmmmmyPlugin: net.mehvahdjukaar.dummmmmmy
 sourceSets.main.java {
     exclude 'slimeknights/tconstruct/plugin/jei/**'
+    exclude 'slimeknights/tconstruct/plugin/jsonthings/**'
+    exclude 'slimeknights/tconstruct/plugin/craftingtweaks/**'
+    exclude 'slimeknights/tconstruct/plugin/ImmersiveEngineeringPlugin.java'
+    exclude 'slimeknights/tconstruct/plugin/DietPlugin.java'
+    exclude 'slimeknights/tconstruct/plugin/DummmmmmyPlugin.java'
 }
 
 dependencies {

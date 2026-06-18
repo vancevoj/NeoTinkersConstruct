@@ -1,0 +1,5 @@
+-d
+/tmp/class-out
+-cp
+src/main/java:
+src/main/java/slimeknights/tconstruct/tools/data/sprite/TinkerMaterialSpriteProvider.java

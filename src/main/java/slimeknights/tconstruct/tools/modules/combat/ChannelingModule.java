@@ -71,7 +71,8 @@ public record ChannelingModule(float clearChance, float rainChance, float thunde
             lightning.setCause(player);
           }
           level.addFreshEntity(lightning);
-          level.playSound(null, target, SoundEvents.TRIDENT_THUNDER, SoundSource.NEUTRAL, 5, 1);
+          // SoundEvents.TRIDENT_THUNDER is Holder<SoundEvent> in 1.21.1; unwrap and use float vol/pitch
+          level.playSound(null, target, SoundEvents.TRIDENT_THUNDER.value(), SoundSource.NEUTRAL, 5.0F, 1.0F);
         }
       }
     }

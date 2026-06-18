@@ -1,6 +1,6 @@
 package slimeknights.tconstruct.tools.modifiers.traits.ranged;
 
-import net.minecraft.world.entity.MobType;
+import net.minecraft.tags.EntityTypeTags;
 import slimeknights.mantle.data.predicate.entity.MobTypePredicate;
 import slimeknights.tconstruct.library.modifiers.Modifier;
 import slimeknights.tconstruct.library.modifiers.modules.combat.ConditionalPowerModule;
@@ -12,6 +12,7 @@ public class HolyModifier extends Modifier {
   @Override
   protected void registerHooks(Builder hookBuilder) {
     super.registerHooks(hookBuilder);
-    hookBuilder.addModule(ConditionalPowerModule.builder().target(new MobTypePredicate(MobType.UNDEAD)).eachLevel(0.75f));
+    // MobType was removed in 1.21; undead is now an entity type tag
+    hookBuilder.addModule(ConditionalPowerModule.builder().target(new MobTypePredicate(EntityTypeTags.UNDEAD)).eachLevel(0.75f));
   }
 }

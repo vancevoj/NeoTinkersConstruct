@@ -27,6 +27,8 @@ import slimeknights.tconstruct.library.modifiers.modules.util.ModifierCondition.
 import slimeknights.tconstruct.library.modifiers.modules.util.ModuleBuilder;
 import slimeknights.tconstruct.library.module.HookProvider;
 import slimeknights.tconstruct.library.module.ModuleHook;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import slimeknights.tconstruct.library.recipe.TinkerRecipeTypes;
 import slimeknights.tconstruct.library.recipe.entitymelting.EntityMeltingRecipe;
 import slimeknights.tconstruct.library.recipe.entitymelting.EntityMeltingRecipeCache;
@@ -116,7 +118,8 @@ public record MeltingModule(LevelingInt temperature, LevelingInt nuggetsPerMetal
     // first, update inventory
     IMeltingRecipe recipe = lastRecipe;
     if (recipe == null || !recipe.matches(this, world)) {
-      recipe = world.getRecipeManager().getRecipeFor(TinkerRecipeTypes.MELTING.get(), this, world).orElse(null);
+      // TODO(neoport): IMeltingContainer must implement RecipeInput for getRecipeFor to work; using SingleRecipeInput as workaround (runtime ClassCast possible until IMeltingContainer is ported)
+      recipe = world.getRecipeManager().getRecipeFor(TinkerRecipeTypes.MELTING.get(), new SingleRecipeInput(this.getStack()), world).map(RecipeHolder::value).orElse(null);
       if (recipe == null) {
         MeltingModule.stack = ItemStack.EMPTY;
         return FluidStack.EMPTY;
@@ -160,7 +163,7 @@ public record MeltingModule(LevelingInt temperature, LevelingInt nuggetsPerMetal
       ItemStack stack = iterator.next();
       FluidStack output = meltItem(modifier, stack, world);
       // fluid must match tank fluid
-      if (!output.isEmpty() && (current.isEmpty() || current.isFluidEqual(output))) {
+      if (!output.isEmpty() && (current.isEmpty() || FluidStack.isSameFluidSameComponents(current, output))) {
         int amount;
 
         // if forced to melt, melt everything regardless, fluid handler will ensure we don't overflow
@@ -209,13 +212,13 @@ public record MeltingModule(LevelingInt temperature, LevelingInt nuggetsPerMetal
         int damagePerOutput;
         if (recipe != null) {
           output = recipe.getOutput(target);
-          damagePerOutput = recipe.getDamage();
+          damagePerOutput = recipe.getDamage(); // TODO(neoport): EntityMeltingRecipe.getDamage() missing until EntityMeltingRecipe is ported
         } else {
           output = EntityMeltingModule.getDefaultFluid();
           damagePerOutput = 2;
         }
         FluidStack fluid = TANK_HELPER.getFluid(tool);
-        if (fluid.isEmpty() || fluid.isFluidEqual(output)) {
+        if (fluid.isEmpty() || FluidStack.isSameFluidSameComponents(fluid, output)) {
           // recipe amount determines how much we get per hit, up to twice the recipe damage
           int fluidAmount;
           if (damageDealt < damagePerOutput * 2) {
@@ -240,7 +243,7 @@ public record MeltingModule(LevelingInt temperature, LevelingInt nuggetsPerMetal
   @Override
   public void afterMeleeHit(IToolStackView tool, ModifierEntry modifier, ToolAttackContext context, float damageDealt) {
     if (context.isFullyCharged()) {
-      meltTarget(tool, modifier, context.getLivingTarget(), damageDealt);
+      meltTarget(tool, modifier, context.getLivingTarget(), damageDealt); // TODO(neoport): ToolAttackContext.getLivingTarget() cascade from ToolAttackContext port
     }
   }
 

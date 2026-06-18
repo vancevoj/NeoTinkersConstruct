@@ -10,12 +10,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import slimeknights.mantle.data.loadable.Loadables;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.recipe.FluidValues;
@@ -37,11 +34,6 @@ public class CopperCanItem extends Item {
   }
 
   @Override
-  public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-    return new CopperCanFluidHandler(stack);
-  }
-
-  @Override
   public boolean hasCraftingRemainingItem(ItemStack stack) {
     return getFluid(stack) != Fluids.EMPTY;
   }
@@ -55,17 +47,10 @@ public class CopperCanItem extends Item {
   }
 
   @Override
-  public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flag) {
+  public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
     Fluid fluid = getFluid(stack);
     if (fluid != Fluids.EMPTY) {
-      CompoundTag fluidTag = getFluidTag(stack);
-      MutableComponent text;
-      if (fluidTag != null) {
-        FluidStack displayFluid = new FluidStack(fluid, FluidValues.INGOT, fluidTag);
-        text = displayFluid.getDisplayName().plainCopy();
-      } else {
-        text = Component.translatable(fluid.getFluidType().getDescriptionId());
-      }
+      MutableComponent text = new FluidStack(fluid, FluidValues.INGOT).getDisplayName().plainCopy();
       tooltip.add(Component.translatable(this.getDescriptionId() + ".contents", text).withStyle(ChatFormatting.GRAY));
       if (flag.isAdvanced()) {
         tooltip.add(Component.translatable(TankItem.FLUID_ID, Loadables.FLUID.getKey(fluid)).withStyle(ChatFormatting.DARK_GRAY));

@@ -9,6 +9,8 @@ import slimeknights.tconstruct.common.json.ConfigEnabledCondition;
 import slimeknights.tconstruct.library.data.material.AbstractMaterialDataProvider;
 import slimeknights.tconstruct.library.materials.definition.MaterialId;
 
+import java.util.List;
+
 import static slimeknights.mantle.Mantle.commonResource;
 
 public class MaterialDataProvider extends AbstractMaterialDataProvider {
@@ -132,20 +134,20 @@ public class MaterialDataProvider extends AbstractMaterialDataProvider {
     addCompatMaterial(MaterialIds.ironwood, 2, ORDER_COMPAT + ORDER_GENERAL, true, "ingots/ironwood");
     // treated wood comes from treated wood or creosote oil
     addMaterial(MaterialIds.treatedWood, 2, ORDER_COMPAT + ORDER_GENERAL, true, false,
-      new OrCondition(ConfigEnabledCondition.FORCE_INTEGRATION_MATERIALS, tagExistsCondition("treated_wood"), new TagFilledCondition<>(FluidTags.create(commonResource("creosote")))));
+      new OrCondition(List.of(ConfigEnabledCondition.FORCE_INTEGRATION_MATERIALS, tagExistsCondition("treated_wood"), new TagFilledCondition<>(FluidTags.create(commonResource("creosote"))))));
     // tier 3 (mod integration)
     addCompatAlloy(MaterialIds.electrum,        3, ORDER_COMPAT + ORDER_GENERAL, "silver");
     addCompatAlloy(MaterialIds.bronze,          3, ORDER_COMPAT + ORDER_HARVEST, "tin");
     addCompatAlloy(MaterialIds.constantan,      3, ORDER_COMPAT + ORDER_HARVEST, "nickel");
     addCompatAlloy(MaterialIds.invar,           3, ORDER_COMPAT + ORDER_WEAPON,  "nickel");
     // TODO 1.21: consider making this an and condition, so we only get pewter if pewter is present or we have both
-    addCompatAlloy(MaterialIds.pewter,          3, ORDER_COMPAT + ORDER_WEAPON,  new OrCondition(tagExistsCondition("ingots/tin"), tagExistsCondition("ingots/lead")));
+    addCompatAlloy(MaterialIds.pewter,          3, ORDER_COMPAT + ORDER_WEAPON,  new OrCondition(List.of(tagExistsCondition("ingots/tin"), tagExistsCondition("ingots/lead"))));
     addCompatAlloy(MaterialIds.platedSlimewood, 3, ORDER_COMPAT + ORDER_SPECIAL, "zinc");
     addCompatMaterial(MaterialIds.necronium,       3, ORDER_COMPAT + ORDER_WEAPON, true, "ingots/uranium");
     addCompatMetalMaterial(MaterialIds.steeleaf, 3, ORDER_COMPAT + ORDER_SPECIAL);
     // tier 4 (mod integration)
     addCompatMetalMaterial(MaterialIds.fiery,           4, ORDER_COMPAT + ORDER_END);
-    addCompatAlloy(MaterialIds.nicrosil, 4, ORDER_COMPAT + ORDER_WEAPON,  new OrCondition(tagExistsCondition("ingots/tin"), tagExistsCondition("ingots/nickel"), tagExistsCondition("ingots/chromium")));
+    addCompatAlloy(MaterialIds.nicrosil, 4, ORDER_COMPAT + ORDER_WEAPON,  new OrCondition(List.of(tagExistsCondition("ingots/tin"), tagExistsCondition("ingots/nickel"), tagExistsCondition("ingots/chromium"))));
 
     // slimesuit
     addMaterial(MaterialIds.clay,  2, ORDER_REPAIR + 5, true);
@@ -161,7 +163,7 @@ public class MaterialDataProvider extends AbstractMaterialDataProvider {
     addRedirect(id("platinum"), redirect(MaterialIds.searedStone));
     addRedirect(id("tungsten"),
       conditionalRedirect(MaterialIds.lead, tagExistsCondition("ingots/lead")),
-      conditionalRedirect(MaterialIds.invar, new OrCondition(tagExistsCondition("ingots/invar"), tagExistsCondition("ingots/nickel"))),
+      conditionalRedirect(MaterialIds.invar, new OrCondition(List.of(tagExistsCondition("ingots/invar"), tagExistsCondition("ingots/nickel")))),
       redirect(MaterialIds.iron));
   }
   /**

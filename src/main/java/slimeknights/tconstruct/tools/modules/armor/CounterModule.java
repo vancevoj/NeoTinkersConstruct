@@ -128,7 +128,7 @@ public interface CounterModule extends ModifierModule, OnAttackedModifierHook, C
       && Util.getSlotType(holder.getUsedItemHand()) == slotType
       && ModifierUtil.canPerformAction(tool, ItemAbilities.SHIELD_BLOCK)
       // not sure whether its a modifier or a bow blocking, so we do end up creating a second tool stack to check use duration; luckily needs no modifier list parse
-      && holder.getItemBySlot(slotType).getUseDuration() - holder.getUseItemRemainingTicks() >= 5;
+      && holder.getItemBySlot(slotType).getUseDuration(holder) - holder.getUseItemRemainingTicks() >= 5;
   }
 
   /** Gets the scaled level of the modifier, doubling for shields that are blocking */
@@ -191,7 +191,8 @@ public interface CounterModule extends ModifierModule, OnAttackedModifierHook, C
     /** @deprecated use {@link #Builder(Function7)} */
     @Deprecated(forRemoval = true)
     public Builder(Function5<LevelingValue,LevelingValue,LevelingValue,Integer,ModifierCondition<IToolStackView>,T> constructor) {
-      this((chance, constant, random, durability,defender, attacker, condition) -> constructor.apply(chance, constant, random, durability, condition));
+      this((Function7<LevelingValue,LevelingValue,LevelingValue,Integer,IJsonPredicate<LivingEntity>,IJsonPredicate<LivingEntity>,ModifierCondition<IToolStackView>,T>)
+        (c, con, r, d, def, att, cond) -> constructor.apply(c, con, r, d, cond));
     }
 
     /** Common case of leveling chance */

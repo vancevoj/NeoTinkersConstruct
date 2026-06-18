@@ -3,20 +3,26 @@ package slimeknights.tconstruct.tables.network;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.network.NetworkEvent.Context;
-import net.neoforged.neoforge.network.NetworkHooks;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import slimeknights.mantle.network.packet.ISimplePacket;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
+import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.network.TinkerNetwork;
 import slimeknights.tconstruct.tables.block.ITabbedBlock;
 
 @RequiredArgsConstructor
 public class StationTabPacket implements IThreadsafePacket {
+  public static final Type<StationTabPacket> TYPE = new Type<>(TConstruct.getResource("station_tab"));
+  public static final StreamCodec<RegistryFriendlyByteBuf,StationTabPacket> STREAM_CODEC = ISimplePacket.codec(StationTabPacket::new);
+
   private final BlockPos pos;
 
   public StationTabPacket(FriendlyByteBuf buffer) {
@@ -29,9 +35,13 @@ public class StationTabPacket implements IThreadsafePacket {
   }
 
   @Override
-  public void handleThreadsafe(Context context) {
-    ServerPlayer sender = context.getSender();
-    if (sender != null) {
+  public Type<StationTabPacket> type() {
+    return TYPE;
+  }
+
+  @Override
+  public void handleThreadsafe(IPayloadContext context) {
+    if (context.player() instanceof ServerPlayer sender) {
       ItemStack heldStack = sender.containerMenu.getCarried();
       if (!heldStack.isEmpty()) {
         // set it to empty, so it's doesn't get dropped
@@ -48,7 +58,7 @@ public class StationTabPacket implements IThreadsafePacket {
       } else {
         MenuProvider provider = state.getMenuProvider(sender.getCommandSenderWorld(), pos);
         if (provider != null) {
-          NetworkHooks.openScreen(sender, provider, pos);
+          sender.openMenu(provider, pos);
         }
       }
 

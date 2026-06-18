@@ -3,10 +3,13 @@ package slimeknights.tconstruct.tools.modules;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.jetbrains.annotations.ApiStatus.Internal;
@@ -39,7 +42,7 @@ public class AutosmeltModule implements ModifierModule, ProcessLootModifierHook 
     Loadables.RECIPE_TYPE.<RecipeType<? extends AbstractCookingRecipe>>flatXmap(type -> (RecipeType<? extends AbstractCookingRecipe>)type, type -> type)
       .list(ArrayLoadable.COMPACT).requiredField("recipe_types", m -> m.recipeTypes),
     FloatLoadable.PERCENT.requiredField("extra_drop_chance", m -> m.extraDropChance),
-    AutosmeltModule::new);
+    (types, chance) -> new AutosmeltModule(types, chance));
   /** Inventory instance to use for recipe search */
   private static final SingleItemContainer INVENTORY = new SingleItemContainer();
 
@@ -87,7 +90,7 @@ public class AutosmeltModule implements ModifierModule, ProcessLootModifierHook 
     // try each recipe type to see if we have a recipe for any of them
     Optional<? extends AbstractCookingRecipe> recipe = Optional.empty();
     for (RecipeType<? extends AbstractCookingRecipe> recipeType : recipeTypes) {
-      recipe = world.getRecipeManager().getRecipeFor(recipeType, INVENTORY, world);
+      recipe = world.getRecipeManager().getRecipeFor(recipeType, new SingleRecipeInput(INVENTORY.getStack()), world).map(RecipeHolder::value);
       if (recipe.isPresent()) {
         break;
       }
@@ -104,8 +107,8 @@ public class AutosmeltModule implements ModifierModule, ProcessLootModifierHook 
    */
   @Nullable
   private AbstractCookingRecipe findCachedRecipe(ItemStack stack, Level world) {
-    // don't use the cache if there is a tag, prevent breaking NBT sensitive recipes
-    if (stack.hasTag()) {
+    // don't use the cache if there is custom data, prevent breaking NBT sensitive recipes
+    if (stack.has(DataComponents.CUSTOM_DATA)) {
       return findRecipe(stack, world).orElse(null);
     }
     try {
@@ -130,7 +133,7 @@ public class AutosmeltModule implements ModifierModule, ProcessLootModifierHook 
     if (recipe != null) {
       // fetch recipe result, may be input sensitive
       INVENTORY.setStack(stack);
-      ItemStack output = recipe.assemble(INVENTORY, world.registryAccess());
+      ItemStack output = recipe.assemble(new SingleRecipeInput(INVENTORY.getStack()), world.registryAccess());
       INVENTORY.setStack(ItemStack.EMPTY);
       // scale the stack size based on the input size
       if (stack.getCount() > 1) {

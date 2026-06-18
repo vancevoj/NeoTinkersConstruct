@@ -5,6 +5,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.MobEffectTextureManager;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -19,8 +20,6 @@ import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.tools.TinkerModifiers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 /** Effect for rendering the charge up when you start using a helmet */
@@ -29,10 +28,7 @@ public class HelmetChargingEffect extends MobEffect {
     super(MobEffectCategory.NEUTRAL, -1);
   }
 
-  @Override
-  public List<ItemStack> getCurativeItems() {
-    return new ArrayList<>();
-  }
+  // TODO(neoport): no-cure behavior now handled via MobEffectInstance cure tags, getCurativeItems override removed
 
   @Override
   public void initializeClient(Consumer<IClientMobEffectExtensions> consumer) {
@@ -85,7 +81,8 @@ public class HelmetChargingEffect extends MobEffect {
   /** Starts using the helmet with the charge time rendering */
   public static int startUsingHelmet(IToolStackView tool, LivingEntity living, float speedFactor) {
     int time = GeneralInteractionModifierHook.startDrawing(tool, living, speedFactor);
-    living.addEffect(new MobEffectInstance(TinkerModifiers.helmetCharging.get(), time + 20, 0, true, false, true));
+    // helmetCharging is a DeferredHolder<?, HelmetChargingEffect> (wildcard), so wrap the effect instance as a Holder<MobEffect>
+    living.addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(TinkerModifiers.helmetCharging.get()), time + 20, 0, true, false, true));
     return time;
   }
 }

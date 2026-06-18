@@ -41,8 +41,11 @@ public record PunchModule(LevelingValue amount, ModifierCondition<IToolStackView
     if (condition.matches(tool, modifier)) {
       float amount = this.amount.compute(modifier.getEffectiveLevel());
       if (amount > 0) {
-        if (arrow != null) {
-          arrow.setKnockback((int) amount);
+        if (arrow instanceof ProjectileWithKnockback withKnockback) {
+          // AbstractArrow.setKnockback removed in 1.21; ModifiableArrow implements ProjectileWithKnockback to add knockback
+          withKnockback.addKnockback(amount);
+        } else if (arrow != null) {
+          // TODO(neoport): AbstractArrow.setKnockback(int) removed in 1.21; no replacement for non-ModifiableArrow arrows
         } else if (projectile instanceof ProjectileWithKnockback withKnockback) {
           withKnockback.addKnockback(amount);
         }

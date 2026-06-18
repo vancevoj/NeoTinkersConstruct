@@ -87,6 +87,7 @@ public record LifestealModule(LevelingValue percent, LevelingInt durabilityUsage
       float percent = this.percent.compute(modifier.getEffectiveLevel());
       if (percent > 0) {
         attacker.heal(percent * damage);
+        // TODO(neoport): Sounds.java needs porting (ForgeRegistries rename, Mod.EventBusSubscriber), getSound() unavailable until then
         attacker.level().playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(), Sounds.NECROTIC_HEAL.getSound(), SoundSource.PLAYERS, 1.0f, 1.0f);
         // take a bit of extra damage to heal
         int durability = durabilityUsage.compute(level);
@@ -125,6 +126,7 @@ public record LifestealModule(LevelingValue percent, LevelingInt durabilityUsage
         float power = ProjectileWithPower.getDamage(projectile);
         if (power > 0) {
           attacker.heal(percent * Math.min(target.getHealth(), power));
+          // TODO(neoport): Sounds.java needs porting (ForgeRegistries rename, Mod.EventBusSubscriber), getSound() unavailable until then
           attacker.level().playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(), Sounds.NECROTIC_HEAL.getSound(), SoundSource.PLAYERS, 1.0f, 1.0f);
 
           // damage fishing rod

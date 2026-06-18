@@ -22,7 +22,9 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -90,7 +92,7 @@ public record SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeT
     InventoryModule.LOADER.directField(SmeltingModule::input),
     OutputKeyField.INSTANCE,
     // TODO 1.21: remove default value
-    Pattern.PARSER.defaultField("output_pattern", Patterns.RESULT, true, m -> m.output.pattern()),
+    Pattern.PARSER.defaultField("output_pattern", Patterns.RESULT, true, m -> m.output.pattern()), // TODO(neoport): InventoryModule.pattern() missing until InventoryModule is ported
     SmeltingModule::new);
 
   /** @apiNote use {@link #SmeltingModule(RecipeType, float, InventoryModule, ResourceLocation, Pattern)} */
@@ -98,7 +100,7 @@ public record SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeT
   public SmeltingModule {}
 
   public SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeType, float multiplier, InventoryModule inventory, @Nullable ResourceLocation outputKey, Pattern outputPattern) {
-    this(recipeType, multiplier, inventory, InventoryModule.builder().from(inventory).key(outputKey).pattern(outputPattern).filter(ItemPredicate.NONE).slots(inventory.slots()));
+    this(recipeType, multiplier, inventory, InventoryModule.builder().from(inventory).key(outputKey).pattern(outputPattern).filter(ItemPredicate.NONE).slots(inventory.slots())); // TODO(neoport): InventoryModule.builder().key()/slots() missing until InventoryModule is ported
   }
 
   public SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeType, float multiplier, InventoryModule inventory) {
@@ -127,11 +129,11 @@ public record SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeT
     CONTAINER.setStack(stack);
     try {
       // first, try the cached recipe
-      if (lastRecipe != null && lastRecipe.matches(CONTAINER, level)) {
+      if (lastRecipe != null && lastRecipe.matches(new SingleRecipeInput(CONTAINER.getStack()), level)) {
         return lastRecipe;
       }
       // if that failed, do a recipe lookup
-      AbstractCookingRecipe recipe = level.getRecipeManager().getRecipeFor(recipeType, CONTAINER, level).orElse(null);
+      AbstractCookingRecipe recipe = level.getRecipeManager().getRecipeFor(recipeType, new SingleRecipeInput(CONTAINER.getStack()), level).map(RecipeHolder::value).orElse(null);
       if (recipe != null) {
         lastRecipe = recipe;
       }
@@ -152,7 +154,7 @@ public record SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeT
 
   /** Logic to actually cook the items */
   private void cookItems(IToolStackView tool, ModifierEntry modifier, Level level, @Nullable LivingEntity holder, float amount) {
-    if (!input.condition().matches(tool, modifier) || amount < 0) {
+    if (!input.condition().matches(tool, modifier) || amount < 0) { // TODO(neoport): InventoryModule.condition() missing until InventoryModule is ported
       return;
     }
     // first, fetch the inventory, ensure it exists
@@ -173,7 +175,7 @@ public record SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeT
         // 0 means no recipe, time for a lookup
         if (time == 0) {
           time = NO_RECIPE;
-          stack = ItemStack.of(entry);
+          stack = ItemStack.parseOptional(level.registryAccess(), entry);
           recipe = findRecipe(recipeType, stack, level, modifier.getId());
           if (recipe != null) {
             time = recipe.getCookingTime();
@@ -202,7 +204,7 @@ public record SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeT
 
             // use the recipe we fetched earlier if present
             if (recipe == null) {
-              stack = ItemStack.of(entry);
+              stack = ItemStack.parseOptional(level.registryAccess(), entry);
               if (!stack.isEmpty()) {
                 recipe = findRecipe(recipeType, stack, level, modifier.getId());
               }
@@ -212,7 +214,7 @@ public record SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeT
               // attempt to assemble the recipe, use a try/catch in case their assemble logic is bad
               CONTAINER.setStack(stack);
               try {
-                ItemStack result = recipe.assemble(CONTAINER, level.registryAccess());
+                ItemStack result = recipe.assemble(new SingleRecipeInput(CONTAINER.getStack()), level.registryAccess());
 
                 // check again if we have space for the result now that we know its size
                 if (!result.isEmpty()) {
@@ -221,7 +223,7 @@ public record SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeT
                     maxStackSize = Math.min(result.getMaxStackSize(), output.getSlotLimit(tool, modifier, slot));
                   }
                   // if not enough space for the combo or its type is wrong, just mark as almost finished and give up
-                  if (result.getCount() + currentResult.getCount() > maxStackSize || !currentResult.isEmpty() && !ItemStack.isSameItemSameTags(currentResult, result)) {
+                  if (result.getCount() + currentResult.getCount() > maxStackSize || !currentResult.isEmpty() && !ItemStack.isSameItemSameComponents(currentResult, result)) {
                     entry.putInt(TAG_TIME, 1);
                     CONTAINER.setStack(ItemStack.EMPTY);
                     continue;
@@ -265,7 +267,7 @@ public record SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeT
                   }
                 }
               } catch (Exception e) {
-                TConstruct.LOG.error("Error getting result of recipe {} on modifier {}, this usually indicates a broken recipe", recipe.getId(), modifier, e);
+                TConstruct.LOG.error("Error getting result of recipe {} on modifier {}, this usually indicates a broken recipe", recipe.getClass().getSimpleName(), modifier, e);
               }
               CONTAINER.setStack(ItemStack.EMPTY);
             } else {
@@ -281,7 +283,7 @@ public record SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeT
   @Override
   public void afterMeleeHit(IToolStackView tool, ModifierEntry modifier, ToolAttackContext context, float damageDealt) {
     // melee hits cook by melee damage
-    cookItems(tool, modifier, context.getAttacker(), damageDealt);
+    cookItems(tool, modifier, context.getAttacker(), damageDealt); // TODO(neoport): ToolAttackContext.getAttacker() missing until ToolAttackContext is ported
   }
 
   @Override
@@ -292,7 +294,7 @@ public record SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeT
   @Override
   public void finishHarvest(IToolStackView tool, ModifierEntry modifier, ToolHarvestContext context, int harvested) {
     if (tool.hasTag(TinkerTags.Items.HARVEST)) {
-      cookItems(tool, modifier, context.getLiving(), harvested);
+      cookItems(tool, modifier, context.getLiving(), harvested); // TODO(neoport): ToolHarvestContext.getLiving() missing until ToolHarvestContext is ported
     }
   }
 
@@ -314,7 +316,7 @@ public record SmeltingModule(RecipeType<? extends AbstractCookingRecipe> recipeT
   public void onAttacked(IToolStackView tool, ModifierEntry modifier, EquipmentContext context, EquipmentSlot slotType, DamageSource source, float amount, boolean isDirectDamage) {
     // damage taken cooks for armor/shields
     if (tool.hasTag(TinkerTags.Items.ARMOR)) {
-      cookItems(tool, modifier, context.getEntity(), amount);
+      cookItems(tool, modifier, context.getEntity(), amount); // TODO(neoport): EquipmentContext.getEntity() cascade from EquipmentContext port
     }
   }
 

@@ -93,6 +93,7 @@ public enum ThrowingModule implements ModifierModule, GeneralInteractionModifier
         float charge = GeneralInteractionModifierHook.getToolCharge(tool, chargeTime);
         float velocity = ConditionalStatModifierHook.getModifiedStat(tool, entity, ToolStats.VELOCITY);
         ThrownTool thrown = new ThrownTool(level, player, stack, charge, velocity, ConditionalStatModifierHook.getModifiedStat(tool, entity, ToolStats.WATER_INERTIA));
+        // TODO(neoport): setOriginalSlot unavailable until ThrownTool compiles (Lombok @Setter blocked by ThrownTool errors)
         if (player.getUsedItemHand() == InteractionHand.OFF_HAND) {
           thrown.setOriginalSlot(Inventory.SLOT_OFFHAND);
         } else {
@@ -108,7 +109,7 @@ public enum ThrowingModule implements ModifierModule, GeneralInteractionModifier
 
         // don't run projectile hooks, as the projectile has the tool already for that. Throwing runs melee hooks
         level.addFreshEntity(thrown);
-        level.playSound(null, thrown, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1, 1);
+        level.playSound(null, thrown.blockPosition(), SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0F, 1.0F);
         if (!player.getAbilities().instabuild) {
           player.getInventory().removeItem(stack);
         }

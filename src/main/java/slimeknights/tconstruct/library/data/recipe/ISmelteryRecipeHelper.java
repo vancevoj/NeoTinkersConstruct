@@ -1,6 +1,6 @@
 package slimeknights.tconstruct.library.data.recipe;
 
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -17,7 +17,6 @@ import slimeknights.tconstruct.library.recipe.melting.MeltingRecipeBuilder;
 import slimeknights.tconstruct.smeltery.TinkerSmeltery;
 
 import javax.annotation.Nullable;
-import java.util.function.Consumer;
 
 import static slimeknights.mantle.Mantle.COMMON;
 import static slimeknights.tconstruct.library.recipe.melting.IMeltingRecipe.getTemperature;
@@ -29,12 +28,12 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
   /* Builders for casting and melting from tags */
 
   /** Creates a smeltery builder for a standard fluid */
-  default SmelteryRecipeBuilder fluid(Consumer<FinishedRecipe> consumer, String name, FluidObject<?> fluid) {
+  default SmelteryRecipeBuilder fluid(RecipeOutput consumer, String name, FluidObject<?> fluid) {
     return SmelteryRecipeBuilder.fluid(consumer, location(name), fluid);
   }
 
   /** Creates a smeltery builder for a molten fluid */
-  default SmelteryRecipeBuilder molten(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid) {
+  default SmelteryRecipeBuilder molten(RecipeOutput consumer, FluidObject<?> fluid) {
     return fluid(consumer, fluid.getId().getPath().substring("molten_".length()), fluid);
   }
 
@@ -51,14 +50,14 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
    * @param recipePath  Recipe output name
    * @param isOptional  If true, recipe is optional
    */
-  default void tagMelting(Consumer<FinishedRecipe> consumer, FluidOutput fluid, int temperature, String tagName, float factor, String recipePath, boolean isOptional) {
-    Consumer<FinishedRecipe> wrapped = isOptional ? withCondition(consumer, tagCondition(tagName)) : consumer;
+  default void tagMelting(RecipeOutput consumer, FluidOutput fluid, int temperature, String tagName, float factor, String recipePath, boolean isOptional) {
+    RecipeOutput wrapped = isOptional ? withCondition(consumer, tagCondition(tagName)) : consumer;
     MeltingRecipeBuilder.melting(Ingredient.of(getItemTag(COMMON, tagName)), fluid, temperature, factor)
                         .save(wrapped, location(recipePath));
   }
 
   /**
-   * Common usage of {@link #tagMelting(Consumer, FluidOutput, int, String, float, String, boolean)}
+   * Common usage of {@link #tagMelting(RecipeOutput, FluidOutput, int, String, float, String, boolean)}
    * @param consumer    Recipe consumer
    * @param fluid       Fluid to melt into
    * @param amount      Fluid output amount
@@ -67,7 +66,7 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
    * @param recipePath  Recipe output name
    * @param isOptional  If true, recipe is optional
    */
-  default void tagMelting(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, int amount, String tagName, float factor, String recipePath, boolean isOptional) {
+  default void tagMelting(RecipeOutput consumer, FluidObject<?> fluid, int amount, String tagName, float factor, String recipePath, boolean isOptional) {
     tagMelting(consumer, fluid.result(amount), getTemperature(fluid), tagName, factor, recipePath, isOptional);
   }
 
@@ -94,9 +93,9 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
     // removed wires/sheetmetals as no addon will have them, IE has a limited list
   }
 
-  /** @deprecated use {@link SmelteryRecipeBuilder} vua {@link #molten(Consumer, FluidObject)} */
+  /** @deprecated use {@link SmelteryRecipeBuilder} vua {@link #molten(RecipeOutput, FluidObject)} */
   @Deprecated(forRemoval = true)
-  default void metalMelting(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, String name, boolean hasOre, boolean hasDust, String folder, boolean isOptional, IByproduct... byproducts) {
+  default void metalMelting(RecipeOutput consumer, FluidObject<?> fluid, String name, boolean hasOre, boolean hasDust, String folder, boolean isOptional, IByproduct... byproducts) {
     SmelteryRecipeBuilder builder = SmelteryRecipeBuilder.fluid(consumer, location(name), fluid).meltingFolder(folder).optional(isOptional);
     if (hasOre) {
       builder.ore(byproducts);
@@ -104,9 +103,9 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
     metalMelting(builder, hasOre, hasDust);
   }
 
-  /** @deprecated use {@link SmelteryRecipeBuilder} via {@link SmelteryRecipeBuilder#fluid(Consumer, ResourceLocation, Fluid)} */
+  /** @deprecated use {@link SmelteryRecipeBuilder} via {@link SmelteryRecipeBuilder#fluid(RecipeOutput, ResourceLocation, Fluid)} */
   @Deprecated(forRemoval = true)
-  default void metalMelting(Consumer<FinishedRecipe> consumer, Fluid fluid, String name, boolean hasOre, boolean hasDust, String folder, boolean isOptional, IByproduct... byproducts) {
+  default void metalMelting(RecipeOutput consumer, Fluid fluid, String name, boolean hasOre, boolean hasDust, String folder, boolean isOptional, IByproduct... byproducts) {
     SmelteryRecipeBuilder builder = SmelteryRecipeBuilder.fluid(consumer, location(name), fluid).meltingFolder(folder).optional(isOptional);
     if (hasOre) {
       builder.ore(byproducts);
@@ -127,9 +126,9 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
     }
   }
 
-  /** @deprecated use {@link SmelteryRecipeBuilder} vua {@link #molten(Consumer, FluidObject)} */
+  /** @deprecated use {@link SmelteryRecipeBuilder} vua {@link #molten(RecipeOutput, FluidObject)} */
   @Deprecated(forRemoval = true)
-  default void gemMelting(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, String name, boolean hasOre, int blockSize, String folder, boolean isOptional, IByproduct... byproducts) {
+  default void gemMelting(RecipeOutput consumer, FluidObject<?> fluid, String name, boolean hasOre, int blockSize, String folder, boolean isOptional, IByproduct... byproducts) {
     SmelteryRecipeBuilder builder = SmelteryRecipeBuilder.fluid(consumer, location(name), fluid).meltingFolder(folder).optional(isOptional);
     if (hasOre) {
       builder.ore(byproducts);
@@ -137,9 +136,9 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
     gemMelting(builder, hasOre, blockSize);
   }
 
-  /** @deprecated use {@link SmelteryRecipeBuilder} via {@link SmelteryRecipeBuilder#fluid(Consumer, ResourceLocation, Fluid)} */
+  /** @deprecated use {@link SmelteryRecipeBuilder} via {@link SmelteryRecipeBuilder#fluid(RecipeOutput, ResourceLocation, Fluid)} */
   @Deprecated(forRemoval = true)
-  default void gemMelting(Consumer<FinishedRecipe> consumer, Fluid fluid, String name, boolean hasOre, int blockSize, String folder, boolean isOptional, IByproduct... byproducts) {
+  default void gemMelting(RecipeOutput consumer, Fluid fluid, String name, boolean hasOre, int blockSize, String folder, boolean isOptional, IByproduct... byproducts) {
     SmelteryRecipeBuilder builder = SmelteryRecipeBuilder.fluid(consumer, location(name), fluid).meltingFolder(folder).optional(isOptional);
     if (hasOre) {
       builder.ore(byproducts);
@@ -159,7 +158,7 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
    * @param output    Recipe output
    * @param location  Recipe base
    */
-  default void castingWithCast(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, int amount, CastItemObject cast, ItemOutput output, String location) {
+  default void castingWithCast(RecipeOutput consumer, FluidObject<?> fluid, int amount, CastItemObject cast, ItemOutput output, String location) {
     ItemCastingRecipeBuilder.tableRecipe(output)
                             .setFluidAndTime(fluid, amount)
                             .setCast(cast.getMultiUseTag(), false)
@@ -179,7 +178,7 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
    * @param output    Recipe output
    * @param location  Recipe base
    */
-  default void castingWithCast(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, int amount, CastItemObject cast, ItemLike output, String location) {
+  default void castingWithCast(RecipeOutput consumer, FluidObject<?> fluid, int amount, CastItemObject cast, ItemLike output, String location) {
     castingWithCast(consumer, fluid, amount, cast, ItemOutput.fromItem(output), location);
   }
 
@@ -193,7 +192,7 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
    * @param recipeName   Name of the recipe for output
    * @param optional     If true, conditions the recipe on the tag
    */
-  default void tagCasting(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, int amount, CastItemObject cast, String tagName, String recipeName, boolean optional) {
+  default void tagCasting(RecipeOutput consumer, FluidObject<?> fluid, int amount, CastItemObject cast, String tagName, String recipeName, boolean optional) {
     if (optional) {
       consumer = withCondition(consumer, tagCondition(tagName));
     }
@@ -208,7 +207,7 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
    * @param ingot     Ingot output
    * @param location  Recipe base
    */
-  default void ingotCasting(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, int amount, ItemLike ingot, String location) {
+  default void ingotCasting(RecipeOutput consumer, FluidObject<?> fluid, int amount, ItemLike ingot, String location) {
     castingWithCast(consumer, fluid, amount, TinkerSmeltery.ingotCast, ingot, location);
   }
 
@@ -219,7 +218,7 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
    * @param ingot     Ingot output
    * @param location  Recipe base
    */
-  default void ingotCasting(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, ItemLike ingot, String location) {
+  default void ingotCasting(RecipeOutput consumer, FluidObject<?> fluid, ItemLike ingot, String location) {
     ingotCasting(consumer, fluid, FluidValues.INGOT, ingot, location);
   }
 
@@ -230,7 +229,7 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
    * @param gem       Gem output
    * @param location  Recipe base
    */
-  default void gemCasting(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, ItemLike gem, String location) {
+  default void gemCasting(RecipeOutput consumer, FluidObject<?> fluid, ItemLike gem, String location) {
     castingWithCast(consumer, fluid, FluidValues.GEM, TinkerSmeltery.gemCast, gem, location);
   }
 
@@ -241,13 +240,13 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
    * @param nugget    Nugget output
    * @param location  Recipe base
    */
-  default void nuggetCasting(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, ItemLike nugget, String location) {
+  default void nuggetCasting(RecipeOutput consumer, FluidObject<?> fluid, ItemLike nugget, String location) {
     castingWithCast(consumer, fluid, FluidValues.NUGGET, TinkerSmeltery.nuggetCast, nugget, location);
   }
 
-  /** @deprecated use {@link SmelteryRecipeBuilder} with {@link #molten(Consumer, FluidObject)} */
+  /** @deprecated use {@link SmelteryRecipeBuilder} with {@link #molten(RecipeOutput, FluidObject)} */
   @Deprecated(forRemoval = true)
-  default void metalCasting(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, @Nullable ItemLike block, @Nullable ItemLike ingot, @Nullable ItemLike nugget, String folder, String metal) {
+  default void metalCasting(RecipeOutput consumer, FluidObject<?> fluid, @Nullable ItemLike block, @Nullable ItemLike ingot, @Nullable ItemLike nugget, String folder, String metal) {
     String metalFolder = folder + metal + "/";
     if (block != null) {
       ItemCastingRecipeBuilder.basinRecipe(block)
@@ -268,15 +267,15 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
     tagCasting(consumer, fluid, FluidValues.INGOT / 2, TinkerSmeltery.wireCast, "wires/" + metal, folder + metal + "/wire", true);
   }
 
-  /** @deprecated use {@link SmelteryRecipeBuilder} with {@link #molten(Consumer, FluidObject)}. */
+  /** @deprecated use {@link SmelteryRecipeBuilder} with {@link #molten(RecipeOutput, FluidObject)}. */
   @Deprecated(forRemoval = true)
-  default void metalCasting(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, MetalItemObject metal, String folder, String name) {
+  default void metalCasting(RecipeOutput consumer, FluidObject<?> fluid, MetalItemObject metal, String folder, String name) {
     metalCasting(consumer, fluid, metal.get(), metal.getIngot(), metal.getNugget(), folder, name);
   }
 
-  /** @deprecated use {@link SmelteryRecipeBuilder} with {@link #molten(Consumer, FluidObject)} */
+  /** @deprecated use {@link SmelteryRecipeBuilder} with {@link #molten(RecipeOutput, FluidObject)} */
   @Deprecated(forRemoval = true)
-  default void metalTagCasting(Consumer<FinishedRecipe> consumer, FluidObject<?> fluid, String name, String folder, boolean forceStandard) {
+  default void metalTagCasting(RecipeOutput consumer, FluidObject<?> fluid, String name, String folder, boolean forceStandard) {
     // nugget and ingot
     tagCasting(consumer, fluid, FluidValues.NUGGET, TinkerSmeltery.nuggetCast, "nuggets/" + name, folder + name + "/nugget", !forceStandard);
     tagCasting(consumer, fluid, FluidValues.INGOT, TinkerSmeltery.ingotCast, "ingots/" + name, folder + name + "/ingot", !forceStandard);
@@ -286,7 +285,7 @@ public interface ISmelteryRecipeHelper extends ICastCreationHelper {
     tagCasting(consumer, fluid, FluidValues.INGOT / 2, TinkerSmeltery.rodCast, "rods/" + name, folder + name + "/rod", true);
     tagCasting(consumer, fluid, FluidValues.INGOT / 2, TinkerSmeltery.wireCast, "wires/" + name, folder + name + "/wire", true);
     // block
-    Consumer<FinishedRecipe> wrapped = forceStandard ? consumer : withCondition(consumer, tagCondition("storage_blocks/" + name));
+    RecipeOutput wrapped = forceStandard ? consumer : withCondition(consumer, tagCondition("storage_blocks/" + name));
     ItemCastingRecipeBuilder.basinRecipe(getItemTag(COMMON, "storage_blocks/" + name))
                             .setFluidAndTime(fluid, FluidValues.METAL_BLOCK)
                             .save(wrapped, location(folder + name + "/block"));

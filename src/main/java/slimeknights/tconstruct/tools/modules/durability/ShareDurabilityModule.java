@@ -31,12 +31,15 @@ import java.util.List;
 public record ShareDurabilityModule(LazyModifier shield, LevelingInt grant, LevelingInt consume) implements ModifierModule, ToolDamageModifierHook {
   private static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<ShareDurabilityModule>defaultHooks(ModifierHooks.TOOL_DAMAGE);
   public static final RecordLoadable<ShareDurabilityModule> LOADER = RecordLoadable.create(
+    // TODO(neoport): LazyModifier.getId() cascade error - LazyModifier.java needs porting (IdAwareObject API change)
     ModifierId.PARSER.requiredField("shield", m -> m.shield.getId()),
     LevelingInt.LOADABLE.requiredField("grant", ShareDurabilityModule::grant),
     LevelingInt.LOADABLE.requiredField("consume", ShareDurabilityModule::consume),
     ShareDurabilityModule::new);
 
   public ShareDurabilityModule(ModifierId modifier, LevelingInt grant, LevelingInt consumed) {
+    // TODO(neoport): LazyModifier(ModifierId) ctor missing - cascade from LazyModifier.java needing port;
+    // LazyModifier lacks @RequiredArgsConstructor-generated ctor due to compile errors in that file
     this(new LazyModifier(modifier), grant, consumed);
   }
 
@@ -111,6 +114,7 @@ public record ShareDurabilityModule(LazyModifier shield, LevelingInt grant, Leve
           Modifier shield = this.shield.get();
           ModifierEntry entry = choice.getModifier(shield);
           // if the modifier is missing, add it
+          // TODO(neoport): ModifierEntry.getLevel() cascade error from LazyModifier.java not compiling
           if (entry.getLevel() == 0) {
             entry = new ModifierEntry(shield, 1);
             choice.addModifier(shield.getId(), 1);

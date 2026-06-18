@@ -1,8 +1,6 @@
 package slimeknights.tconstruct.tools.modules;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -29,8 +27,6 @@ import java.util.List;
  * TODO 1.21: consider merging into {@link slimeknights.tconstruct.library.modifiers.modules.capacity.TimeToCapacityModule}..
  * TODO 1.21: otherwise move to {@link slimeknights.tconstruct.tools.modules.durability}
  */
-@Getter
-@Accessors(fluent = true)
 @RequiredArgsConstructor
 public class OvergrowthModule implements ModifierModule, InventoryTickModifierHook, ConditionalModule<IToolStackView> {
   public static final List<ModuleHook<?>> DEFAULT_HOOKS = HookProvider.<OvergrowthModule>defaultHooks(ModifierHooks.INVENTORY_TICK);
@@ -39,6 +35,16 @@ public class OvergrowthModule implements ModifierModule, InventoryTickModifierHo
 
   private final LevelingValue chance;
   private final ModifierCondition<IToolStackView> condition;
+
+  /** Returns the leveling value for the random chance to restore per tick */
+  public LevelingValue chance() {
+    return chance;
+  }
+
+  @Override
+  public ModifierCondition<IToolStackView> condition() {
+    return condition;
+  }
 
   public OvergrowthModule(LevelingValue chance) {
     this(chance, ModifierCondition.ANY_TOOL);

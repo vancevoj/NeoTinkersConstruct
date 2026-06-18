@@ -2,11 +2,15 @@ package slimeknights.tconstruct.tools.network;
 
 import lombok.RequiredArgsConstructor;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.neoforged.neoforge.network.NetworkEvent.Context;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import slimeknights.mantle.client.TooltipKey;
+import slimeknights.mantle.network.packet.ISimplePacket;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
+import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.shared.TinkerEffects;
 import slimeknights.tconstruct.tools.logic.DoubleJumpHandler;
 import slimeknights.tconstruct.tools.logic.InteractionHandler;
@@ -30,6 +34,9 @@ public enum TinkerControlPacket implements IThreadsafePacket {
   START_LEGGINGS_INTERACT_CONTROL(TooltipKey.CONTROL),
   START_LEGGINGS_INTERACT_ALT(TooltipKey.ALT),
   STOP_LEGGINGS_INTERACT;
+
+  public static final Type<TinkerControlPacket> TYPE = new Type<>(TConstruct.getResource("tinker_control"));
+  public static final StreamCodec<RegistryFriendlyByteBuf,TinkerControlPacket> STREAM_CODEC = ISimplePacket.codec(TinkerControlPacket::read);
 
   private final TooltipKey modifier;
 
@@ -67,9 +74,13 @@ public enum TinkerControlPacket implements IThreadsafePacket {
   }
 
   @Override
-  public void handleThreadsafe(Context context) {
-    ServerPlayer player = context.getSender();
-    if (player != null) {
+  public Type<TinkerControlPacket> type() {
+    return TYPE;
+  }
+
+  @Override
+  public void handleThreadsafe(IPayloadContext context) {
+    if (context.player() instanceof ServerPlayer player) {
       switch (this) {
         case DOUBLE_JUMP -> DoubleJumpHandler.extraJump(player);
         case ANTIGRAVITY_JUMP -> TinkerEffects.antigravity.get().antigravityJump(player);

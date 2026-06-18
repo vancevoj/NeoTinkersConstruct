@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.tools.modules.ranged.ammo;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.Tag;
@@ -15,8 +16,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.phys.EntityHitResult;
 import slimeknights.mantle.client.TooltipKey;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
@@ -41,6 +41,7 @@ import slimeknights.tconstruct.library.utils.RomanNumeralHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 /** Module allowing arrows to be tipped, applying their effect to the target */
 public enum TippedModule implements ModifierModule, ProjectileLaunchModifierHook.NoShooter, ProjectileHitModifierHook, ModifierRemovalHook, DisplayNameModifierHook, TooltipModifierHook {
@@ -98,8 +99,11 @@ public enum TippedModule implements ModifierModule, ProjectileLaunchModifierHook
         int oldHurtTime = target.invulnerableTime;
         target.invulnerableTime = 0;
         // not a problem if the ID is invalid, will just do nothing
-        for (MobEffectInstance instance : BuiltInRegistries.POTION.get(id).getEffects()) {
-          MobEffect effect = instance.getEffect();
+        Potion potion = BuiltInRegistries.POTION.get(id);
+        if (potion == null) return false;
+        for (MobEffectInstance instance : potion.getEffects()) {
+          Holder<MobEffect> effectHolder = instance.getEffect();
+          MobEffect effect = effectHolder.value();
           if (effect.isInstantenous()) {
             effect.applyInstantenousEffect(projectile, projectile.getOwner(), target, instance.getAmplifier(), 1f / (divisor * 0.75f));
           } else {
@@ -123,9 +127,8 @@ public enum TippedModule implements ModifierModule, ProjectileLaunchModifierHook
       ResourceLocation id = ResourceLocation.tryParse(toolData.getString(key));
       if (id != null) {
         Potion potion = BuiltInRegistries.POTION.get(id);
-        if (potion != Potions.EMPTY) {
-          PotionUtils.getColor(potion);
-          PotionUtils.addPotionTooltip(potion.getEffects(), tooltip, 1f / getDivisor(modifier));
+        if (potion != null && !potion.getEffects().isEmpty()) {
+          PotionContents.addPotionTooltip(potion.getEffects(), tooltip::add, 1f / getDivisor(modifier), 20.0F);
         }
       }
     }
@@ -139,12 +142,14 @@ public enum TippedModule implements ModifierModule, ProjectileLaunchModifierHook
       ResourceLocation id = ResourceLocation.tryParse(toolData.getString(key));
       if (id != null) {
         Potion potion = BuiltInRegistries.POTION.get(id);
-        if (potion != Potions.EMPTY) {
+        if (potion != null && !potion.getEffects().isEmpty()) {
+          // wrap as Holder so Potion.getName and PotionContents.getColor can accept it
+          Holder<Potion> potionHolder = BuiltInRegistries.POTION.wrapAsHolder(potion);
           // formats as Tipped <level> (<potion>)
           return Component.translatable(FORMAT,
-            RomanNumeralHelper.getNumeral(entry.getLevel()),
-            Component.translatable(potion.getName("item.minecraft.potion.effect."))
-          ).withStyle(style -> style.withColor(PotionUtils.getColor(potion)));
+            RomanNumeralHelper.getNumeral(entry.intEffectiveLevel()),
+            Component.translatable(Potion.getName(Optional.of(potionHolder), "item.minecraft.potion.effect."))
+          ).withStyle(style -> style.withColor(PotionContents.getColor(potionHolder)));
         }
       }
     }

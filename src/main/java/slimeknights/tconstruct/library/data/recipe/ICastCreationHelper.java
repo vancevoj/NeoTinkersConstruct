@@ -1,6 +1,6 @@
 package slimeknights.tconstruct.library.data.recipe;
 
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -16,8 +16,6 @@ import slimeknights.tconstruct.library.recipe.casting.ItemCastingRecipeBuilder;
 import slimeknights.tconstruct.library.recipe.molding.MoldingRecipeBuilder;
 import slimeknights.tconstruct.library.recipe.partbuilder.ItemPartRecipeBuilder;
 
-import java.util.function.Consumer;
-
 /**
  * Shared methods between {@link ISmelteryRecipeHelper} and {@link IToolRecipeHelper}
  */
@@ -31,7 +29,7 @@ public interface ICastCreationHelper extends IRecipeHelper {
    * @param cast      Produced cast
    * @param folder    Output folder
    */
-  default void castCreation(Consumer<FinishedRecipe> consumer, TagKey<Item> input, CastItemObject cast, String folder) {
+  default void castCreation(RecipeOutput consumer, TagKey<Item> input, CastItemObject cast, String folder) {
     castCreation(consumer, Ingredient.of(input), cast, folder, input.location().getPath());
   }
 
@@ -43,7 +41,7 @@ public interface ICastCreationHelper extends IRecipeHelper {
    * @param folder    Output folder
    * @param name      Cast name
    */
-  default void castCreation(Consumer<FinishedRecipe> consumer, Ingredient input, CastItemObject cast, String folder, String name) {
+  default void castCreation(RecipeOutput consumer, Ingredient input, CastItemObject cast, String folder, String name) {
     ItemCastingRecipeBuilder.tableRecipe(cast)
                             .setFluidAndTime(TinkerFluids.moltenGold, FluidValues.INGOT)
                             .setCast(input, true)

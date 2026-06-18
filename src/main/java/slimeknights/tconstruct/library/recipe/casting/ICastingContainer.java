@@ -16,6 +16,12 @@ public interface ICastingContainer extends ISingleStackContainer, RecipeInput {
     return 1;
   }
 
+  // disambiguate the unrelated isEmpty() defaults inherited from Container (via ISingleStackContainer) and RecipeInput
+  @Override
+  default boolean isEmpty() {
+    return getStack().isEmpty();
+  }
+
   /**
    * Gets the contained fluid in this inventory
    * @return  Contained fluid

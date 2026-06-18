@@ -62,7 +62,7 @@ public record ProjectileBounceModule(LevelingInt bounces) implements ModifierMod
         // mark a bounce as happened, block future modifiers
         persistentData.putInt(key, bounces + 1);
         if (!projectile.level().isClientSide) {
-          projectile.playSound(Sounds.SLIMY_BOUNCE.getSound());
+          projectile.playSound(Sounds.SLIMY_BOUNCE.getSound(), 1.0F, 1.0F);
         }
         return true;
       }

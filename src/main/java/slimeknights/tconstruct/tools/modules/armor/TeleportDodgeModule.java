@@ -2,7 +2,10 @@ package slimeknights.tconstruct.tools.modules.armor;
 
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -59,14 +62,16 @@ public record TeleportDodgeModule(IJsonPredicate<LivingEntity> defender, IJsonPr
   public float modifyDamageTaken(IToolStackView tool, ModifierEntry modifier, EquipmentContext context, EquipmentSlot slotType, DamageSource source, float amount, boolean isDirectDamage) {
     LivingEntity entity = context.getEntity();
     // entity must not have enderference, and conditions must match
-    if (!entity.hasEffect(TinkerEffects.enderference.get()) && this.defender.matches(entity) && damageSource.matches(source)) {
+    // Wrap TinkerEffect value to Holder<MobEffect> via BuiltInRegistries
+    Holder<MobEffect> enderferenceHolder = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(TinkerEffects.enderference.value());
+    if (!entity.hasEffect(enderferenceHolder) && this.defender.matches(entity) && damageSource.matches(source)) {
       // chance of applying is boosted when blocking with a shield
       float level = CounterModule.getLevel(tool, modifier, slotType, entity);
       if (entity.getRandom().nextFloat() < chance.compute(level) && TeleportHelper.randomNearbyTeleport(context.getEntity(), (e, x, y, z) -> new EnderdodgingTeleportEvent(e, x, y, z, modifier))) {
         // if we successfully teleport, apply the cooldown
         int cooldown = this.cooldown.compute(level);
         if (cooldown > 0) {
-          entity.addEffect(new MobEffectInstance(TinkerEffects.enderference.get(), cooldown));
+          entity.addEffect(new MobEffectInstance(enderferenceHolder, cooldown));
         }
         // damage tool based on how much damage we blocked
         ToolDamageUtil.damageAnimated(tool, (int)amount, entity, slotType, modifier.getId());

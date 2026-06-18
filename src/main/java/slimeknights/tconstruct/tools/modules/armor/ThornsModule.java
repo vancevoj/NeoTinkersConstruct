@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.tools.modules.armor;
 
+import com.mojang.datafixers.util.Function7;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
@@ -39,7 +40,8 @@ public record ThornsModule(ResourceKey<DamageType> damageType, LevelingValue cha
 
   /** Creates a new builder instance */
   public static CounterModule.Builder<ThornsModule> type(ResourceKey<DamageType> type) {
-    return new CounterModule.Builder<>((chance, constant, random, durability, defender, attacker, condition) -> new ThornsModule(type, chance, constant, random, durability, defender, attacker, condition));
+    return new CounterModule.Builder<>((Function7<LevelingValue,LevelingValue,LevelingValue,Integer,IJsonPredicate<LivingEntity>,IJsonPredicate<LivingEntity>,ModifierCondition<IToolStackView>,ThornsModule>)
+      (chance, constant, random, durability, defender, attacker, condition) -> new ThornsModule(type, chance, constant, random, durability, defender, attacker, condition));
   }
 
   @Override

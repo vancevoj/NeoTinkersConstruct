@@ -1,9 +1,7 @@
 package slimeknights.tconstruct.tools.modules.cosmetic;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -11,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 import slimeknights.mantle.client.TooltipKey;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
@@ -43,7 +40,7 @@ public enum BannerModule implements ModifierModule, DisplayNameModifierHook, Too
   public static final String KEY_DYE = "dye";
   /** Key for a pattern color, as a 24 bit integer */
   public static final String KEY_COLOR = "color";
-  /** Key for a pattern hash, from {@link BannerPattern#getHashname()} */
+  /** Key for a pattern identifier; stored as old 1.20 hash string, TODO(neoport): migrate to ResourceLocation path */
   public static final String KEY_PATTERN = "pattern";
   /** Tooltip key saying hold shift for patterns */
   private static final Component HOLD_SHIFT = TConstruct.makeTranslation("modifier", "banner.hold_shift").withStyle(ChatFormatting.GRAY);
@@ -75,15 +72,10 @@ public enum BannerModule implements ModifierModule, DisplayNameModifierHook, Too
       if (tooltipKey == TooltipKey.SHIFT) {
         ListTag patterns = tool.getPersistentData().getList(patternKey(modifier.getId()), ListTag.TAG_COMPOUND);
         for (int i = 0; i < patterns.size(); i++) {
-          CompoundTag tag = patterns.getCompound(i);
-          DyeColor dye = DyeColor.byId(tag.getInt(KEY_DYE));
-          Holder<BannerPattern> holder = BannerPattern.byHash(tag.getString(KEY_PATTERN));
-          if (holder != null) {
-            // note that Forge is dumb in BannerItem with their patch - mojang already adds the mod ID to the tooltip key
-            holder.unwrapKey().ifPresent(key ->
-              tooltip.add(Component.translatable("block.minecraft.banner." + key.location().toShortLanguageKey() + '.' + dye.getName()).withStyle(ChatFormatting.GRAY)));
-
-          }
+          // TODO(neoport): BannerPattern.byHash() removed in 1.21.1; BannerPattern is now a data-driven registry.
+          // KEY_PATTERN stores old 1.20 hash strings. Need to migrate storage to ResourceLocation keys
+          // and look up via RegistryAccess. Until then tooltip pattern lines are suppressed.
+          @SuppressWarnings("unused") CompoundTag tag = patterns.getCompound(i);
         }
       } else {
         tooltip.add(HOLD_SHIFT);
@@ -107,10 +99,12 @@ public enum BannerModule implements ModifierModule, DisplayNameModifierHook, Too
     ListTag patterns = new ListTag();
 
     // add in the base pattern, it only exists on shields and we copy from banners
-    BannerPattern base = BuiltInRegistries.BANNER_PATTERN.get(BannerPatterns.BASE);
-    if (base != null) {
+    // TODO(neoport): BuiltInRegistries.BANNER_PATTERN removed; BannerPattern is now data-driven.
+    // BannerPatterns.BASE is ResourceKey<BannerPattern>; getHashname() gone.
+    // Store the base pattern key as its ResourceLocation path ("base") until NBT format migrated to RL keys.
+    {
       CompoundTag basePattern = new CompoundTag();
-      basePattern.putString(KEY_PATTERN, base.getHashname());
+      basePattern.putString(KEY_PATTERN, BannerPatterns.BASE.location().getPath());
       basePattern.putInt(KEY_DYE, dye.getId());
       basePattern.putInt(KEY_COLOR, baseColor);
       patterns.add(basePattern);

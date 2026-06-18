@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.tools.modules.armor;
 
+import com.mojang.datafixers.util.Function7;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,7 +15,8 @@ import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 
 /** Module implementing the counterattack side of freezing */
 public record FreezingCounterModule(LevelingValue chance, LevelingValue constant, LevelingValue random, int durabilityUsage, IJsonPredicate<LivingEntity> defender, IJsonPredicate<LivingEntity> attacker, ModifierCondition<IToolStackView> condition) implements CounterModule {
-  public static final RecordLoadable<FreezingCounterModule> LOADER = CounterModule.makeLoader("seconds", FreezingCounterModule::new);
+  public static final RecordLoadable<FreezingCounterModule> LOADER = CounterModule.makeLoader("seconds",
+    (Function7<LevelingValue,LevelingValue,LevelingValue,Integer,IJsonPredicate<LivingEntity>,IJsonPredicate<LivingEntity>,ModifierCondition<IToolStackView>,FreezingCounterModule>) FreezingCounterModule::new);
 
   /** @apiNote use {@link #builder()} */
   @Internal
@@ -22,7 +24,7 @@ public record FreezingCounterModule(LevelingValue chance, LevelingValue constant
 
   /** Creates a new builder instance */
   public static CounterModule.Builder<FreezingCounterModule> builder() {
-    return new CounterModule.Builder<>(FreezingCounterModule::new);
+    return new CounterModule.Builder<>((Function7<LevelingValue,LevelingValue,LevelingValue,Integer,IJsonPredicate<LivingEntity>,IJsonPredicate<LivingEntity>,ModifierCondition<IToolStackView>,FreezingCounterModule>) FreezingCounterModule::new);
   }
 
   @Override

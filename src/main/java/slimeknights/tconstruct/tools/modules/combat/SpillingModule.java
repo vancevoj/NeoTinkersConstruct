@@ -53,6 +53,7 @@ public record SpillingModule(LevelingValue level, ModifierCondition<IToolStackVi
       if (!fluid.isEmpty()) {
         FluidEffects recipe = FluidEffectManager.INSTANCE.find(fluid.getFluid());
         if (recipe.hasEntityEffects()) {
+          // TODO(neoport): FluidEffectContext.Builder.projectile() is Lombok-generated; missing until FluidEffectContext.java compiles
           int consumed = recipe.applyToEntity(fluid, this.level.compute(modifier.getEffectiveLevel()), FluidEffectContext.builder(attacker.level()).user(attacker, playerAttacker).projectile(projectile).target(target, livingTarget), FluidAction.EXECUTE);
           if (consumed > 0 && (playerAttacker == null || !playerAttacker.isCreative())) {
             spawnParticles(target, fluid);

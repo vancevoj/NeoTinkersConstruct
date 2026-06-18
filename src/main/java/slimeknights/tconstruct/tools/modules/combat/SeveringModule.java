@@ -5,7 +5,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.neoforged.neoforge.common.Tags;
+import net.minecraft.tags.ItemTags;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.mantle.data.loadable.record.SingletonLoader;
 import slimeknights.tconstruct.common.TinkerTags;
@@ -50,13 +50,14 @@ public enum SeveringModule implements ModifierModule, ProcessLootModifierHook {
     Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
     if (entity != null) {
       // ensure no head so far
-      if (generatedLoot.stream().noneMatch(stack -> stack.is(Tags.Items.HEADS))) {
+      if (generatedLoot.stream().noneMatch(stack -> stack.is(ItemTags.SKULLS))) {
         // find proper recipe
         Level world = context.getLevel();
         List<SeveringRecipe> recipes = SeveringRecipeCache.findRecipe(world.getRecipeManager(), entity.getType());
         if (!recipes.isEmpty()) {
           float level = modifier.getEffectiveLevel();
-          float looting = context.getLootingModifier();
+          // getLootingModifier() removed in 1.21.1; looting enchant level is now a loot param
+          float looting = context.hasParam(LootContextParams.ENCHANTMENT_LEVEL) ? context.getParam(LootContextParams.ENCHANTMENT_LEVEL) : 0;
           // deprecated method of doubling chances
           float chanceMultiplier = entity.getType().is(TinkerTags.EntityTypes.RARE_MOBS) ? 2 : 1;
           for (SeveringRecipe recipe : recipes) {
