@@ -16,7 +16,7 @@ group = 'slimeknights.tconstruct'
 // version = <mc>-<upstream Tinkers version>-v<fork version>, e.g. 1.21.1-3.11.2-v1.0
 version = "${minecraft_version}-${mod_version}-v${fork_version}"
 base {
-    archivesName = 'NeoTinkersConstruct'
+    archivesName = 'NeoTinkers'
 }
 
 java {

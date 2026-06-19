@@ -148,11 +148,11 @@ public record FluidContainerModel(FluidStack fluid, boolean flipGas) implements 
         new SimpleModelState(modelState.getRotation().compose(FLUID_TRANSFORM), modelState.isUvLocked())
       );
 
-      // apply light
-      RenderTypeGroup fluidRenderTypes = renderTypes;
+      // apply light: keep the fullbright lightmap so glowing fluids stay bright, but do NOT switch to the
+      // emissive render type. Iris/Oculus shader packs frequently fail rendertype_entity_translucent_emissive
+      // for items (missing Sampler2), which made glowing-fluid buckets (e.g. blazing blood) render as empty.
       int light = fluid.getFluid().getFluidType().getLightLevel(fluid);
       if (light > 0) {
-        fluidRenderTypes = DynamicFluidContainerModel.getLayerRenderTypes(true);
         QuadTransformers.settingEmissivity(light).processInPlace(quads);
       }
       // apply color
@@ -160,7 +160,7 @@ public record FluidContainerModel(FluidStack fluid, boolean flipGas) implements 
       if (color != -1) {
         ColoredBlockModel.applyColorQuadTransformer(color).processInPlace(quads);
       }
-      modelBuilder.addQuads(fluidRenderTypes, quads);
+      modelBuilder.addQuads(renderTypes, quads);
     }
     return modelBuilder.build();
   }
