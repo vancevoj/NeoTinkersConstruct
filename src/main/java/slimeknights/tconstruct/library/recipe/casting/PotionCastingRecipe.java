@@ -28,8 +28,8 @@ import slimeknights.mantle.recipe.IMultiRecipe;
 import slimeknights.mantle.recipe.helper.LoadableRecipeSerializer;
 import slimeknights.mantle.recipe.helper.TypeAwareRecipeSerializer;
 import slimeknights.mantle.recipe.ingredient.FluidIngredient;
+import slimeknights.tconstruct.fluids.fluids.PotionFluidType;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -76,15 +76,6 @@ public class PotionCastingRecipe implements ICastingRecipe, IMultiRecipe<Display
     CastingRecipeLookup.registerCastable(result);
   }
 
-  /** Resolves a potion holder from the fluid NBT written by the potion fluid. TODO(neoport): replace with reading the {@code PotionContents} component off the fluid stack. */
-  @Nullable
-  protected static Holder<Potion> getPotion(@Nullable CompoundTag fluidTag) {
-    if (fluidTag != null && fluidTag.contains(TAG_POTION)) {
-      return BuiltInRegistries.POTION.getHolder(ResourceLocation.tryParse(fluidTag.getString(TAG_POTION))).orElse(null);
-    }
-    return null;
-  }
-
   @Override
   public RecipeType<?> getType() {
     return serializer.getType();
@@ -118,7 +109,7 @@ public class PotionCastingRecipe implements ICastingRecipe, IMultiRecipe<Display
   @Override
   public ItemStack assemble(ICastingContainer inv, HolderLookup.Provider access) {
     ItemStack result = new ItemStack(this.result);
-    Holder<Potion> potion = getPotion(inv.getFluidTag());
+    Holder<Potion> potion = PotionFluidType.getPotion(inv.getFluidStack());
     if (potion != null) {
       result.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
     }

@@ -56,7 +56,7 @@ public class CopperCanFluidHandler implements IFluidHandlerItem {
     if (fluid == Fluids.EMPTY) {
       return FluidStack.EMPTY;
     }
-    return new FluidStack(fluid, getCapacity());
+    return CopperCanItem.getFluidStack(container, getCapacity());
   }
 
 
@@ -91,7 +91,7 @@ public class CopperCanFluidHandler implements IFluidHandlerItem {
       return FluidStack.EMPTY;
     }
     // make sure components match the requested components
-    FluidStack output = new FluidStack(fluid, capacity);
+    FluidStack output = CopperCanItem.getFluidStack(container, capacity);
     if (!FluidStack.isSameFluidSameComponents(resource, output)) {
       return FluidStack.EMPTY;
     }
@@ -116,7 +116,7 @@ public class CopperCanFluidHandler implements IFluidHandlerItem {
       return FluidStack.EMPTY;
     }
     // output 1 ingot
-    FluidStack output = new FluidStack(fluid, capacity);
+    FluidStack output = CopperCanItem.getFluidStack(container, capacity);
     if (action.execute()) {
       CopperCanItem.setFluid(container, FluidStack.EMPTY);
     }

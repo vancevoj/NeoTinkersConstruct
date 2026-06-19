@@ -1,11 +1,14 @@
 package slimeknights.tconstruct.library.modifiers.fluid.entity;
 
 import net.minecraft.core.Holder;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
@@ -31,12 +34,32 @@ public record PotionFluidEffect(float scale, TagPredicate predicate) implements 
     return LOADER;
   }
 
+  /**
+   * Rebuilds the legacy potion fluid tag ({@code {Potion:"<id>"}}, matching {@code PotionFluidType.potionTag}) so the
+   * {@link TagPredicate} keeps working against component-backed fluids. The {@link TagPredicate#ANY} default matches a
+   * null tag, so this preserves the 1.20 behavior for the in-mod potion fluid.
+   */
+  public static boolean testPredicate(TagPredicate predicate, PotionContents contents) {
+    if (predicate == TagPredicate.ANY) {
+      return true;
+    }
+    CompoundTag tag = null;
+    Holder<Potion> potion = contents.potion().orElse(null);
+    if (potion != null) {
+      ResourceKey<Potion> key = potion.unwrapKey().orElse(null);
+      if (key != null) {
+        tag = new CompoundTag();
+        tag.putString("Potion", key.location().toString());
+      }
+    }
+    return predicate.test(tag);
+  }
+
   @Override
   public float apply(FluidStack fluid, EffectLevel level, FluidEffectContext.Entity context, FluidAction action) {
-    // TODO(neoport): TagPredicate (Predicate<CompoundTag>) no longer applies to component-backed fluids; potion is read from DataComponents.POTION_CONTENTS. Predicate filtering dropped pending the potion-fluid model decision.
     LivingEntity target = context.getLivingTarget();
     PotionContents contents = fluid.get(DataComponents.POTION_CONTENTS);
-    if (target != null && contents != null) {
+    if (target != null && contents != null && testPredicate(predicate, contents)) {
       List<MobEffectInstance> effects = new ArrayList<>();
       contents.getAllEffects().forEach(effects::add);
       if (!effects.isEmpty()) {

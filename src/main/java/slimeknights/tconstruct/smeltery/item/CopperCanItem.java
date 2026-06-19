@@ -1,9 +1,12 @@
 package slimeknights.tconstruct.smeltery.item;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -52,7 +55,7 @@ public class CopperCanItem extends Item {
   public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
     Fluid fluid = getFluid(stack);
     if (fluid != Fluids.EMPTY) {
-      MutableComponent text = new FluidStack(fluid, FluidValues.INGOT).getDisplayName().plainCopy();
+      MutableComponent text = getFluidStack(stack, FluidValues.INGOT).getDisplayName().plainCopy();
       tooltip.add(Component.translatable(this.getDescriptionId() + ".contents", text).withStyle(ChatFormatting.GRAY));
       if (flag.isAdvanced()) {
         tooltip.add(Component.translatable(TankItem.FLUID_ID, Loadables.FLUID.getKey(fluid)).withStyle(ChatFormatting.DARK_GRAY));
@@ -113,10 +116,41 @@ public class CopperCanItem extends Item {
     return stack;
   }
 
-  /** Sets the fluid on the given stack */
+  /** Sets the fluid on the given stack, preserving the fluid's data components */
   public static ItemStack setFluid(ItemStack stack, FluidStack fluid) {
-    // TODO(neoport): FluidStack component data not preserved on copper can (was NBT tag); revisit if component fluids need it
-    return setFluid(stack, fluid.getFluid(), null);
+    return setFluid(stack, fluid.getFluid(), serializeComponents(fluid.getComponentsPatch()));
+  }
+
+  /** Serializes a fluid component patch into the compound stored under {@link #TAG_FLUID_TAG}, or null if empty */
+  @Nullable
+  private static CompoundTag serializeComponents(DataComponentPatch patch) {
+    if (patch.isEmpty()) {
+      return null;
+    }
+    Tag encoded = DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, patch).result().orElse(null);
+    if (encoded instanceof CompoundTag compound && !compound.isEmpty()) {
+      return compound;
+    }
+    return null;
+  }
+
+  /** Deserializes the stored component patch from the given stack */
+  private static DataComponentPatch deserializeComponents(ItemStack stack) {
+    CompoundTag fluidTag = getFluidTag(stack);
+    if (fluidTag != null) {
+      return DataComponentPatch.CODEC.parse(NbtOps.INSTANCE, fluidTag).result().orElse(DataComponentPatch.EMPTY);
+    }
+    return DataComponentPatch.EMPTY;
+  }
+
+  /** Gets the contained fluid as a stack with its stored components, using the given amount */
+  public static FluidStack getFluidStack(ItemStack stack, int amount) {
+    Fluid fluid = getFluid(stack);
+    if (fluid == Fluids.EMPTY) {
+      return FluidStack.EMPTY;
+    }
+    Holder<Fluid> holder = BuiltInRegistries.FLUID.wrapAsHolder(fluid);
+    return new FluidStack(holder, amount, deserializeComponents(stack));
   }
 
   /** Gets the fluid from the given stack */

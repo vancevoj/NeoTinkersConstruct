@@ -1,0 +1,45 @@
+{
+  "type": "mantle:add_entry",
+  "conditions": [
+    {
+      "condition": "tconstruct:has_context_set",
+      "set": "minecraft:entity"
+    },
+    {
+      "condition": "minecraft:entity_properties",
+      "entity": "this",
+      "predicate": {
+        "type": "#tconstruct:bacon_producer"
+      }
+    },
+    {
+      "condition": "tconstruct:has_modifier",
+      "modifier": "tconstruct:tasty"
+    }
+  ],
+  "entry": {
+    "type": "minecraft:item",
+    "name": "tconstruct:bacon"
+  },
+  "functions": [
+    {
+      "add": false,
+      "count": {
+        "type": "minecraft:uniform",
+        "max": 1.0,
+        "min": -2.0
+      },
+      "function": "minecraft:set_count"
+    },
+    {
+      "count": {
+        "type": "minecraft:uniform",
+        "max": 1.0,
+        "min": 0.0
+      },
+      "enchantment": "minecraft:looting",
+      "function": "minecraft:enchanted_count_increase"
+    }
+  ],
+  "post_conditions": []
+}

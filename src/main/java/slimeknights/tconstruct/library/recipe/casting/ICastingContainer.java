@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.fluids.FluidStack;
 import slimeknights.mantle.recipe.container.ISingleStackContainer;
 
 import javax.annotation.Nullable;
@@ -42,5 +43,14 @@ public interface ICastingContainer extends ISingleStackContainer, RecipeInput {
   @Nullable
   default CompoundTag getFluidTag() {
     return null;
+  }
+
+  /**
+   * Gets the full component-backed fluid stack in this inventory. Needed in 1.21 as potion data moved from fluid NBT
+   * to {@code DataComponents.POTION_CONTENTS}.
+   * @return  Contained fluid stack, or {@link FluidStack#EMPTY} if unavailable
+   */
+  default FluidStack getFluidStack() {
+    return FluidStack.EMPTY;
   }
 }

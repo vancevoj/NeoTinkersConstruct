@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
@@ -175,8 +176,12 @@ public class CustomExplosion extends Explosion {
           // apply enchantment to reduce knockback
           if (knockback != 0) {
             double adjustedStrength = strength * knockback;
-            // TODO(neoport): 1.21 replaced ProtectionEnchantment.getExplosionKnockbackAfterDampener with data-driven
-            // EnchantmentHelper.modifyKnockback (needs the wearer's tool + ServerLevel); blast protection knockback reduction dropped for now
+            // 1.21 parity: blast protection's explosion knockback dampening (formerly
+            // ProtectionEnchantment.getExplosionKnockbackAfterDampener) is now data-driven via the
+            // generic.explosion_knockback_resistance attribute granted by the enchantment, matching vanilla Explosion.
+            if (entity instanceof LivingEntity living) {
+              adjustedStrength *= 1 - living.getAttributeValue(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE);
+            }
             Vec3 velocity = dir.scale(adjustedStrength / length);
             entity.setDeltaMovement(entity.getDeltaMovement().add(velocity));
             if (entity instanceof Player player) {

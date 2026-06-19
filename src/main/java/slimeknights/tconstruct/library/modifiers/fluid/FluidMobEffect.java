@@ -16,6 +16,7 @@ import slimeknights.mantle.data.loadable.record.RecordLoadable;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.fluid.block.MobEffectCloudFluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.entity.MobEffectFluidEffect;
+import slimeknights.tconstruct.library.utils.TinkerEffectCures;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -55,8 +56,10 @@ public record FluidMobEffect(Holder<MobEffect> effect, int time, int level, @Nul
 
   /** Creates the final effect */
   public MobEffectInstance effectWithTime(int time) {
-    // TODO(neoport): per-instance curative items removed in 1.21 (MobEffectInstance#setCurativeItems gone); curativeItems is retained on the record for datagen but no longer applied to the live effect. Cure customization now uses effect cure tags, a cross-package decision.
-    return new MobEffectInstance(effect, time, this.level - 1);
+    MobEffectInstance instance = new MobEffectInstance(effect, time, this.level - 1);
+    // 1.21: per-stack curative items became EffectCure tokens. null keeps the effect's default cures (milk etc.); a list (possibly empty) replaces them with per-item cure tokens.
+    TinkerEffectCures.setCures(instance, curativeItems);
+    return instance;
   }
 
   /** Creates the final effect */

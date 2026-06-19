@@ -63,6 +63,7 @@ import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ModDataNBT;
 import slimeknights.tconstruct.library.tools.nbt.ModifierNBT;
+import slimeknights.tconstruct.library.utils.TinkerEffectCures;
 import slimeknights.tconstruct.tools.modules.armor.CounterModule;
 
 import javax.annotation.Nullable;
@@ -233,8 +234,10 @@ public interface MobEffectModule extends ModifierModule, ConditionalModule<ITool
       }
       float duration = this.time.computeValue(scaledLevel);
       if (duration > 0) {
-        // TODO(neoport): per-instance curative items removed in 1.21 (MobEffectInstance#setCurativeItems gone); curativeItems is retained on the record for datagen but no longer applied to the live effect. Cure customization now uses effect cure tags, a cross-package decision shared with FluidMobEffect.
-        target.addEffect(new MobEffectInstance(effect, (int)duration, level), cause);
+        MobEffectInstance instance = new MobEffectInstance(effect, (int)duration, level);
+        // 1.21: per-stack curative items became EffectCure tokens. null keeps the effect's default cures; a list (possibly empty) replaces them with per-item cure tokens.
+        TinkerEffectCures.setCures(instance, curativeItems);
+        target.addEffect(instance, cause);
       }
     }
 

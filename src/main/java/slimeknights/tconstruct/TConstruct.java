@@ -9,8 +9,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -177,16 +179,47 @@ public class TConstruct {
     generator.addProvider(server, new TConstructLootTableProvider(packOutput));
     // tool advancements (ItemSubPredicate.Type registered by TinkerTools, see SmelteryCapabilities/ToolStackItemPredicate)
     generator.addProvider(server, new AdvancementsProvider(packOutput, datapackRegistryProvider.getRegistryProvider()));
-    // TODO(neoport): GlobalLootModifiersProvider datagen throws encoding a loot-modifier condition codec (KeyDispatch null);
-    // temporarily disabled so the rest of datagen regenerates. Loot modifiers (extra drops: lustrous/tasty/wither_bone) are off until re-enabled.
-    // generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));
+    generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));
     generator.addProvider(server, new LootTableInjectionProvider(packOutput));
     generator.addProvider(server, new ConfigurationDataProvider(packOutput));
   }
 
-  // TODO(neoport): legacy missing-mappings remap (silky_jewel/round_plate/slime_chestplate -> replacements)
-  // dropped: NeoForge 1.21 removed MissingMappingsEvent and Mantle's RegistrationHelper.handleMissingMappings.
-  // Re-add via the new datamap/remap API before shipping if upgrading old worlds must be supported.
+  /**
+   * Handles legacy id remapping for worlds saved on 1.20.1 (Forge).
+   * <p>
+   * NeoForge removed Forge's {@code MissingMappingsEvent}; the 1.21 equivalent is registry aliasing via
+   * {@link net.neoforged.neoforge.registries.IRegistryExtension#addAlias(ResourceLocation, ResourceLocation)}
+   * (implemented by every {@link net.minecraft.core.Registry}). When an old, now-removed id is looked up and is
+   * absent, the registry resolves it through the alias chain to the target id. We register the aliases during
+   * {@link RegisterEvent}, after the target entries have been added but before the registry freezes.
+   * <p>
+   * This is a 1:1 port of the old {@code TConstruct.missingMappings} handler.
+   */
+  @SubscribeEvent
+  static void registerAliases(final RegisterEvent event) {
+    if (event.getRegistryKey().equals(Registries.BLOCK)) {
+      net.minecraft.core.Registry<net.minecraft.world.level.block.Block> registry = event.getRegistry(Registries.BLOCK);
+      // silky jewel removal
+      registry.addAlias(getResource("silky_jewel_block"), BuiltInRegistries.BLOCK.getKey(Blocks.EMERALD_BLOCK));
+      // piglin heads are vanilla
+      registry.addAlias(getResource("piglin_head"), BuiltInRegistries.BLOCK.getKey(Blocks.PIGLIN_HEAD));
+      registry.addAlias(getResource("piglin_wall_head"), BuiltInRegistries.BLOCK.getKey(Blocks.PIGLIN_WALL_HEAD));
+    } else if (event.getRegistryKey().equals(Registries.ITEM)) {
+      net.minecraft.core.Registry<net.minecraft.world.item.Item> registry = event.getRegistry(Registries.ITEM);
+      // silky jewel removal
+      registry.addAlias(getResource("silky_jewel"), BuiltInRegistries.ITEM.getKey(Items.EMERALD));
+      registry.addAlias(getResource("silky_jewel_block"), BuiltInRegistries.ITEM.getKey(Items.EMERALD_BLOCK));
+      // piglin heads are vanilla
+      registry.addAlias(getResource("piglin_head"), BuiltInRegistries.ITEM.getKey(Items.PIGLIN_HEAD));
+      // round plate rename -> adze head
+      registry.addAlias(getResource("round_plate"), BuiltInRegistries.ITEM.getKey(TinkerToolParts.adzeHead.get()));
+      registry.addAlias(getResource("round_plate_cast"), BuiltInRegistries.ITEM.getKey(TinkerSmeltery.adzeHeadCast.get()));
+      registry.addAlias(getResource("round_plate_sand_cast"), BuiltInRegistries.ITEM.getKey(TinkerSmeltery.adzeHeadCast.getSand()));
+      registry.addAlias(getResource("round_plate_red_sand_cast"), BuiltInRegistries.ITEM.getKey(TinkerSmeltery.adzeHeadCast.getRedSand()));
+      // slimesuit rework
+      registry.addAlias(getResource("slime_chestplate"), BuiltInRegistries.ITEM.getKey(TinkerTools.slimeWings.get()));
+    }
+  }
 
   /* Utils */
 

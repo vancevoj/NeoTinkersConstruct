@@ -37,6 +37,9 @@
     "m m"
   ],
   "result": {
+    "components": {
+      "minecraft:custom_name": "{\"translate\":\"block.tconstruct.tool_forge\"}"
+    },
     "count": 1,
     "id": "tconstruct:tinkers_anvil"
   }

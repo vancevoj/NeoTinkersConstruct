@@ -5,7 +5,9 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -204,10 +206,10 @@ public class TableRecipeProvider extends BaseRecipeProvider {
       .setMatchAll()
       .build(consumer, prefix(TinkerTables.scorchedAnvil, folder));
 
-    // tool forge - just a humor recipe
-    // TODO(neoport): the "tool_forge" custom display name was carried as result NBT; CraftingNBTWrapper now drops NBT
-    // (result data must become DataComponents). Pass an empty tag until a component-aware wrapper exists.
-    RecipeOutput toolForge = CraftingNBTWrapper.wrap(consumer, new CompoundTag());
+    // tool forge - just a humor recipe; carry the custom display name as a CUSTOM_NAME component on the result
+    RecipeOutput toolForge = CraftingNBTWrapper.wrap(consumer, DataComponentPatch.builder()
+      .set(DataComponents.CUSTOM_NAME, Component.translatable("block.tconstruct.tool_forge"))
+      .build());
     ShapedRetexturedRecipeBuilder.fromShaped(
       ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, TinkerTables.tinkersAnvil)
         .define('m', TinkerTags.Items.ANVIL_METAL)

@@ -13,12 +13,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import slimeknights.mantle.block.entity.IRetexturedBlockEntity;
+import slimeknights.mantle.client.render.IRenderBoundingBox;
 import slimeknights.mantle.util.RetexturedHelper;
 import slimeknights.tconstruct.shared.block.entity.TableBlockEntity;
 
 import javax.annotation.Nonnull;
 
-public abstract class RetexturedTableBlockEntity extends TableBlockEntity implements IRetexturedBlockEntity {
+public abstract class RetexturedTableBlockEntity extends TableBlockEntity implements IRetexturedBlockEntity, IRenderBoundingBox {
   private static final String TAG_TEXTURE = "texture";
 
   @Nonnull @Getter
@@ -26,8 +27,13 @@ public abstract class RetexturedTableBlockEntity extends TableBlockEntity implem
   public RetexturedTableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, Component name, int size) {
     super(type, pos, state, name, size);
   }
-  /** Render bounding box for this table; called from the renderer in 1.21 (was a BlockEntity override) */
-  // TODO(neoport): wire into the table BlockEntityRenderer's getRenderBoundingBox (client package) to restore the enlarged cull box
+
+  /**
+   * Enlarged render bounding box so tall items displayed floating above the table are not culled early.
+   * In 1.21 {@code getRenderBoundingBox} moved onto the renderer; {@link slimeknights.mantle.client.render.InventoryBlockEntityRenderer}
+   * delegates to this via {@link IRenderBoundingBox}.
+   */
+  @Override
   public AABB getRenderBoundingBox() {
     return AABB.encapsulatingFullBlocks(worldPosition, worldPosition.offset(1, 2, 1));
   }

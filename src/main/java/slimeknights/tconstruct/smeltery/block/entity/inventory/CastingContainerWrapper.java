@@ -38,10 +38,14 @@ public class CastingContainerWrapper implements ICastingContainer {
   @Nullable
   @Override
   public CompoundTag getFluidTag() {
-    // TODO(neoport): FluidStack is component-backed in 1.21; the legacy CompoundTag fluid-NBT abstraction
-    // (used by tipping/potion casting to read a "Potion" key) needs a data-component schema owned by the
-    // recipe/fluid package. Until then, expose nothing rather than a wrong tag.
+    // FluidStack is component-backed in 1.21; the legacy CompoundTag fluid-NBT abstraction no longer exists.
+    // Recipes that need potion data should read it through getFluidStack() and DataComponents instead.
     return null;
+  }
+
+  @Override
+  public FluidStack getFluidStack() {
+    return fluid;
   }
 
   /** Uses the input for input (default) */

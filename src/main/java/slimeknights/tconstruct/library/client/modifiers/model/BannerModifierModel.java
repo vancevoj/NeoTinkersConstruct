@@ -1,16 +1,18 @@
 package slimeknights.tconstruct.library.client.modifiers.model;
 
 import com.mojang.math.Transformation;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import slimeknights.mantle.client.model.util.MantleItemLayerModel;
 import slimeknights.mantle.data.loadable.Loadables;
@@ -73,21 +75,25 @@ public record BannerModifierModel(@Nullable ResourceLocation smallPrefix, @Nulla
       if (modData.contains(key, CompoundTag.TAG_LIST)) {
         ListTag list = modData.getList(key, ListTag.TAG_COMPOUND);
         List<BakedQuad> quads = new ArrayList<>(list.size());
+        // 1.21: banner patterns are a data-driven registry. BannerModule stores each pattern as its
+        // registry-key path (see BannerModifierRecipe#bannerPatternsToListTag and BannerModule#copyPatterns),
+        // so resolve that path against the banner pattern registry to find the pattern's texture asset id.
+        Level level = Minecraft.getInstance().level;
+        Registry<BannerPattern> registry = level != null ? level.registryAccess().registryOrThrow(Registries.BANNER_PATTERN) : null;
         // iterate all patterns
-        for (int i = 0; i < list.size(); i++) {
-          // patterns are stored as short strings for some reason, for consistency we also store as hashes
-          // map that back to the pattern
-          CompoundTag tag = list.getCompound(i);
-          int color = tag.getInt(BannerModule.KEY_COLOR);
-          // TODO(neoport): BannerPattern.byHash was removed in 1.21; banner patterns are now a registry keyed by
-          // ResourceKey/Holder requiring registry access to resolve the stored hash to a pattern location. Resolve the
-          // pattern (matching BannerModule's storage) and stitch prefix.withSuffix(getSuffix(patternLocation)) to render.
-          ResourceLocation patternLocation = null;
-          if (patternLocation != null) {
-            TextureAtlasSprite sprite = spriteGetter.apply(ModifierModel.blockAtlas(prefix.withSuffix(MaterialRenderInfo.getSuffix(patternLocation))));
-            // skip if sprite is missing - deals with modded patterns that we haven't made textures for
-            if (!MissingTextureAtlasSprite.getLocation().equals(sprite.contents().name())) {
-              quads.add(MantleItemLayerModel.getQuadForGui(color, -1, sprite, transforms, 0));
+        if (registry != null) {
+          for (int i = 0; i < list.size(); i++) {
+            // map the stored registry-key path back to the pattern, then use its texture asset id
+            CompoundTag tag = list.getCompound(i);
+            int color = tag.getInt(BannerModule.KEY_COLOR);
+            BannerPattern pattern = registry.get(ResourceLocation.withDefaultNamespace(tag.getString(BannerModule.KEY_PATTERN)));
+            if (pattern != null) {
+              ResourceLocation patternLocation = pattern.assetId();
+              TextureAtlasSprite sprite = spriteGetter.apply(ModifierModel.blockAtlas(prefix.withSuffix(MaterialRenderInfo.getSuffix(patternLocation))));
+              // skip if sprite is missing - deals with modded patterns that we haven't made textures for
+              if (!MissingTextureAtlasSprite.getLocation().equals(sprite.contents().name())) {
+                quads.add(MantleItemLayerModel.getQuadForGui(color, -1, sprite, transforms, 0));
+              }
             }
           }
         }

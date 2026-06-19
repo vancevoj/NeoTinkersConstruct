@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
+import slimeknights.tconstruct.library.utils.TinkerEffectCures;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.hook.armor.EquipmentChangeModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.armor.OnAttackedModifierHook;
@@ -30,8 +31,10 @@ public class RevengeModifier extends NoLevelsModifier implements EquipmentChange
     Entity trueSource = source.getEntity();
     LivingEntity living = context.getEntity();
     if (trueSource != null && trueSource != living) { // no making yourself mad with slurping or self-destruct or alike
-      // TODO(neoport): per-instance curative items removed in 1.21 (MobEffectInstance#getCurativeItems gone). Restoring "curable only by this helmet" needs a custom EffectCure token; the cure subsystem is cross-package (see CureOnRemovalModule, still on legacy curePotionEffects). For now the effect applies without the helmet-only cure restriction.
       MobEffectInstance effect = new MobEffectInstance(MobEffects.DAMAGE_BOOST, 300);
+      // 1.21: per-stack curative items became EffectCure tokens. Clear default cures (so milk won't help) and only allow the worn helmet to cure it.
+      effect.getCures().clear();
+      effect.getCures().add(TinkerEffectCures.itemCure(living.getItemBySlot(slotType).getItem()));
       living.addEffect(effect);
     }
   }
@@ -41,7 +44,8 @@ public class RevengeModifier extends NoLevelsModifier implements EquipmentChange
     if (context.getChangedSlot() == EquipmentSlot.HEAD) {
       IToolStackView replacement = context.getReplacementTool();
       if (replacement == null || replacement.getModifierLevel(this) == 0) {
-        // TODO(neoport): LivingEntity#curePotionEffects(ItemStack) removed in 1.21 (replaced by removeEffectsCuredBy(EffectCure)). Item-based curing no longer exists; cure-on-unequip needs the cross-package EffectCure subsystem (see CureOnRemovalModule).
+        // cure effects using the helmet
+        context.getEntity().removeEffectsCuredBy(TinkerEffectCures.itemCure(tool.getItem()));
       }
     }
   }

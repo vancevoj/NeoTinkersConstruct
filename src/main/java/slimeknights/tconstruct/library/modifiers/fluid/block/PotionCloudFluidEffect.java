@@ -4,6 +4,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.item.alchemy.PotionContents;
+import slimeknights.tconstruct.library.modifiers.fluid.entity.PotionFluidEffect;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import slimeknights.mantle.data.loadable.primitive.FloatLoadable;
@@ -30,9 +31,8 @@ public record PotionCloudFluidEffect(float scale, TagPredicate predicate) implem
 
   @Override
   public float apply(FluidStack fluid, EffectLevel level, FluidEffectContext.Block context, FluidAction action) {
-    // TODO(neoport): TagPredicate (Predicate<CompoundTag>) no longer applies to component-backed fluids; potion is read from DataComponents.POTION_CONTENTS. Predicate filtering dropped pending the potion-fluid model decision.
     PotionContents contents = fluid.get(DataComponents.POTION_CONTENTS);
-    if (contents != null && context.isOffsetReplaceable()) {
+    if (contents != null && PotionFluidEffect.testPredicate(predicate, contents) && context.isOffsetReplaceable()) {
       List<MobEffectInstance> effects = new ArrayList<>();
       contents.getAllEffects().forEach(effects::add);
       if (!effects.isEmpty()) {
