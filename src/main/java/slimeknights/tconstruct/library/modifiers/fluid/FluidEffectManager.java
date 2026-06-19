@@ -51,6 +51,8 @@ public class FluidEffectManager extends SimpleJsonResourceReloadListener {
 
   /** Condition context for recipe loading */
   private IContext conditionContext = IContext.EMPTY;
+  /** Registry access for resolving data-driven registry entries (e.g. enchantments) during parsing */
+  private net.minecraft.core.RegistryAccess registryAccess = net.minecraft.core.RegistryAccess.EMPTY;
 
   private FluidEffectManager() {
     super(JsonHelper.DEFAULT_GSON, FOLDER);
@@ -66,6 +68,7 @@ public class FluidEffectManager extends SimpleJsonResourceReloadListener {
   private void addDataPackListeners(final AddReloadListenerEvent event) {
     event.addListener(this);
     conditionContext = event.getConditionContext();
+    registryAccess = event.getRegistryAccess();
   }
 
   /** Creates context for modifier parsing */
@@ -106,7 +109,7 @@ public class FluidEffectManager extends SimpleJsonResourceReloadListener {
         if (!processConditions(json, conditionContext)) {
           continue;
         }
-        fluids.add(new FluidEffects.Entry(key, FluidEffects.LOADABLE.deserialize(json, contextBuilder(key).put(ContextKey.CONDITION_CONTEXT, conditionContext).build())));
+        fluids.add(new FluidEffects.Entry(key, FluidEffects.LOADABLE.deserialize(json, contextBuilder(key).put(ContextKey.CONDITION_CONTEXT, conditionContext).put(ContextKey.REGISTRIES, registryAccess).build())));
       } catch (JsonSyntaxException e) {
         TConstruct.LOG.error("Failed to load fluid effect {}", key, e);
       }

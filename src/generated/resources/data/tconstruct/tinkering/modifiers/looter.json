@@ -24,14 +24,15 @@
       "modifier_level": {
         "min": 2
       },
-      "operation": "multiply_base",
+      "operation": "add_multiplied_base",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ]
     }
   ],

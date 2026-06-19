@@ -100,6 +100,10 @@ public record PlatingMaterialStats(MaterialStatType<?> getType, int durability, 
     public Builder durabilityFactor(float maxDamageFactor) {
       for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
         int index = slotType.ordinal();
+        // 1.21 added ArmorItem.Type.BODY (ordinal 4); Tinkers only plates the 4 humanoid slots, so skip out-of-range indices
+        if (index >= durability.length) {
+          continue;
+        }
         durability[index] = (int)(ArmorModuleBuilder.MAX_DAMAGE_ARRAY[index] * maxDamageFactor);
       }
       if (shieldDurability == 0) {

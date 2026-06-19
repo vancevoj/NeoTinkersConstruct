@@ -7,7 +7,7 @@
       "attribute": "minecraft:generic.knockback_resistance",
       "each_level": 0.05,
       "held_tag": "tconstruct:modifiable/held",
-      "operation": "addition"
+      "operation": "add_value"
     },
     {
       "type": "tconstruct:protection",

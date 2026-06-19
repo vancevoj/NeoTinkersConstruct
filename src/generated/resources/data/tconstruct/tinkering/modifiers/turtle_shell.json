@@ -4,10 +4,10 @@
     {
       "type": "tconstruct:max_armor_attribute",
       "allow_broken": false,
-      "attribute": "forge:swim_speed",
+      "attribute": "neoforge:swim_speed",
       "each_level": 0.1,
       "held_tag": "tconstruct:modifiable/held",
-      "operation": "multiply_total"
+      "operation": "add_multiplied_total"
     },
     {
       "type": "tconstruct:protection",

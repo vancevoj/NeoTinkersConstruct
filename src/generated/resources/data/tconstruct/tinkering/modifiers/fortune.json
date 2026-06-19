@@ -35,14 +35,15 @@
       "type": "tconstruct:attribute",
       "attribute": "minecraft:generic.luck",
       "each_level": 1.0,
-      "operation": "addition",
+      "operation": "add_value",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ],
       "tool": {
         "type": "mantle:tag",

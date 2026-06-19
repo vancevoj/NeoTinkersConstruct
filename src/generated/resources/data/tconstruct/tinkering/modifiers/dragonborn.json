@@ -7,7 +7,7 @@
       "attribute": "tconstruct:player.critical_damage",
       "each_level": 0.05,
       "held_tag": "tconstruct:modifiable/held",
-      "operation": "addition",
+      "operation": "add_value",
       "tooltip_style": "percent"
     },
     {

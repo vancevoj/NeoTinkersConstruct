@@ -1,0 +1,9 @@
+{
+  "type": "tconstruct:basin_tool_casting",
+  "cast": {
+    "item": "minecraft:elytra"
+  },
+  "cast_purpose": "consumed",
+  "item_cost": 8,
+  "result": "tconstruct:slime_wings"
+}

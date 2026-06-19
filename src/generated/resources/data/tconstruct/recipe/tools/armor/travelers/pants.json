@@ -1,0 +1,87 @@
+{
+  "type": "tconstruct:crafting_shaped_materials",
+  "category": "equipment",
+  "extra_materials": [
+    "tconstruct:leather"
+  ],
+  "key": {
+    "c": [
+      {
+        "type": "tconstruct:material_value",
+        "material": {
+          "type": "mantle:and",
+          "predicates": [
+            {
+              "type": "mantle:or",
+              "predicates": [
+                "tconstruct:castable",
+                "tconstruct:composite"
+              ]
+            },
+            {
+              "type": "tconstruct:stat_type",
+              "stat_type": "tconstruct:plating_leggings"
+            }
+          ]
+        },
+        "value": 1
+      },
+      {
+        "type": "tconstruct:material",
+        "match": {
+          "item": "tconstruct:fake_ingot"
+        },
+        "material": {
+          "type": "tconstruct:stat_type",
+          "stat_type": "tconstruct:plating_leggings"
+        }
+      }
+    ],
+    "l": {
+      "tag": "c:leathers"
+    }
+  },
+  "parts": [
+    [
+      {
+        "type": "tconstruct:material_value",
+        "material": {
+          "type": "mantle:and",
+          "predicates": [
+            {
+              "type": "mantle:or",
+              "predicates": [
+                "tconstruct:castable",
+                "tconstruct:composite"
+              ]
+            },
+            {
+              "type": "tconstruct:stat_type",
+              "stat_type": "tconstruct:plating_leggings"
+            }
+          ]
+        },
+        "value": 1
+      },
+      {
+        "type": "tconstruct:material",
+        "match": {
+          "item": "tconstruct:fake_ingot"
+        },
+        "material": {
+          "type": "tconstruct:stat_type",
+          "stat_type": "tconstruct:plating_leggings"
+        }
+      }
+    ]
+  ],
+  "pattern": [
+    "lll",
+    "c c",
+    "l l"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tconstruct:travelers_leggings"
+  }
+}

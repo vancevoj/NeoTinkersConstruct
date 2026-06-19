@@ -1,0 +1,26 @@
+{
+  "type": "tconstruct:modifier",
+  "allow_crystal": false,
+  "inputs": [
+    {
+      "item": "minecraft:dragon_breath"
+    },
+    {
+      "item": "tconstruct:dragon_scale"
+    },
+    {
+      "item": "minecraft:dragon_breath"
+    },
+    {
+      "item": "tconstruct:dragon_scale"
+    },
+    {
+      "item": "tconstruct:dragon_scale"
+    }
+  ],
+  "level": 1,
+  "result": "tconstruct:draconic",
+  "tools": {
+    "tag": "tconstruct:modifiable/bonus_slots"
+  }
+}

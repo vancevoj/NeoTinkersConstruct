@@ -8,9 +8,6 @@
       },
       "effect": {
         "type": "tconstruct:break_block",
-        "enchantments": {
-          "minecraft:silk_touch": 1
-        },
         "hardness": 10.0
       }
     }

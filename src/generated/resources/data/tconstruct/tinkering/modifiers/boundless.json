@@ -6,14 +6,15 @@
       "attribute": "tconstruct:generic.protection_cap",
       "each_level": 0.05,
       "flat": 0.05,
-      "operation": "addition",
+      "operation": "add_value",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ],
       "tool": {
         "type": "mantle:tag",

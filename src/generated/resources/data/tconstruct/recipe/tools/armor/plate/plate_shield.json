@@ -1,0 +1,12 @@
+{
+  "type": "tconstruct:table_tool_casting",
+  "cast": {
+    "type": "tconstruct:material",
+    "match": {
+      "item": "tconstruct:shield_core"
+    }
+  },
+  "cast_purpose": "first_material",
+  "item_cost": 3,
+  "result": "tconstruct:plate_shield"
+}

@@ -1,0 +1,21 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "theoneprobe"
+    }
+  ],
+  "type": "tconstruct:modifier_salvage",
+  "modifier": "tconstruct:the_one_probe",
+  "slots": {
+    "upgrades": 1
+  },
+  "tools": [
+    {
+      "tag": "tconstruct:modifiable/armor/helmets"
+    },
+    {
+      "tag": "tconstruct:modifiable/held"
+    }
+  ]
+}

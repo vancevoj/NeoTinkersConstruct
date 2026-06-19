@@ -11,7 +11,7 @@
       "type": "tconstruct:attribute",
       "attribute": "tconstruct:player.use_item_speed",
       "each_level": 0.05,
-      "operation": "addition",
+      "operation": "add_value",
       "slots": [
         "feet",
         "legs",

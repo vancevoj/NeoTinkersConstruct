@@ -3,17 +3,18 @@
   "modules": [
     {
       "type": "tconstruct:attribute",
-      "attribute": "forge:entity_gravity",
+      "attribute": "minecraft:generic.gravity",
       "each_level": -0.1,
       "flat": -0.05,
-      "operation": "multiply_total",
+      "operation": "add_multiplied_total",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ],
       "tooltip_style": "percent"
     },
@@ -21,14 +22,15 @@
       "type": "tconstruct:attribute",
       "attribute": "tconstruct:generic.safe_fall_distance",
       "each_level": 1.0,
-      "operation": "addition",
+      "operation": "add_value",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ]
     }
   ],

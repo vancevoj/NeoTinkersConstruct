@@ -1,0 +1,8 @@
+{
+  "type": "tconstruct:part_builder",
+  "cost": 2,
+  "pattern": "tconstruct:shell",
+  "result": {
+    "item": "tconstruct:shell"
+  }
+}

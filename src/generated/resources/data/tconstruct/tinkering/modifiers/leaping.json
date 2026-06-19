@@ -5,28 +5,30 @@
       "type": "tconstruct:attribute",
       "attribute": "tconstruct:generic.jump_boost",
       "each_level": 1.0,
-      "operation": "addition",
+      "operation": "add_value",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ]
     },
     {
       "type": "tconstruct:attribute",
       "attribute": "tconstruct:generic.safe_fall_distance",
       "each_level": 1.0,
-      "operation": "addition",
+      "operation": "add_value",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ]
     }
   ],

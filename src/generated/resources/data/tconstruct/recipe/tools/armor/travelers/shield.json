@@ -1,0 +1,41 @@
+{
+  "type": "tconstruct:crafting_shaped_materials",
+  "category": "equipment",
+  "extra_materials": [
+    "tconstruct:leather"
+  ],
+  "key": {
+    "c": {
+      "type": "tconstruct:material_value",
+      "material": {
+        "type": "tconstruct:stat_type",
+        "stat_type": "tconstruct:shield_core"
+      },
+      "value": 1
+    },
+    "l": {
+      "tag": "c:leathers"
+    }
+  },
+  "parts": [
+    {
+      "type": "tconstruct:material_value",
+      "material": {
+        "type": "tconstruct:stat_type",
+        "stat_type": "tconstruct:shield_core"
+      },
+      "value": 1
+    }
+  ],
+  "pattern": [
+    "cl",
+    "lc"
+  ],
+  "result": {
+    "components": {
+      "tconstruct:tool_data": {}
+    },
+    "count": 1,
+    "id": "tconstruct:travelers_shield"
+  }
+}

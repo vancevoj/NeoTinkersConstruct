@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:ingots/steeleaf"
+    }
+  ],
+  "type": "tconstruct:material_fluid",
+  "fluid": {
+    "amount": 90,
+    "tag": "tconstruct:molten_steeleaf"
+  },
+  "output": "tconstruct:steeleaf",
+  "temperature": 934
+}

@@ -23,14 +23,15 @@
       "type": "tconstruct:attribute",
       "attribute": "minecraft:generic.knockback_resistance",
       "each_level": 0.1,
-      "operation": "multiply_base",
+      "operation": "add_multiplied_base",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ],
       "tool": {
         "type": "mantle:inverted",
@@ -42,28 +43,30 @@
       "type": "tconstruct:attribute",
       "attribute": "minecraft:generic.movement_speed",
       "each_level": -0.1,
-      "operation": "multiply_base",
+      "operation": "add_multiplied_base",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ]
     },
     {
       "type": "tconstruct:attribute",
-      "attribute": "forge:entity_gravity",
+      "attribute": "minecraft:generic.gravity",
       "each_level": 0.05,
-      "operation": "multiply_total",
+      "operation": "add_multiplied_total",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ],
       "tooltip_style": "percent"
     }

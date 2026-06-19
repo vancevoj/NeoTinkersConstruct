@@ -1,0 +1,13 @@
+{
+  "type": "tconstruct:molding_table",
+  "material": {
+    "tag": "tconstruct:casts/sand"
+  },
+  "pattern": {
+    "type": "tconstruct:material",
+    "match": {
+      "item": "tconstruct:hammer_head"
+    }
+  },
+  "result": "tconstruct:hammer_head_sand_cast"
+}

@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:ingots/constantan"
+    }
+  ],
+  "type": "tconstruct:material",
+  "ingredient": {
+    "tag": "forge:ingots/constantan"
+  },
+  "material": "tconstruct:constantan",
+  "needed": 1,
+  "value": 1
+}

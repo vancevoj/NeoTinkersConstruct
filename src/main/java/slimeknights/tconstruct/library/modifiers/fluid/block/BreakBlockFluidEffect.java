@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.modifiers.fluid.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.CommonComponents;
@@ -36,7 +37,7 @@ import slimeknights.tconstruct.library.modifiers.fluid.FluidEffectContext;
 import java.util.Map;
 
 /** Breaks a block using a fluid */
-public record BreakBlockFluidEffect(float hardness, Map<Enchantment,Integer> enchantments) implements FluidEffect<FluidEffectContext.Block> {
+public record BreakBlockFluidEffect(float hardness, Map<Holder<Enchantment>,Integer> enchantments) implements FluidEffect<FluidEffectContext.Block> {
   public static final RecordLoadable<BreakBlockFluidEffect> LOADER = RecordLoadable.create(
     FloatLoadable.FROM_ZERO.defaultField("hardness", 0f, false, BreakBlockFluidEffect::hardness),
     Loadables.ENCHANTMENT.mapWithValues(IntLoadable.FROM_ONE, 0).defaultField("enchantments", Map.of(), BreakBlockFluidEffect::enchantments),
@@ -46,7 +47,7 @@ public record BreakBlockFluidEffect(float hardness, Map<Enchantment,Integer> enc
     this(hardness, Map.of());
   }
 
-  public BreakBlockFluidEffect(float hardness, Enchantment enchantment, int level) {
+  public BreakBlockFluidEffect(float hardness, Holder<Enchantment> enchantment, int level) {
     this(hardness, Map.of(enchantment, level));
   }
 
@@ -88,11 +89,10 @@ public record BreakBlockFluidEffect(float hardness, Map<Enchantment,Integer> enc
         ItemStack fakeTool = ItemStack.EMPTY;
         if (!enchantments.isEmpty()) {
           fakeTool = new ItemStack(Items.STICK);
-          // 1.21: enchantments live in the ItemEnchantments component keyed by Holder<Enchantment>; wrap each raw enchantment via the datapack enchantment registry
-          var enchantmentRegistry = server.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+          // 1.21: enchantments live in the ItemEnchantments component keyed by Holder<Enchantment>
           ItemEnchantments.Mutable builder = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
-          for (Map.Entry<Enchantment,Integer> entry : enchantments.entrySet()) {
-            builder.set(enchantmentRegistry.wrapAsHolder(entry.getKey()), entry.getValue());
+          for (Map.Entry<Holder<Enchantment>,Integer> entry : enchantments.entrySet()) {
+            builder.set(entry.getKey(), entry.getValue());
           }
           EnchantmentHelper.setEnchantments(fakeTool, builder.toImmutable());
         }
@@ -148,7 +148,7 @@ public record BreakBlockFluidEffect(float hardness, Map<Enchantment,Integer> enc
     } else {
       translationKey += ".enchanted";
       Component enchantments = enchantments().entrySet().stream().<Component>map(entry -> {
-        Enchantment enchantment = entry.getKey();
+        Enchantment enchantment = entry.getKey().value();
         // 1.21: Enchantment#getDescriptionId removed; description() returns the display Component directly
         MutableComponent component = enchantment.description().copy();
         if (enchantment.getMaxLevel() != 1) {

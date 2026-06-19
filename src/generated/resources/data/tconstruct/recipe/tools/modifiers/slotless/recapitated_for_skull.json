@@ -1,0 +1,31 @@
+{
+  "type": "tconstruct:modifier",
+  "allow_crystal": true,
+  "inputs": [
+    {
+      "type": "neoforge:difference",
+      "base": {
+        "tag": "minecraft:skulls"
+      },
+      "subtracted": {
+        "item": "minecraft:dragon_head"
+      }
+    },
+    {
+      "tag": "c:slimeballs"
+    }
+  ],
+  "level": 1,
+  "result": "tconstruct:recapitated",
+  "tools": {
+    "type": "neoforge:intersection",
+    "children": [
+      {
+        "tag": "tconstruct:modifiable/bonus_slots"
+      },
+      {
+        "tag": "tconstruct:modifiable/skulls"
+      }
+    ]
+  }
+}

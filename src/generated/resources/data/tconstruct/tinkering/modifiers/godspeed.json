@@ -6,14 +6,15 @@
       "attribute": "minecraft:generic.movement_speed",
       "each_level": 0.025,
       "flat": 0.025,
-      "operation": "multiply_total",
+      "operation": "add_multiplied_total",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ],
       "tooltip_style": "percent"
     },
@@ -22,14 +23,15 @@
       "attribute": "minecraft:generic.attack_speed",
       "each_level": 0.015,
       "flat": 0.01,
-      "operation": "multiply_total",
+      "operation": "add_multiplied_total",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ],
       "tooltip_style": "percent"
     },
@@ -38,14 +40,15 @@
       "attribute": "tconstruct:player.mining_speed_multiplier",
       "each_level": 0.05,
       "flat": 0.025,
-      "operation": "multiply_total",
+      "operation": "add_multiplied_total",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ],
       "tooltip_style": "percent"
     }

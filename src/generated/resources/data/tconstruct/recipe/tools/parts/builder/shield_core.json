@@ -1,0 +1,8 @@
+{
+  "type": "tconstruct:part_builder",
+  "cost": 4,
+  "pattern": "tconstruct:shield_core",
+  "result": {
+    "item": "tconstruct:shield_core"
+  }
+}

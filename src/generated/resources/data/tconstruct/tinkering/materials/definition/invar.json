@@ -1,6 +1,6 @@
 {
   "condition": {
-    "type": "forge:or",
+    "type": "neoforge:or",
     "values": [
       {
         "type": "tconstruct:config",
@@ -11,7 +11,7 @@
         "tag": "forge:ingots/invar"
       },
       {
-        "type": "forge:and",
+        "type": "neoforge:and",
         "values": [
           {
             "type": "tconstruct:config",

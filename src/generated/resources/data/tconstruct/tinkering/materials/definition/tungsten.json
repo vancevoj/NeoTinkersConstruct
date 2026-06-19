@@ -9,7 +9,7 @@
     },
     {
       "condition": {
-        "type": "forge:or",
+        "type": "neoforge:or",
         "values": [
           {
             "type": "mantle:tag_filled",

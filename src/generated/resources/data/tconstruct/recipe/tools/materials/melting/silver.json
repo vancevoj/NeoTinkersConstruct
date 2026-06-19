@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:ingots/silver"
+    }
+  ],
+  "type": "tconstruct:material_melting",
+  "input": "tconstruct:silver",
+  "result": {
+    "amount": 90,
+    "tag": "forge:molten_silver"
+  },
+  "temperature": 790
+}

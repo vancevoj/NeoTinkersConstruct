@@ -10,7 +10,7 @@
       "type": "tconstruct:attribute",
       "attribute": "minecraft:generic.attack_knockback",
       "each_level": 1.0,
-      "operation": "addition",
+      "operation": "add_value",
       "slots": [
         "mainhand",
         "feet",

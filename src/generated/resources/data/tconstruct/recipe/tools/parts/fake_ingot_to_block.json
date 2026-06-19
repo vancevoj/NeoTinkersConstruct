@@ -1,0 +1,37 @@
+{
+  "type": "tconstruct:crafting_shaped_materials",
+  "category": "misc",
+  "key": {
+    "#": {
+      "type": "tconstruct:material",
+      "match": {
+        "item": "tconstruct:fake_ingot"
+      },
+      "material": {
+        "type": "tconstruct:has_part",
+        "part": "tconstruct:fake_storage_block"
+      }
+    }
+  },
+  "parts": [
+    {
+      "type": "tconstruct:material",
+      "match": {
+        "item": "tconstruct:fake_ingot"
+      },
+      "material": {
+        "type": "tconstruct:has_part",
+        "part": "tconstruct:fake_storage_block"
+      }
+    }
+  ],
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tconstruct:fake_storage_block"
+  }
+}

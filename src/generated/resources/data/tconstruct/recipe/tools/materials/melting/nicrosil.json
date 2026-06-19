@@ -1,0 +1,32 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:or",
+      "values": [
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/nicrosil"
+        },
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/tin"
+        },
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/nickel"
+        },
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/chromium"
+        }
+      ]
+    }
+  ],
+  "type": "tconstruct:material_melting",
+  "input": "tconstruct:nicrosil",
+  "result": {
+    "amount": 90,
+    "tag": "forge:molten_nicrosil"
+  },
+  "temperature": 1100
+}

@@ -5,7 +5,7 @@
       "type": "tconstruct:attribute",
       "attribute": "minecraft:generic.attack_damage",
       "each_level": 0.1,
-      "operation": "multiply_total",
+      "operation": "add_multiplied_total",
       "slots": [
         "feet",
         "legs",

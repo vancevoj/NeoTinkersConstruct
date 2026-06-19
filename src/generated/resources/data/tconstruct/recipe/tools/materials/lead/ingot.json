@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:ingots/lead"
+    }
+  ],
+  "type": "tconstruct:material",
+  "ingredient": {
+    "tag": "forge:ingots/lead"
+  },
+  "material": "tconstruct:lead",
+  "needed": 1,
+  "value": 1
+}

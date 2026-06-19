@@ -1,5 +1,6 @@
 package slimeknights.tconstruct.tools.data;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
@@ -284,9 +285,9 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
   /** Static vanilla registry lookup for resolving data-driven enchantment keys at datagen time */
   private static final HolderLookup.Provider VANILLA_REGISTRIES = VanillaRegistries.createLookup();
 
-  /** Resolves a vanilla enchantment key to its value, as the module/predicate APIs take a raw {@link Enchantment} */
-  private static Enchantment enchantment(ResourceKey<Enchantment> key) {
-    return VANILLA_REGISTRIES.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(key).value();
+  /** Resolves a vanilla enchantment key to its registry holder (modules/predicates store the Holder so they serialize by key) */
+  private static Holder<Enchantment> enchantment(ResourceKey<Enchantment> key) {
+    return VANILLA_REGISTRIES.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(key);
   }
 
   public ModifierProvider(PackOutput packOutput) {

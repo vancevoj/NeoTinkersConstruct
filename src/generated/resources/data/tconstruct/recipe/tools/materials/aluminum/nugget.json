@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:nuggets/aluminum"
+    }
+  ],
+  "type": "tconstruct:material",
+  "ingredient": {
+    "tag": "forge:nuggets/aluminum"
+  },
+  "material": "tconstruct:aluminum",
+  "needed": 9,
+  "value": 1
+}

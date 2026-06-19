@@ -5,14 +5,15 @@
       "type": "tconstruct:attribute",
       "attribute": "tconstruct:generic.bad_effect_duration_multiplier",
       "each_level": 0.2,
-      "operation": "multiply_base",
+      "operation": "add_multiplied_base",
       "slots": [
         "mainhand",
         "offhand",
         "feet",
         "legs",
         "chest",
-        "head"
+        "head",
+        "body"
       ],
       "tooltip_style": "percent"
     }
