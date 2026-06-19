@@ -40,9 +40,15 @@ Branch policy (2026-06-18): the TConstruct repo keeps a **single** branch, `1.21
 `1.21`; also the default). The old `releases` branch and the pristine `1.20.1` reference branch were
 deleted per request. The pristine 1.20.1 source is still available from the `upstream` remote
 (`git fetch upstream 1.20.1`) for diffing. (Mantle's branch is still named `1.21`.)
-**Jars ship via a GitHub Release, not a branch:** release `v3.11.2-1.21.1` carries both jars as assets
-(https://github.com/vancevoj/NeoTinkersConstruct/releases/tag/v3.11.2-1.21.1). Build new jars with
-`./gradlew build` (Java 21), then attach to a new/updated release with `gh release upload` or the API.
+**Jars ship via a GitHub Release, not a branch:** release `v1.0` carries both jars as assets
+(https://github.com/vancevoj/NeoTinkersConstruct/releases/tag/v1.0): NeoTinkersConstruct-1.21.1-3.11.2-v1.0.jar
+and NeoMantle-1.21.1-1.21.0-v1.0.jar. To ship a new release: bump `fork_version` in BOTH gradle.properties,
+`./gradlew clean build` in TConstruct AND explicitly in Mantle (the composite build does not rebuild the
+Mantle jar), then create/upload a GitHub release via the API. v1.0 made the port broadly functional: the
+big fix was recipe loading (~1648 recipes; Mantle LoadableRecipeSerializer context + ItemOutput empty-output
+network tolerance), plus smeltery capabilities, GUI/fluid/texture fixes, advancements + loot modifiers,
+heart bar, and assorted 1:1 parity. Deferred to v1.1: the enchantment-effect ports (looting/soul-speed) and
+a few compat casts using unpopulated forge: tags. See the memory note [[neotinkers-port]] for specifics.
 
 **Structure** (both repos, standard NeoForge MDK):
 - `src/main/java/slimeknights/{tconstruct,mantle}/…` — source
