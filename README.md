@@ -1,4 +1,4 @@
-# Neo Tinkers Construct
+# Neo Tinkers
 
 An unofficial **Minecraft 1.21.1 NeoForge** port of **Tinkers Construct** by SlimeKnights.
 
@@ -8,6 +8,13 @@ Full credit for the mod goes to SlimeKnights. I take no credit for any of the or
 
 ## Download
 
-- [Neo Tinkers Construct - latest release](https://github.com/vancevoj/neo_tinkersconstruct/releases/latest)
+- [Neo Tinkers - latest release](https://github.com/vancevoj/neo_tinkersconstruct/releases/latest)
 - [Neo Mantle (required) - latest release](https://github.com/vancevoj/neo_mantle/releases/latest)
+
+
+## Optional Download - Neo Planner
+
+Neo Planner is another **unofficial** port of the Tinkers Construct Planner addon-mod. This port is functional for 1.21.1 NeoForge, and again - is in no way endorsed by any persons aside myself. Download & use the following at your own discretion.
+
+- [Neo Planner - latest release](https://github.com/vancevoj/neoplanner/releases/latest)
 
