@@ -9,8 +9,22 @@
 
 Porting **Tinkers' Construct** and its hard dependency **Mantle** from Minecraft
 **1.20.1/Forge** to **1.21.1/NeoForge**, so the fork works with all features and can be
-re-synced with upstream over time. **Phase:** Mantle is DONE (compiles + builds a jar);
-TConstruct is mid-port (~6000 compile errors, dropping) via parallel-agent orchestration.
+re-synced with upstream over time. **Phase: PLAYABLE.** Both compile green, datagen
+completes, and the client loads, joins a singleplayer world, and survives normal play
+(movement, mob spawning, opening the inventory/creative tabs). Jars published to the
+`releases` branch (NeoForge 21.1.233). Remaining: smeltery `RegisterCapabilitiesEvent`
+wiring, advancements, and global loot modifiers (all currently stubbed/disabled, none fatal).
+
+**Runtime fixes that made it playable (2026-06-18):**
+- `update_recipes` packet encode failure on world join: Mantle `SimpleRecipeSerializer`
+  used `StreamCodec.unit(constructor.get())` (asserts instance identity on encode); now
+  encodes nothing and builds a fresh instance on decode.
+- Client froze on the Mojang splash: Mantle `fluid.vsh` used the old 3-arg `fog_distance`;
+  fixed to the 1.21 2-arg signature.
+- Crashes on mob tick and on opening the inventory from 1.21's new `BODY` equipment slot
+  (filter flag 6, animal armor): slot-indexed arrays sized by `EquipmentSlot.values().length`
+  (`EquipmentContext`, `ModifierMaxLevel`, `SlotInChargeModule`); `ArmorItem.Type.BODY`
+  skipped in creative-tab/book/tinker-station code that only covers the 4 humanoid types.
 
 ---
 
