@@ -264,7 +264,8 @@ public abstract class AbstractToolItemModelProvider extends GenericDataProvider 
 
   /** Adds broken and blocking models for the armor set */
   protected void armor(String name, EnumObject<ArmorItem.Type,? extends Item> armor, String... textures) throws IOException {
-    armor(name, armor, ArmorItem.Type.values(), textures);
+    // 1.21 added ArmorItem.Type.BODY; Tinkers armor only covers the 4 humanoid slots
+    armor(name, armor, new ArmorItem.Type[]{ArmorItem.Type.HELMET, ArmorItem.Type.CHESTPLATE, ArmorItem.Type.LEGGINGS, ArmorItem.Type.BOOTS}, textures);
   }
 
   /** Creates models for fishing rods cast and broken */

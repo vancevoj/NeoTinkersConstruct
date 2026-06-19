@@ -58,6 +58,9 @@ public record StatlessPartRepairModule(int partIndex, int repairAmount) implemen
     public ArmorBuilder durabilityFactor(float maxDamageFactor) {
       for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
         int index = slotType.ordinal();
+        if (index >= durability.length) { // skip 1.21's BODY armor type
+          continue;
+        }
         durability[index] = (int)(ArmorModuleBuilder.MAX_DAMAGE_ARRAY[index] * maxDamageFactor);
       }
       return this;

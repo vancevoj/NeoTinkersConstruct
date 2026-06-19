@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:geore_medium_buds/iron"
+    }
+  ],
+  "type": "tconstruct:ore_melting",
+  "byproducts": [
+    {
+      "amount": 180,
+      "rate": "metal",
+      "tag": "forge:molten_steel"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:geore_medium_buds/iron"
+  },
+  "rate": "metal",
+  "result": {
+    "amount": 180,
+    "tag": "forge:molten_iron"
+  },
+  "temperature": 800,
+  "time": 90
+}

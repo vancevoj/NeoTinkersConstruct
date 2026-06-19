@@ -324,19 +324,20 @@ public class SmelteryRecipeBuilder {
       // multiple options, each byproduct branch saves the same location guarded by its own condition.
       // ConditionalRecipe used ordered first-match; withConditions guards each branch independently, so the byproduct
       // conditions (presence of an ingot tag) must be mutually exclusive at runtime for the prior behavior to hold.
-      boolean alwaysPresent = false;
+      // TODO(neoport): conditional ore byproducts used ConditionalRecipe's ordered first-match (one recipe id, several
+      // condition-guarded variants). 1.21 datagen dedups by id and cannot emit multiple variants under one id, so emit a
+      // single recipe: prefer an always-present byproduct, otherwise no byproduct (the ore still melts). The mod-compat
+      // conditional byproduct preferences are dropped until restored via unique ids + mutually-exclusive conditions.
+      IByproduct always = null;
       for (IByproduct byproduct : oreByproducts) {
-        // found an always present byproduct? no need to tag and we are done
-        alwaysPresent = byproduct.isAlwaysPresent();
-        RecipeOutput branch = alwaysPresent ? wrapped : wrapped.withConditions(tagCondition("ingots/" + byproduct.getName()));
-        supplier.get().addByproduct(byproduct.getFluid(scale)).setOre(oreRate, byproduct.getOreRate()).save(branch, location);
-
-        if (alwaysPresent) {
+        if (byproduct.isAlwaysPresent()) {
+          always = byproduct;
           break;
         }
       }
-      // not always present? add a recipe with no byproducts as a final fallback
-      if (!alwaysPresent) {
+      if (always != null) {
+        supplier.get().addByproduct(always.getFluid(scale)).setOre(oreRate, always.getOreRate()).save(wrapped, location);
+      } else {
         supplier.get().save(wrapped, location);
       }
     }

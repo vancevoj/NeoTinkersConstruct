@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:plates/gold"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:plates/gold"
+  },
+  "result": {
+    "amount": 90,
+    "tag": "forge:molten_gold"
+  },
+  "temperature": 700,
+  "time": 57
+}

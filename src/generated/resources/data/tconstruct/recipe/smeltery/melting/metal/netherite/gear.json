@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:gears/netherite"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:gears/netherite"
+  },
+  "result": {
+    "amount": 360,
+    "tag": "forge:molten_netherite"
+  },
+  "temperature": 1250,
+  "time": 147
+}

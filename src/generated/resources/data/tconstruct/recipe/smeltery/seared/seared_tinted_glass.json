@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "G": {
+      "tag": "c:glass_blocks/tinted"
+    },
+    "b": {
+      "item": "tconstruct:seared_brick"
+    }
+  },
+  "pattern": [
+    " b ",
+    "bGb",
+    " b "
+  ],
+  "result": {
+    "count": 1,
+    "id": "tconstruct:seared_tinted_glass"
+  }
+}

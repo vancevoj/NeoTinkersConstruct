@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "tools_complement:copper_hammer"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "tools_complement:copper_hammer"
+    ]
+  },
+  "result": {
+    "amount": 1170,
+    "tag": "forge:molten_copper",
+    "unit_size": 10
+  },
+  "temperature": 500,
+  "time": 180
+}

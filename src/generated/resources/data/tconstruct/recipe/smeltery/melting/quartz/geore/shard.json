@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:geore_shards/quartz"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:geore_shards/quartz"
+  },
+  "result": {
+    "amount": 100,
+    "fluid": "tconstruct:molten_quartz"
+  },
+  "temperature": 637,
+  "time": 55
+}

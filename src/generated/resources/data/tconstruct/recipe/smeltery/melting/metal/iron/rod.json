@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:rods/iron"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:rods/iron"
+  },
+  "result": {
+    "amount": 45,
+    "tag": "forge:molten_iron"
+  },
+  "temperature": 800,
+  "time": 12
+}

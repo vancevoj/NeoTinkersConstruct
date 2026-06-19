@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "tools_complement:diamond_hammer"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "tools_complement:diamond_hammer"
+    ]
+  },
+  "result": {
+    "amount": 1300,
+    "fluid": "tconstruct:molten_diamond",
+    "unit_size": 25
+  },
+  "temperature": 1450,
+  "time": 285
+}

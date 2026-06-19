@@ -1,7 +1,6 @@
 {
   "icon": {
-    "item": "tconstruct:cleaver",
-    "nbt": "{Damage:0,tic_broken:0b,tic_display:1b,tic_materials:[\"tconstruct:ui_render#head\",\"tconstruct:ui_render#handle\",\"tconstruct:ui_render#extra\",\"tconstruct:ui_render#large\",\"tconstruct:ui_render#extra_large\"]}"
+    "item": "tconstruct:cleaver"
   },
   "input_slots": [
     {

@@ -1,0 +1,20 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:wires/steel"
+    }
+  ],
+  "type": "tconstruct:casting_table",
+  "cast": {
+    "tag": "tconstruct:casts/multi_use/wire"
+  },
+  "cooling_time": 46,
+  "fluid": {
+    "amount": 45,
+    "tag": "forge:molten_steel"
+  },
+  "result": {
+    "tag": "forge:wires/steel"
+  }
+}

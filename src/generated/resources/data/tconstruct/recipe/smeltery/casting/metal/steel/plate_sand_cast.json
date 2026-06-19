@@ -1,0 +1,21 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:plates/steel"
+    }
+  ],
+  "type": "tconstruct:casting_table",
+  "cast": {
+    "tag": "tconstruct:casts/single_use/plate"
+  },
+  "cast_consumed": true,
+  "cooling_time": 65,
+  "fluid": {
+    "amount": 90,
+    "tag": "forge:molten_steel"
+  },
+  "result": {
+    "tag": "forge:plates/steel"
+  }
+}

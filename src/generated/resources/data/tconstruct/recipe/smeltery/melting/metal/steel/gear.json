@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:gears/steel"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:gears/steel"
+  },
+  "result": {
+    "amount": 360,
+    "tag": "forge:molten_steel"
+  },
+  "temperature": 950,
+  "time": 130
+}

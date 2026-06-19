@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "twilightforest:block_and_chain"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "twilightforest:block_and_chain"
+    ]
+  },
+  "result": {
+    "amount": 1440,
+    "fluid": "tconstruct:molten_knightmetal",
+    "unit_size": 10
+  },
+  "temperature": 1300,
+  "time": 300
+}

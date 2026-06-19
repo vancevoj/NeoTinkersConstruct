@@ -1,7 +1,6 @@
 {
   "icon": {
-    "item": "tconstruct:arrow",
-    "nbt": "{tic_display:1b,tic_materials:[\"tconstruct:ui_render#head\",\"tconstruct:ui_render#handle\",\"tconstruct:ui_render#extra\",\"tconstruct:ui_render#large\",\"tconstruct:ui_render#extra_large\"]}"
+    "item": "tconstruct:arrow"
   },
   "input_slots": [
     {

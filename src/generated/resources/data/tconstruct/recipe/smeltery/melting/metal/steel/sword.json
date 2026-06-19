@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "tconstruct:melting/steel/tools_costing_2"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "tag": "tconstruct:melting/steel/tools_costing_2"
+  },
+  "result": {
+    "amount": 180,
+    "tag": "forge:molten_steel",
+    "unit_size": 10
+  },
+  "temperature": 950,
+  "time": 92
+}

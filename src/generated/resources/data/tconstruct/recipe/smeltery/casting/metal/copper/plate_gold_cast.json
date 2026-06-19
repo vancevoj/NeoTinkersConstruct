@@ -1,0 +1,20 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:plates/copper"
+    }
+  ],
+  "type": "tconstruct:casting_table",
+  "cast": {
+    "tag": "tconstruct:casts/multi_use/plate"
+  },
+  "cooling_time": 50,
+  "fluid": {
+    "amount": 90,
+    "tag": "forge:molten_copper"
+  },
+  "result": {
+    "tag": "forge:plates/copper"
+  }
+}

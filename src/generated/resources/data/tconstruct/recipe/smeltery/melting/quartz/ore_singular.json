@@ -1,0 +1,33 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_combination_filled",
+      "ignore": "tconstruct:non_singular_ore_rates",
+      "match": "forge:ores/quartz"
+    }
+  ],
+  "type": "tconstruct:ore_melting",
+  "byproducts": [
+    {
+      "amount": 90,
+      "rate": "metal",
+      "tag": "forge:molten_iron"
+    }
+  ],
+  "ingredient": {
+    "type": "neoforge:difference",
+    "base": {
+      "tag": "forge:ores/quartz"
+    },
+    "subtracted": {
+      "tag": "tconstruct:non_singular_ore_rates"
+    }
+  },
+  "rate": "gem",
+  "result": {
+    "amount": 100,
+    "fluid": "tconstruct:molten_quartz"
+  },
+  "temperature": 637,
+  "time": 137
+}

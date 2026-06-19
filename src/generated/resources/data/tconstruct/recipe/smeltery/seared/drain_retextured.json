@@ -1,0 +1,22 @@
+{
+  "type": "mantle:crafting_shaped_retextured",
+  "category": "redstone",
+  "key": {
+    "#": {
+      "tag": "tconstruct:smeltery_bricks"
+    },
+    "C": {
+      "tag": "c:ingots/copper"
+    }
+  },
+  "pattern": [
+    "C#C"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tconstruct:seared_drain"
+  },
+  "texture": {
+    "tag": "tconstruct:smeltery_bricks"
+  }
+}

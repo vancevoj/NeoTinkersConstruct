@@ -91,7 +91,12 @@ public abstract class AbstractMaterialStatsDataProvider extends GenericDataProvi
   protected void addArmorStats(MaterialId location, ArmorModuleBuilder<? extends IMaterialStats> statBuilder, IMaterialStats... otherStats) {
     IMaterialStats[] stats = new IMaterialStats[4];
     for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
-      stats[slotType.ordinal()] = statBuilder.build(slotType);
+      int index = slotType.ordinal();
+      // 1.21 added ArmorItem.Type.BODY (ordinal 4); Tinkers only has the 4 humanoid armor slots
+      if (index >= stats.length) {
+        continue;
+      }
+      stats[index] = statBuilder.build(slotType);
     }
     addMaterialStats(location, stats);
     if (otherStats.length > 0) {

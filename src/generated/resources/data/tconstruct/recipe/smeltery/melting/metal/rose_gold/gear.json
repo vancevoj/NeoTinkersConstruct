@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:gears/rose_gold"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:gears/rose_gold"
+  },
+  "result": {
+    "amount": 360,
+    "tag": "forge:molten_rose_gold"
+  },
+  "temperature": 550,
+  "time": 103
+}
