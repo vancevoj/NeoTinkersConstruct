@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material",
-  "ingredient": {
-    "tag": "forge:storage_blocks/quartz"
-  },
-  "material": "tconstruct:quartz",
-  "needed": 1,
-  "value": 4
-}

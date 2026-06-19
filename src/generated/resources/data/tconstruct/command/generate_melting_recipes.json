@@ -15,7 +15,7 @@
       },
       {
         "type": "mantle:tag",
-        "tag": "forge:dyes"
+        "tag": "c:dyes"
       },
       "mantle:has_container"
     ]

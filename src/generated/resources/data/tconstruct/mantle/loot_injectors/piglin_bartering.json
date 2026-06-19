@@ -9,7 +9,7 @@
             {
               "fluid": {
                 "amount": 50,
-                "fluid": "tconstruct:blazing_blood"
+                "id": "tconstruct:blazing_blood"
               },
               "function": "mantle:set_fluid"
             },

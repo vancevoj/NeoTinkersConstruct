@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material_fluid",
-  "fluid": {
-    "amount": 250,
-    "tag": "tconstruct:ichor"
-  },
-  "output": "tconstruct:ichor",
-  "temperature": 700
-}

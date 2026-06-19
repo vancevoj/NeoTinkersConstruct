@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material_melting",
-  "input": "tconstruct:ichor",
-  "result": {
-    "amount": 250,
-    "fluid": "tconstruct:ichor"
-  },
-  "temperature": 700
-}

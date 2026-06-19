@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material",
-  "ingredient": {
-    "item": "minecraft:shulker_shell"
-  },
-  "material": "tconstruct:shulker",
-  "needed": 1,
-  "value": 2
-}

@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material",
-  "ingredient": {
-    "item": "minecraft:feather"
-  },
-  "material": "tconstruct:feather",
-  "needed": 1,
-  "value": 1
-}

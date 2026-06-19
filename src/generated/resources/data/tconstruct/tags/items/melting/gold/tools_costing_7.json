@@ -1,9 +1,0 @@
-{
-  "values": [
-    "minecraft:golden_leggings",
-    {
-      "id": "#forge:tools/paxels/gold",
-      "required": false
-    }
-  ]
-}

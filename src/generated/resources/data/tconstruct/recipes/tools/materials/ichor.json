@@ -1,9 +1,0 @@
-{
-  "type": "tconstruct:material",
-  "ingredient": {
-    "item": "tconstruct:ichor_slime_crystal"
-  },
-  "material": "tconstruct:ichor",
-  "needed": 1,
-  "value": 1
-}
