@@ -32,13 +32,14 @@ wiring, advancements, and global loot modifiers (all currently stubbed/disabled,
 
 | Repo | URL | Branch | State |
 |------|-----|--------|-------|
-| TConstruct fork | https://github.com/vancevoj/NeoTinkersConstruct | **`1.21`** (only branch; now the default) | playable |
+| TConstruct fork | https://github.com/vancevoj/NeoTinkersConstruct | **`1.21.1`** (only branch; now the default) | playable |
 | Mantle fork | https://github.com/vancevoj/Mantle | **`1.21`** | **DONE** (builds `Mantle-1.21.1-1.21.0.jar`) |
 | Upstream (track) | SlimeKnights/TinkersConstruct (`1.20.1`), SlimeKnights/Mantle (`1.20`) | — | no official 1.21 yet |
 
-Branch policy (2026-06-18): the repo keeps a **single** branch, `1.21` (also the default). The old
-`releases` branch and the pristine `1.20.1` reference branch were deleted per request. The pristine
-1.20.1 source is still available from the `upstream` remote (`git fetch upstream 1.20.1`) for diffing.
+Branch policy (2026-06-18): the TConstruct repo keeps a **single** branch, `1.21.1` (renamed from
+`1.21`; also the default). The old `releases` branch and the pristine `1.20.1` reference branch were
+deleted per request. The pristine 1.20.1 source is still available from the `upstream` remote
+(`git fetch upstream 1.20.1`) for diffing. (Mantle's branch is still named `1.21`.)
 **Jars ship via a GitHub Release, not a branch:** release `v3.11.2-1.21.1` carries both jars as assets
 (https://github.com/vancevoj/NeoTinkersConstruct/releases/tag/v3.11.2-1.21.1). Build new jars with
 `./gradlew build` (Java 21), then attach to a new/updated release with `gh release upload` or the API.
@@ -56,7 +57,7 @@ Branch policy (2026-06-18): the repo keeps a **single** branch, `1.21` (also the
 
 | Path | What |
 |------|------|
-| `/ai/work/tinkers/NeoTinkersConstruct` | TConstruct working copy (branch `1.21`) |
+| `/ai/work/tinkers/NeoTinkersConstruct` | TConstruct working copy (branch `1.21.1`) |
 | `/ai/work/tinkers/Mantle` | Mantle working copy (branch `1.21`); wired into TConstruct via composite build (`settings.gradle` → `includeBuild '../Mantle'`) |
 | `/ai/work/tinkers/*.log` | compile logs; latest = `tcon-compile7.log` |
 | `/tmp/maxerrs.init.gradle` | Gradle init script lifting javac's 100-error cap (recreate if missing — content below) |
