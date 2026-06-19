@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "p": {
+      "item": "tconstruct:pattern"
+    },
+    "w": {
+      "type": "neoforge:difference",
+      "base": {
+        "tag": "forge:workbenches"
+      },
+      "subtracted": {
+        "item": "tconstruct:crafting_station"
+      }
+    }
+  },
+  "pattern": [
+    "p",
+    "w"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tconstruct:crafting_station"
+  }
+}

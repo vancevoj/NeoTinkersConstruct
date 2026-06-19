@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 50,
+  "experience": 0.2,
+  "ingredient": {
+    "item": "tconstruct:steel_shard"
+  },
+  "result": {
+    "count": 1,
+    "id": "tconstruct:steel_nugget"
+  }
+}

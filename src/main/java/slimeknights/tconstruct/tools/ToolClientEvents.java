@@ -24,6 +24,7 @@ import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.RegisterSpriteSourceTypesEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -116,7 +117,11 @@ public class ToolClientEvents extends ClientEventBase {
     manager.registerReloadListener(HarvestTiers.RELOAD_LISTENER);
     ArmorModelManager.init(manager);
     manager.registerReloadListener(TrimArmorTextureSupplier.CACHE_INVALIDATOR);
-    ShieldBannerModifierSpriteSource.register();
+  }
+
+  @SubscribeEvent
+  static void registerSpriteSources(RegisterSpriteSourceTypesEvent event) {
+    ShieldBannerModifierSpriteSource.register(event);
   }
 
   @SubscribeEvent

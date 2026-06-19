@@ -1,0 +1,35 @@
+{
+  "type": "mantle:crafting_shaped_retextured",
+  "category": "misc",
+  "key": {
+    "p": {
+      "item": "tconstruct:pattern"
+    },
+    "w": {
+      "type": "neoforge:difference",
+      "base": {
+        "tag": "tconstruct:tables"
+      },
+      "subtracted": {
+        "item": "tconstruct:crafting_station"
+      }
+    }
+  },
+  "pattern": [
+    "p",
+    "w"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tconstruct:crafting_station"
+  },
+  "texture": {
+    "type": "neoforge:difference",
+    "base": {
+      "tag": "tconstruct:tables"
+    },
+    "subtracted": {
+      "item": "tconstruct:crafting_station"
+    }
+  }
+}

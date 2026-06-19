@@ -33,6 +33,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
@@ -91,6 +92,8 @@ import static slimeknights.tconstruct.fluids.block.MobEffectLiquidBlock.createEf
 public final class TinkerFluids extends TinkerModule {
   public TinkerFluids() {
     NeoForgeMod.enableMilkFluid();
+    // RegisterBrewingRecipesEvent fires on the game bus, not the mod bus
+    NeoForge.EVENT_BUS.addListener(this::registerBrewingRecipes);
   }
 
   /** Creative tab for general items, or those that lack another tab */
@@ -387,8 +390,7 @@ public final class TinkerFluids extends TinkerModule {
     });
   }
 
-  /** Registers brewing recipes; brewing in 1.21 is built via the {@link RegisterBrewingRecipesEvent} builder. */
-  @SubscribeEvent
+  /** Registers brewing recipes; brewing in 1.21 is built via the {@link RegisterBrewingRecipesEvent} builder (game bus). */
   void registerBrewingRecipes(final RegisterBrewingRecipesEvent event) {
     PotionBrewing.Builder builder = event.getBuilder();
     // brew congealed slime into bottles to get slime bottles, easy melting

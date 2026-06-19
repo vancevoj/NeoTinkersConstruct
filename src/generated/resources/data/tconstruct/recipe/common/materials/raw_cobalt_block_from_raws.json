@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "tconstruct:raw_cobalt_block",
+  "key": {
+    "#": {
+      "tag": "forge:raw_materials/cobalt"
+    },
+    "*": {
+      "item": "tconstruct:raw_cobalt"
+    }
+  },
+  "pattern": [
+    "###",
+    "#*#",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tconstruct:raw_cobalt_block"
+  }
+}

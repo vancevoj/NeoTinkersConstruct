@@ -56,6 +56,13 @@ import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.ModifierManager;
 import slimeknights.tconstruct.library.modifiers.modules.behavior.EdibleModule;
 import slimeknights.tconstruct.library.modifiers.modules.capacity.OverslimeModule;
+import slimeknights.tconstruct.common.json.ConfigEnabledCondition;
+import slimeknights.tconstruct.library.json.condition.TagDifferencePresentCondition;
+import slimeknights.tconstruct.library.json.condition.TagIntersectionPresentCondition;
+import slimeknights.tconstruct.library.recipe.ingredient.BlockTagIngredient;
+import slimeknights.tconstruct.library.recipe.ingredient.MaterialIngredient;
+import slimeknights.tconstruct.library.recipe.ingredient.MaterialValueIngredient;
+import slimeknights.tconstruct.library.recipe.ingredient.NoContainerIngredient;
 import slimeknights.tconstruct.library.recipe.ingredient.ToolHookIngredient;
 import slimeknights.tconstruct.library.tools.IndestructibleItemEntity;
 import slimeknights.tconstruct.library.tools.SlotType;
@@ -65,6 +72,7 @@ import slimeknights.tconstruct.library.tools.capability.ToolEnergyCapability;
 import slimeknights.tconstruct.library.tools.capability.fluid.ToolFluidCapability;
 import slimeknights.tconstruct.library.tools.capability.fluid.ToolTankHelper;
 import slimeknights.tconstruct.library.tools.capability.inventory.ToolInventoryCapability;
+import slimeknights.tconstruct.library.tools.definition.ModifiableArmorMaterial;
 import slimeknights.tconstruct.library.tools.definition.ToolDefinition;
 import slimeknights.tconstruct.library.tools.definition.module.ToolHooks;
 import slimeknights.tconstruct.library.tools.definition.module.ToolModule;
@@ -235,8 +243,8 @@ public final class TinkerTools extends TinkerModule {
   }
 
   // armor
-  public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> travelersGear = ITEMS.registerEnum("travelers", ArmorItem.Type.values(), type -> new MultilayerArmorItem(ArmorDefinitions.TRAVELERS, type, UNSTACKABLE_PROPS));
-  public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> plateArmor = ITEMS.registerEnum("plate", ArmorItem.Type.values(), type -> new MultilayerArmorItem(ArmorDefinitions.PLATE, type, UNSTACKABLE_PROPS));
+  public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> travelersGear = ITEMS.registerEnum("travelers", ModifiableArmorMaterial.ARMOR_TYPES, type -> new MultilayerArmorItem(ArmorDefinitions.TRAVELERS, type, UNSTACKABLE_PROPS));
+  public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> plateArmor = ITEMS.registerEnum("plate", ModifiableArmorMaterial.ARMOR_TYPES, type -> new MultilayerArmorItem(ArmorDefinitions.PLATE, type, UNSTACKABLE_PROPS));
   public static final EnumObject<ArmorItem.Type,ModifiableArmorItem> slimesuit = new EnumObject.Builder<ArmorItem.Type,ModifiableArmorItem>(ArmorItem.Type.class)
     .put(ArmorItem.Type.HELMET, ITEMS.register("slime_helmet", () -> new SlimeskullItem(ArmorDefinitions.SLIMESUIT, SlimeskullItem.MODEL_LOCATION, UNSTACKABLE_PROPS)))
     // TODO 1.21: rename to slime chestplate as we no longer need the migration
@@ -313,6 +321,16 @@ public final class TinkerTools extends TinkerModule {
     // 1.21: custom ingredients are registered as IngredientType on the NeoForge registry (was CraftingHelper.register)
     if (event.getRegistryKey() == NeoForgeRegistries.Keys.INGREDIENT_TYPES) {
       event.register(NeoForgeRegistries.Keys.INGREDIENT_TYPES, ToolHookIngredient.ID, () -> ToolHookIngredient.TYPE);
+      event.register(NeoForgeRegistries.Keys.INGREDIENT_TYPES, getResource("no_container"), () -> NoContainerIngredient.TYPE);
+      event.register(NeoForgeRegistries.Keys.INGREDIENT_TYPES, getResource("block_tag"), () -> BlockTagIngredient.TYPE);
+      event.register(NeoForgeRegistries.Keys.INGREDIENT_TYPES, getResource("material"), () -> MaterialIngredient.TYPE);
+      event.register(NeoForgeRegistries.Keys.INGREDIENT_TYPES, getResource("material_value"), () -> MaterialValueIngredient.TYPE);
+    }
+    // 1.21: custom ICondition codecs register on CONDITION_CODECS (was CraftingHelper.register)
+    if (event.getRegistryKey() == NeoForgeRegistries.Keys.CONDITION_CODECS) {
+      event.register(NeoForgeRegistries.Keys.CONDITION_CODECS, ConfigEnabledCondition.ID, () -> ConfigEnabledCondition.CODEC);
+      event.register(NeoForgeRegistries.Keys.CONDITION_CODECS, TagIntersectionPresentCondition.NAME, () -> TagIntersectionPresentCondition.CODEC);
+      event.register(NeoForgeRegistries.Keys.CONDITION_CODECS, TagDifferencePresentCondition.NAME, () -> TagDifferencePresentCondition.CODEC);
     }
     // TODO(neoport): cross-package - ToolStackItemPredicate needs an ItemSubPredicate.Type<> (BuiltInRegistries.ITEM_SUB_PREDICATE_TYPE)
     //  with a Codec bridge for the mantle ToolStackPredicate loadable, owned by the mantle/registration agent. The legacy

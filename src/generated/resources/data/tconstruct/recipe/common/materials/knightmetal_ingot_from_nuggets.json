@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "tconstruct:knightmetal_ingot",
+  "key": {
+    "#": {
+      "tag": "forge:nuggets/knightmetal"
+    },
+    "*": {
+      "item": "tconstruct:knightmetal_nugget"
+    }
+  },
+  "pattern": [
+    "###",
+    "#*#",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tconstruct:knightmetal_ingot"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "tconstruct:manyullyn_block",
+  "key": {
+    "#": {
+      "tag": "forge:ingots/manyullyn"
+    },
+    "*": {
+      "item": "tconstruct:manyullyn_ingot"
+    }
+  },
+  "pattern": [
+    "###",
+    "#*#",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tconstruct:manyullyn_block"
+  }
+}

@@ -167,7 +167,7 @@ public class TinkerItemModelProvider extends ItemModelProvider {
 
   /** Creates a part model with the given texture */
   private MaterialModelBuilder<ItemModelBuilder> part(ResourceLocation part, String texture) {
-    return withExistingParent(part.getPath(), "forge:item/default")
+    return withExistingParent(part.getPath(), "neoforge:item/default")
       .texture("texture", getResource("item/tool/" + texture))
       .customLoader(MaterialModelBuilder::new);
   }

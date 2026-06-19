@@ -18,6 +18,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import slimeknights.mantle.registration.deferred.PotionDeferredRegister;
@@ -72,9 +73,10 @@ public class TinkerEffects extends TinkerModule {
 
   public TinkerEffects() {
     POTIONS.register(ModLoadingContext.get().getActiveContainer().getEventBus());
+    // RegisterBrewingRecipesEvent fires on the game bus, not the mod bus
+    NeoForge.EVENT_BUS.addListener(this::registerBrewingRecipes);
   }
 
-  @SubscribeEvent
   void registerBrewingRecipes(RegisterBrewingRecipesEvent event) {
     PotionBrewing.Builder builder = event.getBuilder();
     brewing(builder, experiencedPotion,  Potions.AWKWARD, Ingredient.of(TinkerWorld.congealedSlime.get(SlimeType.EARTH)));

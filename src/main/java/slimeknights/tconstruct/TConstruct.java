@@ -112,7 +112,7 @@ public class TConstruct {
     // base
     bus.register(new TinkerCommons());
     bus.register(new TinkerMaterials());
-    bus.register(new TinkerEffects());
+    new TinkerEffects(); // self-registers POTIONS on the mod bus + brewing on the game bus; no @SubscribeEvent methods to register
     bus.register(new TinkerGadgets(bus));
     bus.register(new TinkerAttributes());
     // world
@@ -121,7 +121,7 @@ public class TConstruct {
     // tools
     bus.register(new TinkerTables());
     bus.register(new TinkerModifiers());
-    bus.register(new TinkerToolParts());
+    new TinkerToolParts(); // pure registration (shared DeferredRegisters via initRegisters); no @SubscribeEvent methods
     bus.register(new TinkerTools());
     // smeltery
     bus.register(new TinkerSmeltery());
@@ -176,7 +176,9 @@ public class TConstruct {
     // other datagen
     generator.addProvider(server, new TConstructLootTableProvider(packOutput));
     generator.addProvider(server, new AdvancementsProvider(packOutput, lookupProvider));
-    generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));
+    // TODO(neoport): GlobalLootModifiersProvider datagen throws encoding a loot-modifier condition codec (KeyDispatch null);
+    // temporarily disabled so the rest of datagen regenerates. Loot modifiers (extra drops: lustrous/tasty/wither_bone) are off until re-enabled.
+    // generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));
     generator.addProvider(server, new LootTableInjectionProvider(packOutput));
     generator.addProvider(server, new ConfigurationDataProvider(packOutput));
   }

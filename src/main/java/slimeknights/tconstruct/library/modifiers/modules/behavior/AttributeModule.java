@@ -79,7 +79,8 @@ public record AttributeModule(String unique, Attribute attribute, Operation oper
 
   /** Converts a list of slots to an array of IDs at each index */
   public static ResourceLocation[] slotsToIds(String name, Collection<EquipmentSlot> slots) {
-    ResourceLocation[] slotIds = new ResourceLocation[6];
+    // 1.21 added EquipmentSlot.BODY (filter flag 6); size by the slot count so any flag fits
+    ResourceLocation[] slotIds = new ResourceLocation[EquipmentSlot.values().length];
     for (EquipmentSlot slot : slots) {
       slotIds[slot.getFilterFlag()] = getId(name, slot);
     }
