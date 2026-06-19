@@ -17,6 +17,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ArmorItem;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
+import slimeknights.tconstruct.library.tools.definition.ModifiableArmorMaterial;
 import slimeknights.tconstruct.tables.TinkerTables;
 import slimeknights.tconstruct.tables.menu.TinkerStationContainerMenu;
 
@@ -84,8 +85,9 @@ public class TinkerStationTransferInfo<T> implements IRecipeTransferInfo<TinkerS
   @Override
   public List<Slot> getInventorySlots(TinkerStationContainerMenu container, T recipe) {
     List<Slot> slots = new ArrayList<>();
-    // skip over inputs, output slot, tool slot, armor, and offhand
-    int start = container.getInputSlots().size() + 3 + ArmorItem.Type.values().length;
+    // skip over inputs, output slot, tool slot, armor, and offhand. Only the 4 humanoid armor slots are added
+    // (the menu skips 1.21's BODY type), so use that count rather than ArmorItem.Type.values().length (which is 5).
+    int start = container.getInputSlots().size() + 3 + ModifiableArmorMaterial.ARMOR_TYPES.length;
     for(int i = start; i < start + 36; i++) {
       Slot slot = container.getSlot(i);
       slots.add(slot);

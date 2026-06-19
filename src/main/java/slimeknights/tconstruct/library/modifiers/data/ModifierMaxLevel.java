@@ -10,8 +10,8 @@ import javax.annotation.Nullable;
 
 /** Helper class to keep track the max modifier level in a modifier, floats, keeps track of max slot, and tracks all 6 slots */
 public class ModifierMaxLevel {
-  /** Level for each slot */
-  private final float[] levels = new float[6];
+  /** Level for each slot (sized for all equipment slots; 1.21's BODY slot raised the max filter flag to 6) */
+  private final float[] levels = new float[EquipmentSlot.values().length];
   /** Max level across all slots */
   @Getter
   private float max = 0;

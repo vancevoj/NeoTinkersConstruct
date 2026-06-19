@@ -110,6 +110,7 @@ public class ArmorMaterialContent extends AbstractMaterialContent {
   /** Gets the tool to display for the given stat type, just hardcoding to plate armor for simplicity */
   private static void addPlatingItem(MaterialStatsId statType, List<ItemStack> stacks, MaterialVariantId variant) {
     for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
+      if (slotType == ArmorItem.Type.BODY) continue; // 1.21's BODY type has no plating; ordinal 4 would also overflow the 4-entry TYPES list
       if (statType.equals(PlatingMaterialStats.TYPES.get(slotType.ordinal()).getId())) {
         stacks.add(TinkerToolParts.plating.get(slotType).withMaterialForDisplay(variant));
         return;

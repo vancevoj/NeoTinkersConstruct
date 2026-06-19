@@ -26,10 +26,12 @@ public class EquipmentContext {
   /** Entity who changed equipment */
   @Getter
   private final LivingEntity entity;
+  /** Number of equipment slots; in 1.21 the BODY slot (animal armor) raised the max filter flag to 6, so arrays must be sized for all slots. */
+  private static final int SLOT_COUNT = EquipmentSlot.values().length;
   /** Determines if the tool in the given slot was fetched */
-  protected final boolean[] fetchedTool = new boolean[6];
+  protected final boolean[] fetchedTool = new boolean[SLOT_COUNT];
   /** Array of tools currently on the entity */
-  protected final IToolStackView[] toolsInSlots = new IToolStackView[6];
+  protected final IToolStackView[] toolsInSlots = new IToolStackView[SLOT_COUNT];
   /** Cached tinker data holder, saves attachment lookup times slightly */
   private TinkerDataCapability.Holder tinkerData = null;
   /** Tracks whether the tinker data holder has been fetched, since the holder itself may legitimately be null */

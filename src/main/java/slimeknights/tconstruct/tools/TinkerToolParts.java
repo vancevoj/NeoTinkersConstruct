@@ -137,6 +137,7 @@ public final class TinkerToolParts extends TinkerModule {
     accept(output, fletching);
     // plating, pair each one with the dummy plating item
     for (ArmorItem.Type type : ArmorItem.Type.values()) {
+      if (type == ArmorItem.Type.BODY) continue; // 1.21's BODY (animal armor) type has no Tinkers plating; the EnumObjects only hold the 4 humanoid types
       tab.accept(TinkerSmeltery.dummyPlating.get(type));
       plating.get(type).addVariants(output, "");
     }
