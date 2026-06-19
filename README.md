@@ -9,5 +9,5 @@ Full credit for the mod goes to SlimeKnights. I take no credit for any of the or
 ## Download
 
 - [Neo Tinkers Construct - latest release](https://github.com/vancevoj/neo_tinkersconstruct/releases/latest)
-- [NeoMantle (required) - latest release](https://github.com/vancevoj/neo_mantle/releases/latest)
+- [Neo Mantle (required) - latest release](https://github.com/vancevoj/neo_mantle/releases/latest)
 
