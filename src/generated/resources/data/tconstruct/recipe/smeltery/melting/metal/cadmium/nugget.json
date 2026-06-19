@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/cadmium"
+      "tag": "c:nuggets/cadmium"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:nuggets/cadmium"
+    "tag": "c:nuggets/cadmium"
   },
   "result": {
     "amount": 10,
-    "tag": "forge:molten_cadmium"
+    "tag": "c:molten_cadmium"
   },
   "temperature": 294,
   "time": 14

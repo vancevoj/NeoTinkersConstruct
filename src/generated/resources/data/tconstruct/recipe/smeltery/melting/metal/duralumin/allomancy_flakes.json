@@ -14,7 +14,7 @@
   },
   "result": {
     "amount": 30,
-    "tag": "forge:molten_duralumin"
+    "tag": "c:molten_duralumin"
   },
   "temperature": 625,
   "time": 31

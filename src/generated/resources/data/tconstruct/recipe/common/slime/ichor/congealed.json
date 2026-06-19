@@ -4,7 +4,7 @@
   "group": "tconstruct:congealed_slime",
   "key": {
     "#": {
-      "tag": "forge:slimeball/ichor"
+      "tag": "c:slimeball/ichor"
     }
   },
   "pattern": [

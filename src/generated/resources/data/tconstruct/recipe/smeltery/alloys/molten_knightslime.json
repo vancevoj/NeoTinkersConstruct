@@ -3,7 +3,7 @@
   "inputs": [
     {
       "amount": 90,
-      "tag": "forge:molten_cobalt"
+      "tag": "c:molten_cobalt"
     },
     {
       "amount": 250,

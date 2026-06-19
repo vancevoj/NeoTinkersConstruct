@@ -3,9 +3,9 @@
   "cooling_time": 194,
   "fluid": {
     "amount": 810,
-    "tag": "forge:molten_steel"
+    "tag": "c:molten_steel"
   },
   "result": {
-    "tag": "forge:storage_blocks/steel"
+    "tag": "c:storage_blocks/steel"
   }
 }

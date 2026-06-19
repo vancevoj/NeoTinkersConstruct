@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:wires/copper"
+      "tag": "c:wires/copper"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:wires/copper"
+    "tag": "c:wires/copper"
   },
   "result": {
     "amount": 45,
-    "tag": "forge:molten_copper"
+    "tag": "c:molten_copper"
   },
   "temperature": 500,
   "time": 10

@@ -1,11 +1,11 @@
 {
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:slimeball/earth"
+    "tag": "c:slimeball/earth"
   },
   "result": {
     "amount": 250,
-    "tag": "forge:slime"
+    "tag": "c:slime"
   },
   "temperature": 50,
   "time": 31

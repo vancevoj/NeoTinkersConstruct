@@ -3,7 +3,7 @@
   "input": "tconstruct:earthslime",
   "result": {
     "amount": 250,
-    "tag": "forge:slime"
+    "tag": "c:slime"
   },
   "temperature": 50
 }

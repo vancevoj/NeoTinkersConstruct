@@ -5,7 +5,7 @@
   },
   "fluid": {
     "amount": 250,
-    "tag": "forge:potion"
+    "tag": "c:potion"
   },
   "result": "minecraft:potion"
 }

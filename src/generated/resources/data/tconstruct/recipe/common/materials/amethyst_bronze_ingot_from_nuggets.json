@@ -4,7 +4,7 @@
   "group": "tconstruct:amethyst_bronze_ingot",
   "key": {
     "#": {
-      "tag": "forge:nuggets/amethyst_bronze"
+      "tag": "c:nuggets/amethyst_bronze"
     },
     "*": {
       "item": "tconstruct:amethyst_bronze_nugget"

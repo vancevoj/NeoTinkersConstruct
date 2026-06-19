@@ -2,17 +2,17 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:storage_blocks/raw_bendalloy"
+      "tag": "c:storage_blocks/raw_bendalloy"
     }
   ],
   "type": "tconstruct:ore_melting",
   "ingredient": {
-    "tag": "forge:storage_blocks/raw_bendalloy"
+    "tag": "c:storage_blocks/raw_bendalloy"
   },
   "rate": "metal",
   "result": {
     "amount": 810,
-    "tag": "forge:molten_bendalloy"
+    "tag": "c:molten_bendalloy"
   },
   "temperature": 100,
   "time": 200

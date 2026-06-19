@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:armors/leggings/constantan"
+      "tag": "c:armors/leggings/constantan"
     }
   ],
   "type": "tconstruct:damagable_melting",
   "ingredient": {
-    "tag": "forge:armors/leggings/constantan"
+    "tag": "c:armors/leggings/constantan"
   },
   "result": {
     "amount": 630,
-    "tag": "forge:molten_constantan",
+    "tag": "c:molten_constantan",
     "unit_size": 10
   },
   "temperature": 920,

@@ -3,7 +3,7 @@
   "cooling_time": 33,
   "fluid": {
     "amount": 30,
-    "tag": "forge:molten_gold"
+    "tag": "c:molten_gold"
   },
   "result": "tconstruct:gold_bars"
 }

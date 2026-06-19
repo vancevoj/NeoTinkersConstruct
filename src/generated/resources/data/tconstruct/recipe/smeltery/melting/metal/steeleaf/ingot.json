@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/steeleaf"
+      "tag": "c:ingots/steeleaf"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:ingots/steeleaf"
+    "tag": "c:ingots/steeleaf"
   },
   "result": {
     "amount": 90,

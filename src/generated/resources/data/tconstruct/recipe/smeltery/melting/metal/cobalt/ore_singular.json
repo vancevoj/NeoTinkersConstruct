@@ -3,7 +3,7 @@
     {
       "type": "mantle:tag_combination_filled",
       "ignore": "tconstruct:non_singular_ore_rates",
-      "match": "forge:ores/cobalt"
+      "match": "c:ores/cobalt"
     }
   ],
   "type": "tconstruct:ore_melting",
@@ -17,7 +17,7 @@
   "ingredient": {
     "type": "neoforge:difference",
     "base": {
-      "tag": "forge:ores/cobalt"
+      "tag": "c:ores/cobalt"
     },
     "subtracted": {
       "tag": "tconstruct:non_singular_ore_rates"
@@ -26,7 +26,7 @@
   "rate": "metal",
   "result": {
     "amount": 180,
-    "tag": "forge:molten_cobalt"
+    "tag": "c:molten_cobalt"
   },
   "temperature": 950,
   "time": 162

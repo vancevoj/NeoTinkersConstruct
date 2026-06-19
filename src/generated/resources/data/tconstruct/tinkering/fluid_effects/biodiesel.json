@@ -33,6 +33,6 @@
   ],
   "fluid": {
     "amount": 50,
-    "tag": "forge:biodiesel"
+    "tag": "c:biodiesel"
   }
 }

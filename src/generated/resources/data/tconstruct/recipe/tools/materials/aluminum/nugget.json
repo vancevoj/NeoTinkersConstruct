@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/aluminum"
+      "tag": "c:nuggets/aluminum"
     }
   ],
   "type": "tconstruct:material",
   "ingredient": {
-    "tag": "forge:nuggets/aluminum"
+    "tag": "c:nuggets/aluminum"
   },
   "material": "tconstruct:aluminum",
   "needed": 9,

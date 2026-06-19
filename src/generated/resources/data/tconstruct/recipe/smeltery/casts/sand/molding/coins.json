@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:coins"
+      "tag": "c:coins"
     }
   ],
   "type": "tconstruct:molding_table",
@@ -10,7 +10,7 @@
     "tag": "tconstruct:casts/sand"
   },
   "pattern": {
-    "tag": "forge:coins"
+    "tag": "c:coins"
   },
   "result": "tconstruct:coin_sand_cast"
 }

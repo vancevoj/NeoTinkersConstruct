@@ -2,22 +2,22 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:raw_materials/ironwood"
+      "tag": "c:raw_materials/ironwood"
     }
   ],
   "type": "tconstruct:melting",
   "byproducts": [
     {
       "amount": 10,
-      "tag": "forge:molten_gold"
+      "tag": "c:molten_gold"
     }
   ],
   "ingredient": {
-    "tag": "forge:raw_materials/ironwood"
+    "tag": "c:raw_materials/ironwood"
   },
   "result": {
     "amount": 90,
-    "tag": "forge:molten_iron"
+    "tag": "c:molten_iron"
   },
   "temperature": 800,
   "time": 60

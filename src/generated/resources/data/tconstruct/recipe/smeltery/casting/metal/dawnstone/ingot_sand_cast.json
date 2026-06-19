@@ -3,11 +3,11 @@
     {
       "type": "mantle:tag_filled",
       "registry": "minecraft:fluid",
-      "tag": "forge:molten_dawnstone"
+      "tag": "c:molten_dawnstone"
     },
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/dawnstone"
+      "tag": "c:ingots/dawnstone"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -18,9 +18,9 @@
   "cooling_time": 63,
   "fluid": {
     "amount": 90,
-    "tag": "forge:molten_dawnstone"
+    "tag": "c:molten_dawnstone"
   },
   "result": {
-    "tag": "forge:ingots/dawnstone"
+    "tag": "c:ingots/dawnstone"
   }
 }

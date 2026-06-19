@@ -14,7 +14,7 @@
   },
   "result": {
     "amount": 10,
-    "tag": "forge:molten_nickel"
+    "tag": "c:molten_nickel"
   },
   "temperature": 950,
   "time": 22

@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#forge:slimeball/sky"
+            "items": "#c:slimeball/sky"
           }
         ]
       },

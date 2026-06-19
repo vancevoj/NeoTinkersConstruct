@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:plates/tin"
+      "tag": "c:plates/tin"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -13,9 +13,9 @@
   "cooling_time": 39,
   "fluid": {
     "amount": 90,
-    "tag": "forge:molten_tin"
+    "tag": "c:molten_tin"
   },
   "result": {
-    "tag": "forge:plates/tin"
+    "tag": "c:plates/tin"
   }
 }

@@ -3,7 +3,7 @@
   "cooling_time": 20,
   "fluid": {
     "amount": 50,
-    "tag": "forge:potion"
+    "tag": "c:potion"
   },
   "modifier": "tconstruct:tipped",
   "tools": {

@@ -3,7 +3,7 @@
   "input": "tconstruct:manyullyn",
   "result": {
     "amount": 90,
-    "tag": "forge:molten_manyullyn"
+    "tag": "c:molten_manyullyn"
   },
   "temperature": 1200
 }

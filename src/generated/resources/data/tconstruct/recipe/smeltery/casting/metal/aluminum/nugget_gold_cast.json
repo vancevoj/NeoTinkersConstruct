@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/aluminum"
+      "tag": "c:nuggets/aluminum"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -12,9 +12,9 @@
   "cooling_time": 16,
   "fluid": {
     "amount": 10,
-    "tag": "forge:molten_aluminum"
+    "tag": "c:molten_aluminum"
   },
   "result": {
-    "tag": "forge:nuggets/aluminum"
+    "tag": "c:nuggets/aluminum"
   }
 }

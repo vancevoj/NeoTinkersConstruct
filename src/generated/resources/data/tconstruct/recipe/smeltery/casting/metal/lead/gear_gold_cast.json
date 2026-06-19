@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:gears/lead"
+      "tag": "c:gears/lead"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -12,9 +12,9 @@
   "cooling_time": 87,
   "fluid": {
     "amount": 360,
-    "tag": "forge:molten_lead"
+    "tag": "c:molten_lead"
   },
   "result": {
-    "tag": "forge:gears/lead"
+    "tag": "c:gears/lead"
   }
 }

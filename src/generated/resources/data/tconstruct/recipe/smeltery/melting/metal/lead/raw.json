@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:raw_materials/lead"
+      "tag": "c:raw_materials/lead"
     }
   ],
   "type": "tconstruct:ore_melting",
@@ -10,16 +10,16 @@
     {
       "amount": 90,
       "rate": "metal",
-      "tag": "forge:molten_gold"
+      "tag": "c:molten_gold"
     }
   ],
   "ingredient": {
-    "tag": "forge:raw_materials/lead"
+    "tag": "c:raw_materials/lead"
   },
   "rate": "metal",
   "result": {
     "amount": 90,
-    "tag": "forge:molten_lead"
+    "tag": "c:molten_lead"
   },
   "temperature": 330,
   "time": 65

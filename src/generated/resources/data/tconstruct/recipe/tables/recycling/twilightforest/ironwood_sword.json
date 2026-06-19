@@ -12,7 +12,7 @@
   "results": {
     "tconstruct:ingot": {
       "count": 2,
-      "tag": "forge:ingots/ironwood"
+      "tag": "c:ingots/ironwood"
     }
   },
   "tool": {

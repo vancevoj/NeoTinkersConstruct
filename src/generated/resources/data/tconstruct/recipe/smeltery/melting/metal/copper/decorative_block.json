@@ -25,7 +25,7 @@
   ],
   "result": {
     "amount": 810,
-    "tag": "forge:molten_copper"
+    "tag": "c:molten_copper"
   },
   "temperature": 500,
   "time": 150

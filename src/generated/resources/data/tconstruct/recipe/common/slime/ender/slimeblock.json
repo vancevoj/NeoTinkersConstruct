@@ -4,7 +4,7 @@
   "group": "slime_blocks",
   "key": {
     "#": {
-      "tag": "forge:slimeball/ender"
+      "tag": "c:slimeball/ender"
     }
   },
   "pattern": [

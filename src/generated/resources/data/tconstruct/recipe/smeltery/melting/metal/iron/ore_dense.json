@@ -3,7 +3,7 @@
     {
       "type": "mantle:tag_combination_filled",
       "match": [
-        "forge:ores/iron",
+        "c:ores/iron",
         "c:ore_rates/dense"
       ]
     }
@@ -13,14 +13,14 @@
     {
       "amount": 540,
       "rate": "metal",
-      "tag": "forge:molten_steel"
+      "tag": "c:molten_steel"
     }
   ],
   "ingredient": {
     "type": "neoforge:intersection",
     "children": [
       {
-        "tag": "forge:ores/iron"
+        "tag": "c:ores/iron"
       },
       {
         "tag": "c:ore_rates/dense"
@@ -30,7 +30,7 @@
   "rate": "metal",
   "result": {
     "amount": 540,
-    "tag": "forge:molten_iron"
+    "tag": "c:molten_iron"
   },
   "temperature": 800,
   "time": 271

@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:dusts/bendalloy"
+      "tag": "c:dusts/bendalloy"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:dusts/bendalloy"
+    "tag": "c:dusts/bendalloy"
   },
   "result": {
     "amount": 90,
-    "tag": "forge:molten_bendalloy"
+    "tag": "c:molten_bendalloy"
   },
   "temperature": 100,
   "time": 25

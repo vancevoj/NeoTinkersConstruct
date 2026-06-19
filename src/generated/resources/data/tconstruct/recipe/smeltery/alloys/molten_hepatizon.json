@@ -3,11 +3,11 @@
   "inputs": [
     {
       "amount": 180,
-      "tag": "forge:molten_copper"
+      "tag": "c:molten_copper"
     },
     {
       "amount": 90,
-      "tag": "forge:molten_cobalt"
+      "tag": "c:molten_cobalt"
     },
     {
       "amount": 100,
@@ -16,7 +16,7 @@
   ],
   "result": {
     "amount": 180,
-    "tag": "forge:molten_hepatizon"
+    "tag": "c:molten_hepatizon"
   },
   "temperature": 1400
 }

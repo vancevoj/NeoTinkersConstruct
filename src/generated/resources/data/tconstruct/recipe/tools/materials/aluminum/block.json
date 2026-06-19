@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:storage_blocks/aluminum"
+      "tag": "c:storage_blocks/aluminum"
     }
   ],
   "type": "tconstruct:material",
   "ingredient": {
-    "tag": "forge:storage_blocks/aluminum"
+    "tag": "c:storage_blocks/aluminum"
   },
   "leftover": {
     "count": 1,
-    "tag": "forge:ingots/aluminum"
+    "tag": "c:ingots/aluminum"
   },
   "material": "tconstruct:aluminum",
   "needed": 1,

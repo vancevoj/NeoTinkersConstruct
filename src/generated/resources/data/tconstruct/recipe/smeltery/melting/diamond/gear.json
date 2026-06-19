@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:gears/diamond"
+      "tag": "c:gears/diamond"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:gears/diamond"
+    "tag": "c:gears/diamond"
   },
   "result": {
     "amount": 400,

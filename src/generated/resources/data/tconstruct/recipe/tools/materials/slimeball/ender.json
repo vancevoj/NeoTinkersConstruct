@@ -1,7 +1,7 @@
 {
   "type": "tconstruct:material",
   "ingredient": {
-    "tag": "forge:slimeball/ender"
+    "tag": "c:slimeball/ender"
   },
   "material": "tconstruct:slimeball#ender",
   "needed": 1,

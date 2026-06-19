@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/steeleaf"
+      "tag": "c:ingots/steeleaf"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -16,6 +16,6 @@
     "tag": "tconstruct:molten_steeleaf"
   },
   "result": {
-    "tag": "forge:ingots/steeleaf"
+    "tag": "c:ingots/steeleaf"
   }
 }

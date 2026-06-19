@@ -7,7 +7,7 @@
   "cooling_time": 1,
   "fluid": {
     "amount": 250,
-    "tag": "forge:honey"
+    "tag": "c:honey"
   },
   "result": "minecraft:honey_bottle"
 }

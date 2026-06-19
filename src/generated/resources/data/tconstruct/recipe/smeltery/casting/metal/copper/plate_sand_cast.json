@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:plates/copper"
+      "tag": "c:plates/copper"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -13,9 +13,9 @@
   "cooling_time": 50,
   "fluid": {
     "amount": 90,
-    "tag": "forge:molten_copper"
+    "tag": "c:molten_copper"
   },
   "result": {
-    "tag": "forge:plates/copper"
+    "tag": "c:plates/copper"
   }
 }

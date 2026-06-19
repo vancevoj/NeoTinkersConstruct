@@ -3,7 +3,7 @@
   "byproducts": [
     {
       "amount": 250,
-      "tag": "forge:ender"
+      "tag": "c:ender"
     }
   ],
   "ingredient": {

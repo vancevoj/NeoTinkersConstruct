@@ -9,6 +9,6 @@
     "nbt": {
       "Potion": "minecraft:slow_falling"
     },
-    "tag": "forge:potion"
+    "tag": "c:potion"
   }
 }

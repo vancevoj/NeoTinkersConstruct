@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/electrum"
+      "tag": "c:nuggets/electrum"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -13,9 +13,9 @@
   "cooling_time": 20,
   "fluid": {
     "amount": 10,
-    "tag": "forge:molten_electrum"
+    "tag": "c:molten_electrum"
   },
   "result": {
-    "tag": "forge:nuggets/electrum"
+    "tag": "c:nuggets/electrum"
   }
 }

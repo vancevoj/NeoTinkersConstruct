@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "#": {
-      "tag": "forge:ingots/cobalt"
+      "tag": "c:ingots/cobalt"
     },
     ".": {
-      "tag": "forge:nuggets/cobalt"
+      "tag": "c:nuggets/cobalt"
     }
   },
   "pattern": [

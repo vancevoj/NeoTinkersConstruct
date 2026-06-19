@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/steeleaf"
+      "tag": "c:nuggets/steeleaf"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:nuggets/steeleaf"
+    "tag": "c:nuggets/steeleaf"
   },
   "result": {
     "amount": 10,

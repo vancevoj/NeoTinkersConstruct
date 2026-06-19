@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:storage_blocks/signalum"
+      "tag": "c:storage_blocks/signalum"
     }
   ],
   "type": "tconstruct:casting_basin",
   "cooling_time": 199,
   "fluid": {
     "amount": 810,
-    "tag": "forge:molten_signalum"
+    "tag": "c:molten_signalum"
   },
   "result": {
-    "tag": "forge:storage_blocks/signalum"
+    "tag": "c:storage_blocks/signalum"
   }
 }

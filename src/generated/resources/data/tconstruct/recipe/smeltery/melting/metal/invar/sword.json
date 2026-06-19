@@ -11,7 +11,7 @@
   },
   "result": {
     "amount": 180,
-    "tag": "forge:molten_invar",
+    "tag": "c:molten_invar",
     "unit_size": 10
   },
   "temperature": 900,

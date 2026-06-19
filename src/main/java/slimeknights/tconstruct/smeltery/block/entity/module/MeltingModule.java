@@ -226,7 +226,10 @@ public class MeltingModule implements IMeltingContainer, ContainerData {
    * @param nbt  NBT
    */
   public void readFromTag(HolderLookup.Provider registries, CompoundTag nbt) {
-    stack = ItemStack.parseOptional(registries, nbt);
+    // 1.21: the module tag also carries slot/temp/time fields, so a non-empty compound without an
+    // item "id" would make the strict ItemStack codec throw ("No key id in MapLike"). Only parse an
+    // item when one is actually present (spammed 83 errors on world load otherwise).
+    stack = nbt.contains("id") ? ItemStack.parseOptional(registries, nbt) : ItemStack.EMPTY;
     if (!stack.isEmpty()) {
       currentTime = nbt.getInt(TAG_CURRENT_TIME);
       requiredTime = nbt.getInt(TAG_REQUIRED_TIME);

@@ -11,7 +11,7 @@
   },
   "result": {
     "amount": 180,
-    "tag": "forge:molten_lead",
+    "tag": "c:molten_lead",
     "unit_size": 10
   },
   "temperature": 330,

@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/nicrosil"
+      "tag": "c:ingots/nicrosil"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -12,9 +12,9 @@
   "cooling_time": 69,
   "fluid": {
     "amount": 90,
-    "tag": "forge:molten_nicrosil"
+    "tag": "c:molten_nicrosil"
   },
   "result": {
-    "tag": "forge:ingots/nicrosil"
+    "tag": "c:ingots/nicrosil"
   }
 }

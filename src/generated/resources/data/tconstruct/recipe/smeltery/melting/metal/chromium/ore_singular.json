@@ -3,7 +3,7 @@
     {
       "type": "mantle:tag_combination_filled",
       "ignore": "tconstruct:non_singular_ore_rates",
-      "match": "forge:ores/chromium"
+      "match": "c:ores/chromium"
     }
   ],
   "type": "tconstruct:ore_melting",
@@ -11,13 +11,13 @@
     {
       "amount": 180,
       "rate": "metal",
-      "tag": "forge:molten_iron"
+      "tag": "c:molten_iron"
     }
   ],
   "ingredient": {
     "type": "neoforge:difference",
     "base": {
-      "tag": "forge:ores/chromium"
+      "tag": "c:ores/chromium"
     },
     "subtracted": {
       "tag": "tconstruct:non_singular_ore_rates"
@@ -26,7 +26,7 @@
   "rate": "metal",
   "result": {
     "amount": 180,
-    "tag": "forge:molten_chromium"
+    "tag": "c:molten_chromium"
   },
   "temperature": 900,
   "time": 158

@@ -10,6 +10,6 @@
     "tag": "tconstruct:molten_cinderslime"
   },
   "result": {
-    "tag": "forge:ingots/cinderslime"
+    "tag": "c:ingots/cinderslime"
   }
 }

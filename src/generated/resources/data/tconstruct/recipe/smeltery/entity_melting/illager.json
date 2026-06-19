@@ -2,7 +2,7 @@
   "type": "tconstruct:entity_melting",
   "damage": 2,
   "entity": {
-    "tag": "forge:illagers"
+    "tag": "c:illagers"
   },
   "result": {
     "amount": 25,

@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:gears/lumium"
+      "tag": "c:gears/lumium"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:gears/lumium"
+    "tag": "c:gears/lumium"
   },
   "result": {
     "amount": 360,
-    "tag": "forge:molten_lumium"
+    "tag": "c:molten_lumium"
   },
   "temperature": 1050,
   "time": 136

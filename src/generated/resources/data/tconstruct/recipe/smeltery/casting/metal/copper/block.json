@@ -3,9 +3,9 @@
   "cooling_time": 150,
   "fluid": {
     "amount": 810,
-    "tag": "forge:molten_copper"
+    "tag": "c:molten_copper"
   },
   "result": {
-    "tag": "forge:storage_blocks/copper"
+    "tag": "c:storage_blocks/copper"
   }
 }

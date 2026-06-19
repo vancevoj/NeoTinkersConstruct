@@ -3,7 +3,7 @@
     {
       "type": "mantle:tag_combination_filled",
       "match": [
-        "forge:ores/tungsten",
+        "c:ores/tungsten",
         "c:ore_rates/sparse"
       ]
     }
@@ -13,14 +13,14 @@
     {
       "amount": 90,
       "rate": "metal",
-      "tag": "forge:molten_gold"
+      "tag": "c:molten_gold"
     }
   ],
   "ingredient": {
     "type": "neoforge:intersection",
     "children": [
       {
-        "tag": "forge:ores/tungsten"
+        "tag": "c:ores/tungsten"
       },
       {
         "tag": "c:ore_rates/sparse"
@@ -30,7 +30,7 @@
   "rate": "metal",
   "result": {
     "amount": 90,
-    "tag": "forge:molten_tungsten"
+    "tag": "c:molten_tungsten"
   },
   "temperature": 950,
   "time": 97

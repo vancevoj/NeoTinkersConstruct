@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:storage_blocks/invar"
+      "tag": "c:storage_blocks/invar"
     }
   ],
   "type": "tconstruct:material",
   "ingredient": {
-    "tag": "forge:storage_blocks/invar"
+    "tag": "c:storage_blocks/invar"
   },
   "leftover": {
     "count": 1,
-    "tag": "forge:ingots/invar"
+    "tag": "c:ingots/invar"
   },
   "material": "tconstruct:invar",
   "needed": 1,

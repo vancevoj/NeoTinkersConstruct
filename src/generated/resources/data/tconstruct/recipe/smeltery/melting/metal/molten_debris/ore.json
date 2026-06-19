@@ -3,7 +3,7 @@
   "byproducts": [
     {
       "amount": 30,
-      "tag": "forge:molten_netherite"
+      "tag": "c:molten_netherite"
     }
   ],
   "ingredient": {

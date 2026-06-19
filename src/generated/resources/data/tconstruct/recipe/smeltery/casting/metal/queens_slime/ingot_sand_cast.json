@@ -10,6 +10,6 @@
     "tag": "tconstruct:molten_queens_slime"
   },
   "result": {
-    "tag": "forge:ingots/queens_slime"
+    "tag": "c:ingots/queens_slime"
   }
 }

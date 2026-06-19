@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:storage_blocks/raw_duralumin"
+      "tag": "c:storage_blocks/raw_duralumin"
     }
   ],
   "type": "tconstruct:ore_melting",
@@ -10,16 +10,16 @@
     {
       "amount": 810,
       "rate": "metal",
-      "tag": "forge:molten_copper"
+      "tag": "c:molten_copper"
     }
   ],
   "ingredient": {
-    "tag": "forge:storage_blocks/raw_duralumin"
+    "tag": "c:storage_blocks/raw_duralumin"
   },
   "rate": "metal",
   "result": {
     "amount": 810,
-    "tag": "forge:molten_duralumin"
+    "tag": "c:molten_duralumin"
   },
   "temperature": 625,
   "time": 326

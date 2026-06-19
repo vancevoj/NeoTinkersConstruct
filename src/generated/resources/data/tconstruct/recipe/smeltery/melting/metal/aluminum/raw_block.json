@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:storage_blocks/raw_aluminum"
+      "tag": "c:storage_blocks/raw_aluminum"
     }
   ],
   "type": "tconstruct:ore_melting",
@@ -10,16 +10,16 @@
     {
       "amount": 810,
       "rate": "metal",
-      "tag": "forge:molten_iron"
+      "tag": "c:molten_iron"
     }
   ],
   "ingredient": {
-    "tag": "forge:storage_blocks/raw_aluminum"
+    "tag": "c:storage_blocks/raw_aluminum"
   },
   "rate": "metal",
   "result": {
     "amount": 810,
-    "tag": "forge:molten_aluminum"
+    "tag": "c:molten_aluminum"
   },
   "temperature": 425,
   "time": 283

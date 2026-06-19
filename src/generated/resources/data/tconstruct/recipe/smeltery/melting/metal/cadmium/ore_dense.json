@@ -3,7 +3,7 @@
     {
       "type": "mantle:tag_combination_filled",
       "match": [
-        "forge:ores/cadmium",
+        "c:ores/cadmium",
         "c:ore_rates/dense"
       ]
     }
@@ -13,14 +13,14 @@
     {
       "amount": 540,
       "rate": "metal",
-      "tag": "forge:molten_copper"
+      "tag": "c:molten_copper"
     }
   ],
   "ingredient": {
     "type": "neoforge:intersection",
     "children": [
       {
-        "tag": "forge:ores/cadmium"
+        "tag": "c:ores/cadmium"
       },
       {
         "tag": "c:ore_rates/dense"
@@ -30,7 +30,7 @@
   "rate": "metal",
   "result": {
     "amount": 540,
-    "tag": "forge:molten_cadmium"
+    "tag": "c:molten_cadmium"
   },
   "temperature": 294,
   "time": 189

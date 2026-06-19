@@ -9,6 +9,6 @@
     "nbt": {
       "Potion": "minecraft:fire_resistance"
     },
-    "tag": "forge:potion"
+    "tag": "c:potion"
   }
 }

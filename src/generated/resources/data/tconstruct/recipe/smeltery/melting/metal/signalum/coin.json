@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:coins/signalum"
+      "tag": "c:coins/signalum"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:coins/signalum"
+    "tag": "c:coins/signalum"
   },
   "result": {
     "amount": 30,
-    "tag": "forge:molten_signalum"
+    "tag": "c:molten_signalum"
   },
   "temperature": 999,
   "time": 44

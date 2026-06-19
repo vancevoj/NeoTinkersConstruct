@@ -2,7 +2,7 @@
   "type": "tconstruct:material_fluid",
   "fluid": {
     "amount": 250,
-    "tag": "forge:ender"
+    "tag": "c:ender"
   },
   "output": "tconstruct:ender_pearl",
   "temperature": 477

@@ -80,7 +80,7 @@ public class GuiSmelteryTank implements IScreenWithFluidTank {
     if (tank.getContained() > 0) {
       int[] heights = calcLiquidHeights(true);
 
-      int bottom = y + width;
+      int bottom = y + height;
       for (int i = 0; i < heights.length; i++) {
         int fluidH = heights[i];
         FluidStack liquid = tank.getFluids().get(i);

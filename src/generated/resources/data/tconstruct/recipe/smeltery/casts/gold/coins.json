@@ -2,18 +2,18 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:coins"
+      "tag": "c:coins"
     }
   ],
   "type": "tconstruct:casting_table",
   "cast": {
-    "tag": "forge:coins"
+    "tag": "c:coins"
   },
   "cast_consumed": true,
   "cooling_time": 57,
   "fluid": {
     "amount": 90,
-    "tag": "forge:molten_gold"
+    "tag": "c:molten_gold"
   },
   "result": "tconstruct:coin_cast",
   "switch_slots": true

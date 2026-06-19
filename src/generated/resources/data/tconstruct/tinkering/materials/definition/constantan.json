@@ -8,7 +8,7 @@
       },
       {
         "type": "mantle:tag_filled",
-        "tag": "forge:ingots/constantan"
+        "tag": "c:ingots/constantan"
       },
       {
         "type": "neoforge:and",
@@ -19,7 +19,7 @@
           },
           {
             "type": "mantle:tag_filled",
-            "tag": "forge:ingots/nickel"
+            "tag": "c:ingots/nickel"
           }
         ]
       }

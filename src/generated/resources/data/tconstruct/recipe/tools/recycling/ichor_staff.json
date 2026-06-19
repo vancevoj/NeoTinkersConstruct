@@ -14,7 +14,7 @@
     },
     "tconstruct:ingot": {
       "count": 1,
-      "tag": "forge:ingots/queens_slime"
+      "tag": "c:ingots/queens_slime"
     }
   },
   "tool": {

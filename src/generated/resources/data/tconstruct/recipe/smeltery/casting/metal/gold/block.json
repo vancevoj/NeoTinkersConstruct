@@ -3,9 +3,9 @@
   "cooling_time": 171,
   "fluid": {
     "amount": 810,
-    "tag": "forge:molten_gold"
+    "tag": "c:molten_gold"
   },
   "result": {
-    "tag": "forge:storage_blocks/gold"
+    "tag": "c:storage_blocks/gold"
   }
 }

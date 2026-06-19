@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:armors/chestplates/tin"
+      "tag": "c:armors/chestplates/tin"
     }
   ],
   "type": "tconstruct:damagable_melting",
   "ingredient": {
-    "tag": "forge:armors/chestplates/tin"
+    "tag": "c:armors/chestplates/tin"
   },
   "result": {
     "amount": 720,
-    "tag": "forge:molten_tin",
+    "tag": "c:molten_tin",
     "unit_size": 10
   },
   "temperature": 225,

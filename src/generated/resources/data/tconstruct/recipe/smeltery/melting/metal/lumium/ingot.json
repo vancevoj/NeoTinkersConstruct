@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/lumium"
+      "tag": "c:ingots/lumium"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:ingots/lumium"
+    "tag": "c:ingots/lumium"
   },
   "result": {
     "amount": 90,
-    "tag": "forge:molten_lumium"
+    "tag": "c:molten_lumium"
   },
   "temperature": 1050,
   "time": 68

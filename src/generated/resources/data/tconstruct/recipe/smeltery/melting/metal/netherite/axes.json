@@ -12,7 +12,7 @@
   },
   "result": {
     "amount": 90,
-    "tag": "forge:molten_netherite",
+    "tag": "c:molten_netherite",
     "unit_size": 10
   },
   "temperature": 1250,

@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:plates"
+      "tag": "c:plates"
     }
   ],
   "type": "tconstruct:molding_table",
@@ -10,7 +10,7 @@
     "tag": "tconstruct:casts/red_sand"
   },
   "pattern": {
-    "tag": "forge:plates"
+    "tag": "c:plates"
   },
   "result": "tconstruct:plate_red_sand_cast"
 }

@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/bronze"
+      "tag": "c:ingots/bronze"
     }
   ],
   "type": "tconstruct:material",
   "ingredient": {
-    "tag": "forge:ingots/bronze"
+    "tag": "c:ingots/bronze"
   },
   "material": "tconstruct:bronze",
   "needed": 1,

@@ -7,7 +7,7 @@
   "cooling_time": 1,
   "fluid": {
     "amount": 250,
-    "tag": "forge:beetroot_soup"
+    "tag": "c:beetroot_soup"
   },
   "result": "minecraft:beetroot_soup"
 }

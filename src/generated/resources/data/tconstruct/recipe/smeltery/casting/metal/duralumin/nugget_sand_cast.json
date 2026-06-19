@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/duralumin"
+      "tag": "c:nuggets/duralumin"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -13,9 +13,9 @@
   "cooling_time": 18,
   "fluid": {
     "amount": 10,
-    "tag": "forge:molten_duralumin"
+    "tag": "c:molten_duralumin"
   },
   "result": {
-    "tag": "forge:nuggets/duralumin"
+    "tag": "c:nuggets/duralumin"
   }
 }

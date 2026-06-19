@@ -9,7 +9,7 @@
   "byproducts": [
     {
       "amount": 5,
-      "tag": "forge:molten_gold"
+      "tag": "c:molten_gold"
     }
   ],
   "ingredient": {

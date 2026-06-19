@@ -1,7 +1,7 @@
 {
   "type": "tconstruct:material",
   "ingredient": {
-    "tag": "forge:slimeball/ichor"
+    "tag": "c:slimeball/ichor"
   },
   "material": "tconstruct:slimeball#ichor",
   "needed": 1,

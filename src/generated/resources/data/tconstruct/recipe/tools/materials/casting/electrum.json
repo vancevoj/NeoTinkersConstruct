@@ -5,11 +5,11 @@
       "values": [
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/electrum"
+          "tag": "c:ingots/electrum"
         },
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/silver"
+          "tag": "c:ingots/silver"
         }
       ]
     }
@@ -17,7 +17,7 @@
   "type": "tconstruct:material_fluid",
   "fluid": {
     "amount": 90,
-    "tag": "forge:molten_electrum"
+    "tag": "c:molten_electrum"
   },
   "output": "tconstruct:electrum",
   "temperature": 760

@@ -4,7 +4,7 @@
   "group": "tconstruct:copper_ingot",
   "key": {
     "#": {
-      "tag": "forge:nuggets/copper"
+      "tag": "c:nuggets/copper"
     },
     "*": {
       "item": "tconstruct:copper_nugget"

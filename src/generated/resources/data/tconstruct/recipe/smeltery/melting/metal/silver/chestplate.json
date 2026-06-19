@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:armors/chestplates/silver"
+      "tag": "c:armors/chestplates/silver"
     }
   ],
   "type": "tconstruct:damagable_melting",
   "ingredient": {
-    "tag": "forge:armors/chestplates/silver"
+    "tag": "c:armors/chestplates/silver"
   },
   "result": {
     "amount": 720,
-    "tag": "forge:molten_silver",
+    "tag": "c:molten_silver",
     "unit_size": 10
   },
   "temperature": 790,

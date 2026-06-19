@@ -10,7 +10,7 @@
       "item": "minecraft:chain"
     },
     {
-      "tag": "forge:ingots/slimesteel"
+      "tag": "c:ingots/slimesteel"
     }
   ],
   "level": 1,

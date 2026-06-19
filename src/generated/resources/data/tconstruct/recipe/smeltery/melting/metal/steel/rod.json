@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:rods/steel"
+      "tag": "c:rods/steel"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:rods/steel"
+    "tag": "c:rods/steel"
   },
   "result": {
     "amount": 45,
-    "tag": "forge:molten_steel"
+    "tag": "c:molten_steel"
   },
   "temperature": 950,
   "time": 13

@@ -7,9 +7,9 @@
   "cooling_time": 74,
   "fluid": {
     "amount": 90,
-    "tag": "forge:molten_netherite"
+    "tag": "c:molten_netherite"
   },
   "result": {
-    "tag": "forge:ingots/netherite"
+    "tag": "c:ingots/netherite"
   }
 }

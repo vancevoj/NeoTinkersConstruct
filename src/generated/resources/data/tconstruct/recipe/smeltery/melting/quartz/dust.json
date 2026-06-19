@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:dusts/quartz"
+      "tag": "c:dusts/quartz"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:dusts/quartz"
+    "tag": "c:dusts/quartz"
   },
   "result": {
     "amount": 100,

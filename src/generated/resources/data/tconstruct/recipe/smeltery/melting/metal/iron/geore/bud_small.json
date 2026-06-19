@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:geore_small_buds/iron"
+      "tag": "c:geore_small_buds/iron"
     }
   ],
   "type": "tconstruct:ore_melting",
@@ -10,16 +10,16 @@
     {
       "amount": 90,
       "rate": "metal",
-      "tag": "forge:molten_steel"
+      "tag": "c:molten_steel"
     }
   ],
   "ingredient": {
-    "tag": "forge:geore_small_buds/iron"
+    "tag": "c:geore_small_buds/iron"
   },
   "rate": "metal",
   "result": {
     "amount": 90,
-    "tag": "forge:molten_iron"
+    "tag": "c:molten_iron"
   },
   "temperature": 800,
   "time": 60

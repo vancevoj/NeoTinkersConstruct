@@ -4,7 +4,7 @@
   "group": "tconstruct:hepatizon_ingot",
   "key": {
     "#": {
-      "tag": "forge:nuggets/hepatizon"
+      "tag": "c:nuggets/hepatizon"
     },
     "*": {
       "item": "tconstruct:hepatizon_nugget"

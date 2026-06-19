@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:geore_blocks/quartz"
+      "tag": "c:geore_blocks/quartz"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:geore_blocks/quartz"
+    "tag": "c:geore_blocks/quartz"
   },
   "result": {
     "amount": 400,

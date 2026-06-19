@@ -46,6 +46,6 @@
   ],
   "fluid": {
     "amount": 100,
-    "tag": "forge:concrete"
+    "tag": "c:concrete"
   }
 }

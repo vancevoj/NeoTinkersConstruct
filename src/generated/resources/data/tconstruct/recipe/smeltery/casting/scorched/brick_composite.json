@@ -7,7 +7,7 @@
   "cooling_time": 50,
   "fluid": {
     "amount": 125,
-    "tag": "forge:magma"
+    "tag": "c:magma"
   },
   "result": "tconstruct:scorched_brick"
 }

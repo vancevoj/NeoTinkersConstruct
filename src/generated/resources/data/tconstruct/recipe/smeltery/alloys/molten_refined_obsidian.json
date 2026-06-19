@@ -2,11 +2,11 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/refined_obsidian"
+      "tag": "c:ingots/refined_obsidian"
     },
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/osmium"
+      "tag": "c:ingots/osmium"
     }
   ],
   "type": "tconstruct:alloy",
@@ -21,12 +21,12 @@
     },
     {
       "amount": 90,
-      "tag": "forge:molten_osmium"
+      "tag": "c:molten_osmium"
     }
   ],
   "result": {
     "amount": 90,
-    "tag": "forge:molten_refined_obsidian"
+    "tag": "c:molten_refined_obsidian"
   },
   "temperature": 1475
 }

@@ -7,7 +7,7 @@
   "cooling_time": 161,
   "fluid": {
     "amount": 720,
-    "tag": "forge:molten_gold"
+    "tag": "c:molten_gold"
   },
   "result": "minecraft:golden_apple"
 }

@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/brass"
+      "tag": "c:nuggets/brass"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -13,9 +13,9 @@
   "cooling_time": 18,
   "fluid": {
     "amount": 10,
-    "tag": "forge:molten_brass"
+    "tag": "c:molten_brass"
   },
   "result": {
-    "tag": "forge:nuggets/brass"
+    "tag": "c:nuggets/brass"
   }
 }

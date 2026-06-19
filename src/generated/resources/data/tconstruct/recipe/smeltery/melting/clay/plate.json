@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:plates/brick"
+      "tag": "c:plates/brick"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:plates/brick"
+    "tag": "c:plates/brick"
   },
   "result": {
     "amount": 250,

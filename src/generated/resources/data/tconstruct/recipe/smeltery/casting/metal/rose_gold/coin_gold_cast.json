@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:coins/rose_gold"
+      "tag": "c:coins/rose_gold"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -12,9 +12,9 @@
   "cooling_time": 30,
   "fluid": {
     "amount": 30,
-    "tag": "forge:molten_rose_gold"
+    "tag": "c:molten_rose_gold"
   },
   "result": {
-    "tag": "forge:coins/rose_gold"
+    "tag": "c:coins/rose_gold"
   }
 }

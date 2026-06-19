@@ -7,7 +7,7 @@
   "cooling_time": 65,
   "fluid": {
     "amount": 90,
-    "tag": "forge:molten_cobalt"
+    "tag": "c:molten_cobalt"
   },
   "result": "tconstruct:cobalt_reinforcement"
 }

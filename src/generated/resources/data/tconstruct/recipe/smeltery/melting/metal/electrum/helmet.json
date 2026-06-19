@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:armors/helmets/electrum"
+      "tag": "c:armors/helmets/electrum"
     }
   ],
   "type": "tconstruct:damagable_melting",
   "ingredient": {
-    "tag": "forge:armors/helmets/electrum"
+    "tag": "c:armors/helmets/electrum"
   },
   "result": {
     "amount": 450,
-    "tag": "forge:molten_electrum",
+    "tag": "c:molten_electrum",
     "unit_size": 10
   },
   "temperature": 760,

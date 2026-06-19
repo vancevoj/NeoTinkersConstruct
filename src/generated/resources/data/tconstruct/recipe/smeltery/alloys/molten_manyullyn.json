@@ -3,7 +3,7 @@
   "inputs": [
     {
       "amount": 270,
-      "tag": "forge:molten_cobalt"
+      "tag": "c:molten_cobalt"
     },
     {
       "amount": 90,
@@ -12,7 +12,7 @@
   ],
   "result": {
     "amount": 360,
-    "tag": "forge:molten_manyullyn"
+    "tag": "c:molten_manyullyn"
   },
   "temperature": 1200
 }

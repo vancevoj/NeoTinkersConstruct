@@ -3,7 +3,7 @@
     {
       "type": "mantle:tag_combination_filled",
       "ignore": "tconstruct:non_singular_ore_rates",
-      "match": "forge:ores/copper"
+      "match": "c:ores/copper"
     }
   ],
   "type": "tconstruct:ore_melting",
@@ -11,13 +11,13 @@
     {
       "amount": 60,
       "rate": "metal",
-      "tag": "forge:molten_gold"
+      "tag": "c:molten_gold"
     }
   ],
   "ingredient": {
     "type": "neoforge:difference",
     "base": {
-      "tag": "forge:ores/copper"
+      "tag": "c:ores/copper"
     },
     "subtracted": {
       "tag": "tconstruct:non_singular_ore_rates"
@@ -26,7 +26,7 @@
   "rate": "metal",
   "result": {
     "amount": 180,
-    "tag": "forge:molten_copper"
+    "tag": "c:molten_copper"
   },
   "temperature": 500,
   "time": 125

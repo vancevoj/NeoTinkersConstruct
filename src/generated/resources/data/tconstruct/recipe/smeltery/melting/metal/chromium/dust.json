@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:dusts/chromium"
+      "tag": "c:dusts/chromium"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:dusts/chromium"
+    "tag": "c:dusts/chromium"
   },
   "result": {
     "amount": 90,
-    "tag": "forge:molten_chromium"
+    "tag": "c:molten_chromium"
   },
   "temperature": 900,
   "time": 47

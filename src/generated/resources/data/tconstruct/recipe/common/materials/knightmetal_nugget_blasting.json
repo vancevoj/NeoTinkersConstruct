@@ -4,7 +4,7 @@
   "cookingtime": 25,
   "experience": 0.2,
   "ingredient": {
-    "tag": "forge:raw_nuggets/knightmetal"
+    "tag": "c:raw_nuggets/knightmetal"
   },
   "result": {
     "count": 1,

@@ -3,7 +3,7 @@
   "input": "tconstruct:copper",
   "result": {
     "amount": 90,
-    "tag": "forge:molten_copper"
+    "tag": "c:molten_copper"
   },
   "temperature": 500
 }

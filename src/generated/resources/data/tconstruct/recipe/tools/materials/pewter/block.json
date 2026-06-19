@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:storage_blocks/pewter"
+      "tag": "c:storage_blocks/pewter"
     }
   ],
   "type": "tconstruct:material",
   "ingredient": {
-    "tag": "forge:storage_blocks/pewter"
+    "tag": "c:storage_blocks/pewter"
   },
   "leftover": {
     "count": 1,
-    "tag": "forge:ingots/pewter"
+    "tag": "c:ingots/pewter"
   },
   "material": "tconstruct:pewter",
   "needed": 1,

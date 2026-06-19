@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/nicrosil"
+      "tag": "c:nuggets/nicrosil"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:nuggets/nicrosil"
+    "tag": "c:nuggets/nicrosil"
   },
   "result": {
     "amount": 10,
-    "tag": "forge:molten_nicrosil"
+    "tag": "c:molten_nicrosil"
   },
   "temperature": 1100,
   "time": 23

@@ -3,7 +3,7 @@
   "input": "tconstruct:iron",
   "result": {
     "amount": 90,
-    "tag": "forge:molten_iron"
+    "tag": "c:molten_iron"
   },
   "temperature": 800
 }

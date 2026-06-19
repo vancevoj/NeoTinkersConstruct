@@ -31,6 +31,6 @@
   ],
   "fluid": {
     "amount": 50,
-    "tag": "forge:redstone_acid"
+    "tag": "c:redstone_acid"
   }
 }

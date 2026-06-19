@@ -7,7 +7,7 @@
   "cooling_time": 54,
   "fluid": {
     "amount": 80,
-    "tag": "forge:molten_gold"
+    "tag": "c:molten_gold"
   },
   "result": "minecraft:glistering_melon_slice"
 }

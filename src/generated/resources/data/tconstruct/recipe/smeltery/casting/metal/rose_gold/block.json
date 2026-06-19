@@ -3,9 +3,9 @@
   "cooling_time": 155,
   "fluid": {
     "amount": 810,
-    "tag": "forge:molten_rose_gold"
+    "tag": "c:molten_rose_gold"
   },
   "result": {
-    "tag": "forge:storage_blocks/rose_gold"
+    "tag": "c:storage_blocks/rose_gold"
   }
 }

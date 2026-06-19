@@ -2,13 +2,13 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/chromium"
+      "tag": "c:ingots/chromium"
     },
     {
       "type": "neoforge:not",
       "value": {
         "type": "mantle:tag_filled",
-        "tag": "forge:ingots/nickel"
+        "tag": "c:ingots/nickel"
       }
     }
   ],
@@ -16,11 +16,11 @@
   "inputs": [
     {
       "amount": 180,
-      "tag": "forge:molten_chromium"
+      "tag": "c:molten_chromium"
     },
     {
       "amount": 90,
-      "tag": "forge:molten_iron"
+      "tag": "c:molten_iron"
     },
     {
       "amount": 100,
@@ -29,7 +29,7 @@
   ],
   "result": {
     "amount": 360,
-    "tag": "forge:molten_nicrosil"
+    "tag": "c:molten_nicrosil"
   },
   "temperature": 1100
 }

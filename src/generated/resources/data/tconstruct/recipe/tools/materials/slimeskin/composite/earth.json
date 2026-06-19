@@ -2,7 +2,7 @@
   "type": "tconstruct:material_fluid",
   "fluid": {
     "amount": 250,
-    "tag": "forge:slime"
+    "tag": "c:slime"
   },
   "input": "tconstruct:leather",
   "output": "tconstruct:slimeskin",

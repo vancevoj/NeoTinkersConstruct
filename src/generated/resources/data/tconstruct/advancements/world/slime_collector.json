@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#forge:slimeball/earth"
+            "items": "#c:slimeball/earth"
           }
         ]
       },
@@ -15,7 +15,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#forge:slimeball/ender"
+            "items": "#c:slimeball/ender"
           }
         ]
       },
@@ -25,7 +25,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#forge:slimeball/ichor"
+            "items": "#c:slimeball/ichor"
           }
         ]
       },
@@ -45,7 +45,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#forge:slimeball/sky"
+            "items": "#c:slimeball/sky"
           }
         ]
       },

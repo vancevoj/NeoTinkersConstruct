@@ -4,7 +4,7 @@
   "group": "tconstruct:manyullyn_ingot",
   "key": {
     "#": {
-      "tag": "forge:nuggets/manyullyn"
+      "tag": "c:nuggets/manyullyn"
     },
     "*": {
       "item": "tconstruct:manyullyn_nugget"

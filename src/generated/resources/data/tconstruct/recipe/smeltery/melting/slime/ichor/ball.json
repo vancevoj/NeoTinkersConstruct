@@ -7,7 +7,7 @@
     }
   ],
   "ingredient": {
-    "tag": "forge:slimeball/ichor"
+    "tag": "c:slimeball/ichor"
   },
   "result": {
     "amount": 10,

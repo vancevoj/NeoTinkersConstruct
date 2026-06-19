@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:gears/netherite"
+      "tag": "c:gears/netherite"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -12,9 +12,9 @@
   "cooling_time": 147,
   "fluid": {
     "amount": 360,
-    "tag": "forge:molten_netherite"
+    "tag": "c:molten_netherite"
   },
   "result": {
-    "tag": "forge:gears/netherite"
+    "tag": "c:gears/netherite"
   }
 }

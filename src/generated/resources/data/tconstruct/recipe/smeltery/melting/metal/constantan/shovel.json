@@ -11,7 +11,7 @@
   },
   "result": {
     "amount": 90,
-    "tag": "forge:molten_constantan",
+    "tag": "c:molten_constantan",
     "unit_size": 10
   },
   "temperature": 920,

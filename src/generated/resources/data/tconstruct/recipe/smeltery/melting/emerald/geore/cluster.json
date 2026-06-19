@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:geore_clusters/emerald"
+      "tag": "c:geore_clusters/emerald"
     }
   ],
   "type": "tconstruct:ore_melting",
@@ -14,7 +14,7 @@
     }
   ],
   "ingredient": {
-    "tag": "forge:geore_clusters/emerald"
+    "tag": "c:geore_clusters/emerald"
   },
   "rate": "gem",
   "result": {

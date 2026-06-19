@@ -14,7 +14,7 @@
   },
   "result": {
     "amount": 990,
-    "tag": "forge:molten_tin",
+    "tag": "c:molten_tin",
     "unit_size": 10
   },
   "temperature": 225,

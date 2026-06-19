@@ -14,7 +14,7 @@
   },
   "result": {
     "amount": 30,
-    "tag": "forge:molten_chromium"
+    "tag": "c:molten_chromium"
   },
   "temperature": 900,
   "time": 37

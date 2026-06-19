@@ -8,7 +8,7 @@
       },
       {
         "type": "mantle:tag_filled",
-        "tag": "forge:ingots/plated_slimewood"
+        "tag": "c:ingots/plated_slimewood"
       },
       {
         "type": "neoforge:and",
@@ -19,7 +19,7 @@
           },
           {
             "type": "mantle:tag_filled",
-            "tag": "forge:ingots/zinc"
+            "tag": "c:ingots/zinc"
           }
         ]
       }

@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:gears/quartz"
+      "tag": "c:gears/quartz"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -15,6 +15,6 @@
     "tag": "tconstruct:molten_quartz"
   },
   "result": {
-    "tag": "forge:gears/quartz"
+    "tag": "c:gears/quartz"
   }
 }

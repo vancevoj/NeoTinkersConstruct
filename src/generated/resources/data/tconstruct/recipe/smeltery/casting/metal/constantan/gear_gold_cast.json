@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:gears/constantan"
+      "tag": "c:gears/constantan"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -12,9 +12,9 @@
   "cooling_time": 128,
   "fluid": {
     "amount": 360,
-    "tag": "forge:molten_constantan"
+    "tag": "c:molten_constantan"
   },
   "result": {
-    "tag": "forge:gears/constantan"
+    "tag": "c:gears/constantan"
   }
 }

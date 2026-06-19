@@ -10,7 +10,7 @@
       }
     },
     {
-      "tag": "forge:ingots/steel"
+      "tag": "c:ingots/steel"
     },
     {
       "type": "tconstruct:material",

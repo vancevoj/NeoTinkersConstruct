@@ -21,7 +21,7 @@
         },
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/platinum"
+          "tag": "c:ingots/platinum"
         }
       ]
     }
@@ -52,6 +52,6 @@
   ],
   "fluid": {
     "amount": 10,
-    "tag": "forge:molten_platinum"
+    "tag": "c:molten_platinum"
   }
 }

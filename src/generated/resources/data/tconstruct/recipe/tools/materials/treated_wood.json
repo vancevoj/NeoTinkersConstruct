@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:treated_wood"
+      "tag": "c:treated_wood"
     }
   ],
   "type": "tconstruct:material",
   "ingredient": {
-    "tag": "forge:treated_wood"
+    "tag": "c:treated_wood"
   },
   "material": "tconstruct:treated_wood",
   "needed": 1,

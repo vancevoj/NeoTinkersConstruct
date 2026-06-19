@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/brass"
+      "tag": "c:ingots/brass"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -12,9 +12,9 @@
   "cooling_time": 54,
   "fluid": {
     "amount": 90,
-    "tag": "forge:molten_brass"
+    "tag": "c:molten_brass"
   },
   "result": {
-    "tag": "forge:ingots/brass"
+    "tag": "c:ingots/brass"
   }
 }

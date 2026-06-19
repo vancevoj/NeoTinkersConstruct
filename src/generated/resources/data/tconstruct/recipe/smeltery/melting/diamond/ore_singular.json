@@ -3,7 +3,7 @@
     {
       "type": "mantle:tag_combination_filled",
       "ignore": "tconstruct:non_singular_ore_rates",
-      "match": "forge:ores/diamond"
+      "match": "c:ores/diamond"
     }
   ],
   "type": "tconstruct:ore_melting",
@@ -17,7 +17,7 @@
   "ingredient": {
     "type": "neoforge:difference",
     "base": {
-      "tag": "forge:ores/diamond"
+      "tag": "c:ores/diamond"
     },
     "subtracted": {
       "tag": "tconstruct:non_singular_ore_rates"

@@ -577,7 +577,11 @@ public abstract class CastingBlockEntity extends TableBlockEntity implements Wor
     // if we have a recipe name, swap recipe name for recipe instance
     if (recipeName != null) {
       loadRecipe(pLevel, recipeName);
-      recipeName = null;
+      // only clear the saved name if it actually resolved; loadRecipe no-ops on an empty tank, and
+      // dropping the name there would permanently lose the recipe (no cooling/output preview after reload)
+      if (currentRecipe != null) {
+        recipeName = null;
+      }
     }
   }
 

@@ -5,19 +5,19 @@
       "values": [
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/nicrosil"
+          "tag": "c:ingots/nicrosil"
         },
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/tin"
+          "tag": "c:ingots/tin"
         },
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/nickel"
+          "tag": "c:ingots/nickel"
         },
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/chromium"
+          "tag": "c:ingots/chromium"
         }
       ]
     }
@@ -26,7 +26,7 @@
   "input": "tconstruct:nicrosil",
   "result": {
     "amount": 90,
-    "tag": "forge:molten_nicrosil"
+    "tag": "c:molten_nicrosil"
   },
   "temperature": 1100
 }

@@ -11,7 +11,7 @@
       },
       {
         "type": "neoforge:not",
-        "value": "#forge:no_default_monsters"
+        "value": "#c:no_default_monsters"
       }
     ]
   },

@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:coins/aluminum"
+      "tag": "c:coins/aluminum"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -12,9 +12,9 @@
   "cooling_time": 27,
   "fluid": {
     "amount": 30,
-    "tag": "forge:molten_aluminum"
+    "tag": "c:molten_aluminum"
   },
   "result": {
-    "tag": "forge:coins/aluminum"
+    "tag": "c:coins/aluminum"
   }
 }

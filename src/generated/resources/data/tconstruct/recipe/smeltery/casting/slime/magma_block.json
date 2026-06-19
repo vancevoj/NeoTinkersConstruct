@@ -3,7 +3,7 @@
   "cooling_time": 141,
   "fluid": {
     "amount": 1000,
-    "tag": "forge:magma"
+    "tag": "c:magma"
   },
   "result": "minecraft:magma_block"
 }

@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:armors/chestplates/invar"
+      "tag": "c:armors/chestplates/invar"
     }
   ],
   "type": "tconstruct:damagable_melting",
   "ingredient": {
-    "tag": "forge:armors/chestplates/invar"
+    "tag": "c:armors/chestplates/invar"
   },
   "result": {
     "amount": 720,
-    "tag": "forge:molten_invar",
+    "tag": "c:molten_invar",
     "unit_size": 10
   },
   "temperature": 900,

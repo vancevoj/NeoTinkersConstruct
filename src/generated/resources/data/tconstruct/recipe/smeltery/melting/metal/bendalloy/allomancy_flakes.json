@@ -14,7 +14,7 @@
   },
   "result": {
     "amount": 30,
-    "tag": "forge:molten_bendalloy"
+    "tag": "c:molten_bendalloy"
   },
   "temperature": 100,
   "time": 19

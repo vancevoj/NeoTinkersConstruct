@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:gears/emerald"
+      "tag": "c:gears/emerald"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:gears/emerald"
+    "tag": "c:gears/emerald"
   },
   "result": {
     "amount": 400,

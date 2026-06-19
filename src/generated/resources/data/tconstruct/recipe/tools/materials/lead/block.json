@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:storage_blocks/lead"
+      "tag": "c:storage_blocks/lead"
     }
   ],
   "type": "tconstruct:material",
   "ingredient": {
-    "tag": "forge:storage_blocks/lead"
+    "tag": "c:storage_blocks/lead"
   },
   "leftover": {
     "count": 1,
-    "tag": "forge:ingots/lead"
+    "tag": "c:ingots/lead"
   },
   "material": "tconstruct:lead",
   "needed": 1,

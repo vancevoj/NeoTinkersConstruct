@@ -11,7 +11,7 @@
   },
   "result": {
     "amount": 360,
-    "tag": "forge:molten_steel",
+    "tag": "c:molten_steel",
     "unit_size": 10
   },
   "temperature": 950,

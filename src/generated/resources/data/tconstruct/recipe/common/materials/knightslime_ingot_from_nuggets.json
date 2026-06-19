@@ -4,7 +4,7 @@
   "group": "tconstruct:knightslime_ingot",
   "key": {
     "#": {
-      "tag": "forge:nuggets/knightslime"
+      "tag": "c:nuggets/knightslime"
     },
     "*": {
       "item": "tconstruct:knightslime_nugget"

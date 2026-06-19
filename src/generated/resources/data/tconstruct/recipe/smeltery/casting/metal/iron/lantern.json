@@ -7,7 +7,7 @@
   "cooling_time": 57,
   "fluid": {
     "amount": 80,
-    "tag": "forge:molten_iron"
+    "tag": "c:molten_iron"
   },
   "result": "minecraft:lantern"
 }

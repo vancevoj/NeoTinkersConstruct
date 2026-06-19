@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:sheetmetals/gold"
+      "tag": "c:sheetmetals/gold"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:sheetmetals/gold"
+    "tag": "c:sheetmetals/gold"
   },
   "result": {
     "amount": 90,
-    "tag": "forge:molten_gold"
+    "tag": "c:molten_gold"
   },
   "temperature": 700,
   "time": 57

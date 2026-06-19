@@ -6,6 +6,6 @@
     "tag": "tconstruct:molten_queens_slime"
   },
   "result": {
-    "tag": "forge:storage_blocks/queens_slime"
+    "tag": "c:storage_blocks/queens_slime"
   }
 }

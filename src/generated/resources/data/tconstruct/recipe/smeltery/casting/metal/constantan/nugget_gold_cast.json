@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/constantan"
+      "tag": "c:nuggets/constantan"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -12,9 +12,9 @@
   "cooling_time": 21,
   "fluid": {
     "amount": 10,
-    "tag": "forge:molten_constantan"
+    "tag": "c:molten_constantan"
   },
   "result": {
-    "tag": "forge:nuggets/constantan"
+    "tag": "c:nuggets/constantan"
   }
 }

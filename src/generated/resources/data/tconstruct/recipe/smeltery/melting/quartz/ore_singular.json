@@ -3,7 +3,7 @@
     {
       "type": "mantle:tag_combination_filled",
       "ignore": "tconstruct:non_singular_ore_rates",
-      "match": "forge:ores/quartz"
+      "match": "c:ores/quartz"
     }
   ],
   "type": "tconstruct:ore_melting",
@@ -11,13 +11,13 @@
     {
       "amount": 90,
       "rate": "metal",
-      "tag": "forge:molten_iron"
+      "tag": "c:molten_iron"
     }
   ],
   "ingredient": {
     "type": "neoforge:difference",
     "base": {
-      "tag": "forge:ores/quartz"
+      "tag": "c:ores/quartz"
     },
     "subtracted": {
       "tag": "tconstruct:non_singular_ore_rates"

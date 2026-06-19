@@ -9,7 +9,7 @@
         },
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/pewter"
+          "tag": "c:ingots/pewter"
         }
       ]
     },
@@ -18,11 +18,11 @@
       "values": [
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/lead"
+          "tag": "c:ingots/lead"
         },
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/tin"
+          "tag": "c:ingots/tin"
         }
       ]
     }
@@ -31,16 +31,16 @@
   "inputs": [
     {
       "amount": 270,
-      "tag": "forge:molten_tin"
+      "tag": "c:molten_tin"
     },
     {
       "amount": 90,
-      "tag": "forge:molten_lead"
+      "tag": "c:molten_lead"
     }
   ],
   "result": {
     "amount": 360,
-    "tag": "forge:molten_pewter"
+    "tag": "c:molten_pewter"
   },
   "temperature": 400
 }

@@ -6,6 +6,6 @@
     "tag": "tconstruct:molten_knightmetal"
   },
   "result": {
-    "tag": "forge:storage_blocks/knightmetal"
+    "tag": "c:storage_blocks/knightmetal"
   }
 }

@@ -13,7 +13,7 @@
   "cooling_time": 16,
   "fluid": {
     "amount": 10,
-    "tag": "forge:molten_zinc"
+    "tag": "c:molten_zinc"
   },
   "result": "create:andesite_alloy"
 }

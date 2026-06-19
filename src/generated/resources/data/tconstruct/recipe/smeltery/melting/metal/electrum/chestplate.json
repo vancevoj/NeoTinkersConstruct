@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:armors/chestplates/electrum"
+      "tag": "c:armors/chestplates/electrum"
     }
   ],
   "type": "tconstruct:damagable_melting",
   "ingredient": {
-    "tag": "forge:armors/chestplates/electrum"
+    "tag": "c:armors/chestplates/electrum"
   },
   "result": {
     "amount": 720,
-    "tag": "forge:molten_electrum",
+    "tag": "c:molten_electrum",
     "unit_size": 10
   },
   "temperature": 760,

@@ -1,7 +1,7 @@
 {
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:ingots/cinderslime"
+    "tag": "c:ingots/cinderslime"
   },
   "result": {
     "amount": 90,

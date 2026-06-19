@@ -12,6 +12,6 @@
     "nbt": {
       "Potion": "minecraft:night_vision"
     },
-    "tag": "forge:potion"
+    "tag": "c:potion"
   }
 }

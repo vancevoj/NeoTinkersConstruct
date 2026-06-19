@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:plates/nickel"
+      "tag": "c:plates/nickel"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -12,9 +12,9 @@
   "cooling_time": 65,
   "fluid": {
     "amount": 90,
-    "tag": "forge:molten_nickel"
+    "tag": "c:molten_nickel"
   },
   "result": {
-    "tag": "forge:plates/nickel"
+    "tag": "c:plates/nickel"
   }
 }

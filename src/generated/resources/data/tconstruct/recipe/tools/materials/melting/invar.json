@@ -5,11 +5,11 @@
       "values": [
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/invar"
+          "tag": "c:ingots/invar"
         },
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/nickel"
+          "tag": "c:ingots/nickel"
         }
       ]
     }
@@ -18,7 +18,7 @@
   "input": "tconstruct:invar",
   "result": {
     "amount": 90,
-    "tag": "forge:molten_invar"
+    "tag": "c:molten_invar"
   },
   "temperature": 900
 }

@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:storage_blocks/lead"
+      "tag": "c:storage_blocks/lead"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:storage_blocks/lead"
+    "tag": "c:storage_blocks/lead"
   },
   "result": {
     "amount": 810,
-    "tag": "forge:molten_lead"
+    "tag": "c:molten_lead"
   },
   "temperature": 330,
   "time": 130

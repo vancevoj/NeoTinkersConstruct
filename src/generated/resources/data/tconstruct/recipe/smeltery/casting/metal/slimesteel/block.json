@@ -6,6 +6,6 @@
     "tag": "tconstruct:molten_slimesteel"
   },
   "result": {
-    "tag": "forge:storage_blocks/slimesteel"
+    "tag": "c:storage_blocks/slimesteel"
   }
 }

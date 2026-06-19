@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:gears/quartz"
+      "tag": "c:gears/quartz"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:gears/quartz"
+    "tag": "c:gears/quartz"
   },
   "result": {
     "amount": 400,

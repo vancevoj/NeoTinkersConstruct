@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:storage_blocks/steeleaf"
+      "tag": "c:storage_blocks/steeleaf"
     }
   ],
   "type": "tconstruct:casting_basin",
@@ -12,6 +12,6 @@
     "tag": "tconstruct:molten_steeleaf"
   },
   "result": {
-    "tag": "forge:storage_blocks/steeleaf"
+    "tag": "c:storage_blocks/steeleaf"
   }
 }

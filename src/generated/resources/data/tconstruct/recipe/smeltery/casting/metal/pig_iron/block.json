@@ -6,6 +6,6 @@
     "tag": "tconstruct:molten_pig_iron"
   },
   "result": {
-    "tag": "forge:storage_blocks/pig_iron"
+    "tag": "c:storage_blocks/pig_iron"
   }
 }

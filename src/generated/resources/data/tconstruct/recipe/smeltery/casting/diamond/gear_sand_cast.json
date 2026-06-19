@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:gears/diamond"
+      "tag": "c:gears/diamond"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -16,6 +16,6 @@
     "tag": "tconstruct:molten_diamond"
   },
   "result": {
-    "tag": "forge:gears/diamond"
+    "tag": "c:gears/diamond"
   }
 }

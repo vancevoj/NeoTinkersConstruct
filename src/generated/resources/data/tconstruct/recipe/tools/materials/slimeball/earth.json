@@ -1,7 +1,7 @@
 {
   "type": "tconstruct:material",
   "ingredient": {
-    "tag": "forge:slimeball/earth"
+    "tag": "c:slimeball/earth"
   },
   "material": "tconstruct:slimeball#earth",
   "needed": 1,

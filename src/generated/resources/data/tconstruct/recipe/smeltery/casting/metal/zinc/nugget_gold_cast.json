@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/zinc"
+      "tag": "c:nuggets/zinc"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -12,9 +12,9 @@
   "cooling_time": 16,
   "fluid": {
     "amount": 10,
-    "tag": "forge:molten_zinc"
+    "tag": "c:molten_zinc"
   },
   "result": {
-    "tag": "forge:nuggets/zinc"
+    "tag": "c:nuggets/zinc"
   }
 }

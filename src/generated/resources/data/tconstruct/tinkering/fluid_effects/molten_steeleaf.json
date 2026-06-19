@@ -21,7 +21,7 @@
         },
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/steeleaf"
+          "tag": "c:ingots/steeleaf"
         }
       ]
     }

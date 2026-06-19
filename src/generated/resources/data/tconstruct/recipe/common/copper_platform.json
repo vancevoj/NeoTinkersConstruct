@@ -6,7 +6,7 @@
       "tag": "c:ingots/copper"
     },
     ".": {
-      "tag": "forge:nuggets/copper"
+      "tag": "c:nuggets/copper"
     }
   },
   "pattern": [

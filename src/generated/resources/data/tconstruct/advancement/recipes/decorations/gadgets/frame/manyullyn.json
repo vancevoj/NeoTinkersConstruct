@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#forge:nuggets/manyullyn"
+            "items": "#c:nuggets/manyullyn"
           }
         ]
       },

@@ -28,6 +28,6 @@
   ],
   "fluid": {
     "amount": 50,
-    "tag": "forge:phenolic_resin"
+    "tag": "c:phenolic_resin"
   }
 }

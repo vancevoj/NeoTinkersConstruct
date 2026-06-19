@@ -5,11 +5,11 @@
       "values": [
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/bronze"
+          "tag": "c:ingots/bronze"
         },
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/tin"
+          "tag": "c:ingots/tin"
         }
       ]
     }
@@ -17,7 +17,7 @@
   "type": "tconstruct:material_fluid",
   "fluid": {
     "amount": 90,
-    "tag": "forge:molten_bronze"
+    "tag": "c:molten_bronze"
   },
   "output": "tconstruct:bronze",
   "temperature": 700

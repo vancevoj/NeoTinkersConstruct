@@ -3,7 +3,7 @@
     {
       "type": "mantle:tag_combination_filled",
       "ignore": "tconstruct:non_singular_ore_rates",
-      "match": "forge:ores/tungsten"
+      "match": "c:ores/tungsten"
     }
   ],
   "type": "tconstruct:ore_melting",
@@ -11,13 +11,13 @@
     {
       "amount": 180,
       "rate": "metal",
-      "tag": "forge:molten_gold"
+      "tag": "c:molten_gold"
     }
   ],
   "ingredient": {
     "type": "neoforge:difference",
     "base": {
-      "tag": "forge:ores/tungsten"
+      "tag": "c:ores/tungsten"
     },
     "subtracted": {
       "tag": "tconstruct:non_singular_ore_rates"
@@ -26,7 +26,7 @@
   "rate": "metal",
   "result": {
     "amount": 180,
-    "tag": "forge:molten_tungsten"
+    "tag": "c:molten_tungsten"
   },
   "temperature": 950,
   "time": 162

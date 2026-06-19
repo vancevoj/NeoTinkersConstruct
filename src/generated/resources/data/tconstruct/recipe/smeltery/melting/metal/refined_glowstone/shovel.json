@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:tools/shovels/refined_glowstone"
+      "tag": "c:tools/shovels/refined_glowstone"
     }
   ],
   "type": "tconstruct:damagable_melting",
   "ingredient": {
-    "tag": "forge:tools/shovels/refined_glowstone"
+    "tag": "c:tools/shovels/refined_glowstone"
   },
   "result": {
     "amount": 90,
-    "tag": "forge:molten_refined_glowstone",
+    "tag": "c:molten_refined_glowstone",
     "unit_size": 10
   },
   "temperature": 825,

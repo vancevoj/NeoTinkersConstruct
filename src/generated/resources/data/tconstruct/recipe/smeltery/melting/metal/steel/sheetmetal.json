@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:sheetmetals/steel"
+      "tag": "c:sheetmetals/steel"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:sheetmetals/steel"
+    "tag": "c:sheetmetals/steel"
   },
   "result": {
     "amount": 90,
-    "tag": "forge:molten_steel"
+    "tag": "c:molten_steel"
   },
   "temperature": 950,
   "time": 65

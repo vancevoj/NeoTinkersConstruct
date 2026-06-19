@@ -14,7 +14,7 @@
   },
   "result": {
     "amount": 1170,
-    "tag": "forge:molten_nickel",
+    "tag": "c:molten_nickel",
     "unit_size": 10
   },
   "temperature": 950,

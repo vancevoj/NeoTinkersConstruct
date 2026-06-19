@@ -5,11 +5,11 @@
       "values": [
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/constantan"
+          "tag": "c:ingots/constantan"
         },
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/nickel"
+          "tag": "c:ingots/nickel"
         }
       ]
     }
@@ -17,7 +17,7 @@
   "type": "tconstruct:material_fluid",
   "fluid": {
     "amount": 90,
-    "tag": "forge:molten_constantan"
+    "tag": "c:molten_constantan"
   },
   "output": "tconstruct:constantan",
   "temperature": 920

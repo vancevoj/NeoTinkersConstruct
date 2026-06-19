@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/tungsten"
+      "tag": "c:nuggets/tungsten"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -12,9 +12,9 @@
   "cooling_time": 22,
   "fluid": {
     "amount": 10,
-    "tag": "forge:molten_tungsten"
+    "tag": "c:molten_tungsten"
   },
   "result": {
-    "tag": "forge:nuggets/tungsten"
+    "tag": "c:nuggets/tungsten"
   }
 }

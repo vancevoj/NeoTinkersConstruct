@@ -3,7 +3,7 @@
     {
       "type": "mantle:tag_combination_filled",
       "match": [
-        "forge:ores/zinc",
+        "c:ores/zinc",
         "c:ore_rates/sparse"
       ]
     }
@@ -13,14 +13,14 @@
     {
       "amount": 90,
       "rate": "metal",
-      "tag": "forge:molten_copper"
+      "tag": "c:molten_copper"
     }
   ],
   "ingredient": {
     "type": "neoforge:intersection",
     "children": [
       {
-        "tag": "forge:ores/zinc"
+        "tag": "c:ores/zinc"
       },
       {
         "tag": "c:ore_rates/sparse"
@@ -30,7 +30,7 @@
   "rate": "metal",
   "result": {
     "amount": 90,
-    "tag": "forge:molten_zinc"
+    "tag": "c:molten_zinc"
   },
   "temperature": 420,
   "time": 70

@@ -16,12 +16,12 @@
     },
     {
       "amount": 40,
-      "tag": "forge:molten_gold"
+      "tag": "c:molten_gold"
     }
   ],
   "result": {
     "amount": 10,
-    "tag": "forge:molten_netherite"
+    "tag": "c:molten_netherite"
   },
   "temperature": 1250
 }

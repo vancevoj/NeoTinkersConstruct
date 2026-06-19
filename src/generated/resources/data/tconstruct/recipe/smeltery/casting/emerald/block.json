@@ -6,6 +6,6 @@
     "tag": "tconstruct:molten_emerald"
   },
   "result": {
-    "tag": "forge:storage_blocks/emerald"
+    "tag": "c:storage_blocks/emerald"
   }
 }

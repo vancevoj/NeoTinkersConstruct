@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:wires"
+      "tag": "c:wires"
     }
   ],
   "type": "tconstruct:molding_table",
@@ -10,7 +10,7 @@
     "tag": "tconstruct:casts/sand"
   },
   "pattern": {
-    "tag": "forge:wires"
+    "tag": "c:wires"
   },
   "result": "tconstruct:wire_sand_cast"
 }

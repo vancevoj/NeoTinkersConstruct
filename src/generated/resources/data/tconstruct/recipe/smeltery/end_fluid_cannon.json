@@ -3,7 +3,7 @@
   "category": "redstone",
   "key": {
     "C": {
-      "tag": "forge:ingots/knightmetal"
+      "tag": "c:ingots/knightmetal"
     },
     "R": {
       "tag": "c:dusts/redstone"

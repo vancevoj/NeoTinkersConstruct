@@ -9,6 +9,6 @@
     "nbt": {
       "Potion": "minecraft:turtle_master"
     },
-    "tag": "forge:potion"
+    "tag": "c:potion"
   }
 }

@@ -9,7 +9,7 @@
         },
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/uranium"
+          "tag": "c:ingots/uranium"
         }
       ]
     }

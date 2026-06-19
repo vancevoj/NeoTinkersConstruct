@@ -3,7 +3,7 @@
     {
       "type": "mantle:tag_combination_filled",
       "match": [
-        "forge:ores/emerald",
+        "c:ores/emerald",
         "c:ore_rates/dense"
       ]
     }
@@ -20,7 +20,7 @@
     "type": "neoforge:intersection",
     "children": [
       {
-        "tag": "forge:ores/emerald"
+        "tag": "c:ores/emerald"
       },
       {
         "tag": "c:ore_rates/dense"

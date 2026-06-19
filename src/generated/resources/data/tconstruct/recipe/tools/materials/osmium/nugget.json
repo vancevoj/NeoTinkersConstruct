@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/osmium"
+      "tag": "c:nuggets/osmium"
     }
   ],
   "type": "tconstruct:material",
   "ingredient": {
-    "tag": "forge:nuggets/osmium"
+    "tag": "c:nuggets/osmium"
   },
   "material": "tconstruct:osmium",
   "needed": 9,

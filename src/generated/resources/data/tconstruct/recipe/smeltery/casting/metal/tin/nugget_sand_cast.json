@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/tin"
+      "tag": "c:nuggets/tin"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -13,9 +13,9 @@
   "cooling_time": 13,
   "fluid": {
     "amount": 10,
-    "tag": "forge:molten_tin"
+    "tag": "c:molten_tin"
   },
   "result": {
-    "tag": "forge:nuggets/tin"
+    "tag": "c:nuggets/tin"
   }
 }

@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:coins/tin"
+      "tag": "c:coins/tin"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -13,9 +13,9 @@
   "cooling_time": 23,
   "fluid": {
     "amount": 30,
-    "tag": "forge:molten_tin"
+    "tag": "c:molten_tin"
   },
   "result": {
-    "tag": "forge:coins/tin"
+    "tag": "c:coins/tin"
   }
 }

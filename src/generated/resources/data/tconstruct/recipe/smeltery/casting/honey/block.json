@@ -3,7 +3,7 @@
   "cooling_time": 94,
   "fluid": {
     "amount": 1000,
-    "tag": "forge:honey"
+    "tag": "c:honey"
   },
   "result": "minecraft:honey_block"
 }

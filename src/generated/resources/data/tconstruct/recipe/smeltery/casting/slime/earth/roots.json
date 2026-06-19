@@ -7,7 +7,7 @@
   "cooling_time": 103,
   "fluid": {
     "amount": 1000,
-    "tag": "forge:slime"
+    "tag": "c:slime"
   },
   "result": "tconstruct:earth_enderbark_roots"
 }

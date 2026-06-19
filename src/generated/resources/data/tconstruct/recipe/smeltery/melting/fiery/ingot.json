@@ -2,18 +2,18 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/fiery"
+      "tag": "c:ingots/fiery"
     }
   ],
   "type": "tconstruct:melting",
   "byproducts": [
     {
       "amount": 90,
-      "tag": "forge:molten_iron"
+      "tag": "c:molten_iron"
     }
   ],
   "ingredient": {
-    "tag": "forge:ingots/fiery"
+    "tag": "c:ingots/fiery"
   },
   "result": {
     "amount": 250,

@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/nicrosil"
+      "tag": "c:ingots/nicrosil"
     }
   ],
   "type": "tconstruct:material",
   "ingredient": {
-    "tag": "forge:ingots/nicrosil"
+    "tag": "c:ingots/nicrosil"
   },
   "material": "tconstruct:nicrosil",
   "needed": 1,

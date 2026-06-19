@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:gears"
+      "tag": "c:gears"
     }
   ],
   "type": "tconstruct:molding_table",
@@ -10,7 +10,7 @@
     "tag": "tconstruct:casts/sand"
   },
   "pattern": {
-    "tag": "forge:gears"
+    "tag": "c:gears"
   },
   "result": "tconstruct:gear_sand_cast"
 }

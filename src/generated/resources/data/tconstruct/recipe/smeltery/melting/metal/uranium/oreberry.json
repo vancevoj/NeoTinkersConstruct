@@ -14,7 +14,7 @@
   },
   "result": {
     "amount": 10,
-    "tag": "forge:molten_uranium"
+    "tag": "c:molten_uranium"
   },
   "temperature": 830,
   "time": 20

@@ -3,7 +3,7 @@
     {
       "type": "mantle:tag_combination_filled",
       "match": [
-        "forge:ores/chromium",
+        "c:ores/chromium",
         "c:ore_rates/sparse"
       ]
     }
@@ -13,14 +13,14 @@
     {
       "amount": 90,
       "rate": "metal",
-      "tag": "forge:molten_iron"
+      "tag": "c:molten_iron"
     }
   ],
   "ingredient": {
     "type": "neoforge:intersection",
     "children": [
       {
-        "tag": "forge:ores/chromium"
+        "tag": "c:ores/chromium"
       },
       {
         "tag": "c:ore_rates/sparse"
@@ -30,7 +30,7 @@
   "rate": "metal",
   "result": {
     "amount": 90,
-    "tag": "forge:molten_chromium"
+    "tag": "c:molten_chromium"
   },
   "temperature": 900,
   "time": 95

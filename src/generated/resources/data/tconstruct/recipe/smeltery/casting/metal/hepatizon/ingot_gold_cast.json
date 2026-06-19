@@ -6,9 +6,9 @@
   "cooling_time": 78,
   "fluid": {
     "amount": 90,
-    "tag": "forge:molten_hepatizon"
+    "tag": "c:molten_hepatizon"
   },
   "result": {
-    "tag": "forge:ingots/hepatizon"
+    "tag": "c:ingots/hepatizon"
   }
 }

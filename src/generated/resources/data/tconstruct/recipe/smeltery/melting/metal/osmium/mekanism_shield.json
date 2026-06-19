@@ -14,7 +14,7 @@
   },
   "result": {
     "amount": 540,
-    "tag": "forge:molten_osmium",
+    "tag": "c:molten_osmium",
     "unit_size": 10
   },
   "temperature": 975,

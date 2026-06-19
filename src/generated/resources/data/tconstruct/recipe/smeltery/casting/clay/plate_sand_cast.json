@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:plates/brick"
+      "tag": "c:plates/brick"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -16,6 +16,6 @@
     "tag": "tconstruct:molten_clay"
   },
   "result": {
-    "tag": "forge:plates/brick"
+    "tag": "c:plates/brick"
   }
 }

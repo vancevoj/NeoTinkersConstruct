@@ -2,7 +2,7 @@
   "type": "tconstruct:material_fluid",
   "fluid": {
     "amount": 125,
-    "tag": "forge:magma"
+    "tag": "c:magma"
   },
   "input": "tconstruct:flint",
   "output": "tconstruct:scorched_stone",

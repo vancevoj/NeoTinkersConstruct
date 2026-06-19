@@ -7,7 +7,7 @@
   "cooling_time": 1,
   "fluid": {
     "amount": 250,
-    "tag": "forge:rabbit_stew"
+    "tag": "c:rabbit_stew"
   },
   "result": "minecraft:rabbit_stew"
 }

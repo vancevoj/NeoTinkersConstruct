@@ -3,11 +3,11 @@
     {
       "type": "mantle:tag_filled",
       "registry": "minecraft:fluid",
-      "tag": "forge:molten_dawnstone"
+      "tag": "c:molten_dawnstone"
     },
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/dawnstone"
+      "tag": "c:nuggets/dawnstone"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -17,9 +17,9 @@
   "cooling_time": 21,
   "fluid": {
     "amount": 10,
-    "tag": "forge:molten_dawnstone"
+    "tag": "c:molten_dawnstone"
   },
   "result": {
-    "tag": "forge:nuggets/dawnstone"
+    "tag": "c:nuggets/dawnstone"
   }
 }

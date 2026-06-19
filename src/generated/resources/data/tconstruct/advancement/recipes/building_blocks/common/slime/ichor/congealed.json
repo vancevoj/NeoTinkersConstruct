@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#forge:slimeball/ichor"
+            "items": "#c:slimeball/ichor"
           }
         ]
       },

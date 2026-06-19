@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:plates/zinc"
+      "tag": "c:plates/zinc"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:plates/zinc"
+    "tag": "c:plates/zinc"
   },
   "result": {
     "amount": 90,
-    "tag": "forge:molten_zinc"
+    "tag": "c:molten_zinc"
   },
   "temperature": 420,
   "time": 47

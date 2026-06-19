@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:coins/steel"
+      "tag": "c:coins/steel"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:coins/steel"
+    "tag": "c:coins/steel"
   },
   "result": {
     "amount": 30,
-    "tag": "forge:molten_steel"
+    "tag": "c:molten_steel"
   },
   "temperature": 950,
   "time": 43

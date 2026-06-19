@@ -2,20 +2,20 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:treated_wood"
+      "tag": "c:treated_wood"
     }
   ],
   "type": "tconstruct:swappable_modifier",
   "allow_crystal": false,
   "inputs": [
     {
-      "tag": "forge:treated_wood"
+      "tag": "c:treated_wood"
     },
     {
       "item": "tconstruct:pattern"
     },
     {
-      "tag": "forge:treated_wood"
+      "tag": "c:treated_wood"
     }
   ],
   "result": {

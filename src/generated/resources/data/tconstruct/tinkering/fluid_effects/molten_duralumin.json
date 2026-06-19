@@ -21,7 +21,7 @@
         },
         {
           "type": "mantle:tag_filled",
-          "tag": "forge:ingots/duralumin"
+          "tag": "c:ingots/duralumin"
         }
       ]
     }
@@ -45,6 +45,6 @@
   ],
   "fluid": {
     "amount": 10,
-    "tag": "forge:molten_duralumin"
+    "tag": "c:molten_duralumin"
   }
 }

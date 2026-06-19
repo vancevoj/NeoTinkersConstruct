@@ -2,7 +2,7 @@
   "type": "tconstruct:entity_melting",
   "damage": 5,
   "entity": {
-    "tag": "forge:villagers"
+    "tag": "c:villagers"
   },
   "result": {
     "amount": 25,

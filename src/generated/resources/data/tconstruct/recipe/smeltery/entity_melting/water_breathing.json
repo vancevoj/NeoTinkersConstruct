@@ -12,6 +12,6 @@
     "nbt": {
       "Potion": "minecraft:water_breathing"
     },
-    "tag": "forge:potion"
+    "tag": "c:potion"
   }
 }

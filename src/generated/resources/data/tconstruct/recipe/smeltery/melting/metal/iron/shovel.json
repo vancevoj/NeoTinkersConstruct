@@ -5,7 +5,7 @@
   },
   "result": {
     "amount": 90,
-    "tag": "forge:molten_iron",
+    "tag": "c:molten_iron",
     "unit_size": 10
   },
   "temperature": 800,

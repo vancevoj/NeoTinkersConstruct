@@ -3,7 +3,7 @@
     {
       "type": "mantle:tag_combination_filled",
       "match": [
-        "forge:ores/silver",
+        "c:ores/silver",
         "c:ore_rates/sparse"
       ]
     }
@@ -13,14 +13,14 @@
     {
       "amount": 90,
       "rate": "metal",
-      "tag": "forge:molten_gold"
+      "tag": "c:molten_gold"
     }
   ],
   "ingredient": {
     "type": "neoforge:intersection",
     "children": [
       {
-        "tag": "forge:ores/silver"
+        "tag": "c:ores/silver"
       },
       {
         "tag": "c:ore_rates/sparse"
@@ -30,7 +30,7 @@
   "rate": "metal",
   "result": {
     "amount": 90,
-    "tag": "forge:molten_silver"
+    "tag": "c:molten_silver"
   },
   "temperature": 790,
   "time": 90

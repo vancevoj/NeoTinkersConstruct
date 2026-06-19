@@ -6,6 +6,6 @@
     "tag": "tconstruct:molten_diamond"
   },
   "result": {
-    "tag": "forge:storage_blocks/diamond"
+    "tag": "c:storage_blocks/diamond"
   }
 }

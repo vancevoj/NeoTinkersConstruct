@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:geore_blocks/emerald"
+      "tag": "c:geore_blocks/emerald"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:geore_blocks/emerald"
+    "tag": "c:geore_blocks/emerald"
   },
   "result": {
     "amount": 400,

@@ -14,7 +14,7 @@
   },
   "result": {
     "amount": 540,
-    "tag": "forge:molten_refined_obsidian",
+    "tag": "c:molten_refined_obsidian",
     "unit_size": 10
   },
   "temperature": 1475,

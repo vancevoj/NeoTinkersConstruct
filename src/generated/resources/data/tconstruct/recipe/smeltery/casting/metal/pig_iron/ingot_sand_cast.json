@@ -10,6 +10,6 @@
     "tag": "tconstruct:molten_pig_iron"
   },
   "result": {
-    "tag": "forge:ingots/pig_iron"
+    "tag": "c:ingots/pig_iron"
   }
 }

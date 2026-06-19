@@ -3,16 +3,16 @@
   "inputs": [
     {
       "amount": 90,
-      "tag": "forge:molten_copper"
+      "tag": "c:molten_copper"
     },
     {
       "amount": 90,
-      "tag": "forge:molten_gold"
+      "tag": "c:molten_gold"
     }
   ],
   "result": {
     "amount": 180,
-    "tag": "forge:molten_rose_gold"
+    "tag": "c:molten_rose_gold"
   },
   "temperature": 550
 }

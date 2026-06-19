@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/fiery"
+      "tag": "c:ingots/fiery"
     }
   ],
   "type": "tconstruct:casting_table",
   "cast": {
-    "tag": "forge:ingots/iron"
+    "tag": "c:ingots/iron"
   },
   "cast_consumed": true,
   "cooling_time": 134,
@@ -16,6 +16,6 @@
     "tag": "tconstruct:fiery_liquid"
   },
   "result": {
-    "tag": "forge:ingots/fiery"
+    "tag": "c:ingots/fiery"
   }
 }

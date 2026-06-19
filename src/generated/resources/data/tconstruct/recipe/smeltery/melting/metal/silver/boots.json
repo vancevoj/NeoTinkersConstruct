@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:armors/boots/silver"
+      "tag": "c:armors/boots/silver"
     }
   ],
   "type": "tconstruct:damagable_melting",
   "ingredient": {
-    "tag": "forge:armors/boots/silver"
+    "tag": "c:armors/boots/silver"
   },
   "result": {
     "amount": 360,
-    "tag": "forge:molten_silver",
+    "tag": "c:molten_silver",
     "unit_size": 10
   },
   "temperature": 790,

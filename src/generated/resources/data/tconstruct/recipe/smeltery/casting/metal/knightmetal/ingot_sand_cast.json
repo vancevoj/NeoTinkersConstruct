@@ -10,6 +10,6 @@
     "tag": "tconstruct:molten_knightmetal"
   },
   "result": {
-    "tag": "forge:ingots/knightmetal"
+    "tag": "c:ingots/knightmetal"
   }
 }

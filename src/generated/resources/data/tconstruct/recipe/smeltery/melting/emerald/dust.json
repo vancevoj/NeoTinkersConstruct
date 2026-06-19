@@ -2,12 +2,12 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:dusts/emerald"
+      "tag": "c:dusts/emerald"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:dusts/emerald"
+    "tag": "c:dusts/emerald"
   },
   "result": {
     "amount": 100,

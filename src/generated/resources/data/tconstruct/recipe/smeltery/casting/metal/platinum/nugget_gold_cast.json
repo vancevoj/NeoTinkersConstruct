@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:nuggets/platinum"
+      "tag": "c:nuggets/platinum"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -12,9 +12,9 @@
   "cooling_time": 22,
   "fluid": {
     "amount": 10,
-    "tag": "forge:molten_platinum"
+    "tag": "c:molten_platinum"
   },
   "result": {
-    "tag": "forge:nuggets/platinum"
+    "tag": "c:nuggets/platinum"
   }
 }

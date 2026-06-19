@@ -3,7 +3,7 @@
   "inputs": [
     {
       "amount": 90,
-      "tag": "forge:molten_copper"
+      "tag": "c:molten_copper"
     },
     {
       "amount": 100,
@@ -12,7 +12,7 @@
   ],
   "result": {
     "amount": 90,
-    "tag": "forge:molten_amethyst_bronze"
+    "tag": "c:molten_amethyst_bronze"
   },
   "temperature": 820
 }

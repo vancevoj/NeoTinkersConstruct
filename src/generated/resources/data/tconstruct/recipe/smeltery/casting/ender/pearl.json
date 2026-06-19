@@ -3,7 +3,7 @@
   "cooling_time": 82,
   "fluid": {
     "amount": 250,
-    "tag": "forge:ender"
+    "tag": "c:ender"
   },
   "result": "minecraft:ender_pearl"
 }

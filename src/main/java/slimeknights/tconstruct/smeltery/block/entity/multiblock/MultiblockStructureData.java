@@ -136,7 +136,7 @@ public class MultiblockStructureData {
       if (pos.getX() == minPos.getX() || pos.getX() == maxPos.getX()) edges++;
       if (pos.getZ() == minPos.getZ() || pos.getZ() == maxPos.getZ()) edges++;
       if ((hasFloor && pos.getY() == minPos.getY()) ||
-          (hasCeiling && pos.getX() == maxPos.getX())) edges++;
+          (hasCeiling && pos.getY() == maxPos.getY())) edges++;
       if (edges < 2) {
         return true;
       }

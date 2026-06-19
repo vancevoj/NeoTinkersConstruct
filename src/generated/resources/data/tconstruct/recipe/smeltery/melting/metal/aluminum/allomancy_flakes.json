@@ -14,7 +14,7 @@
   },
   "result": {
     "amount": 30,
-    "tag": "forge:molten_aluminum"
+    "tag": "c:molten_aluminum"
   },
   "temperature": 425,
   "time": 27

@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:storage_blocks/tin"
+      "tag": "c:storage_blocks/tin"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:storage_blocks/tin"
+    "tag": "c:storage_blocks/tin"
   },
   "result": {
     "amount": 810,
-    "tag": "forge:molten_tin"
+    "tag": "c:molten_tin"
   },
   "temperature": 225,
   "time": 117

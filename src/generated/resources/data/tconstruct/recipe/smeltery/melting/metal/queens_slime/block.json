@@ -1,7 +1,7 @@
 {
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:storage_blocks/queens_slime"
+    "tag": "c:storage_blocks/queens_slime"
   },
   "result": {
     "amount": 810,

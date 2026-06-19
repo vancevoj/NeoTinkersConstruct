@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/uranium"
+      "tag": "c:ingots/uranium"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -13,7 +13,7 @@
   "cooling_time": 106,
   "fluid": {
     "amount": 270,
-    "tag": "forge:molten_uranium"
+    "tag": "c:molten_uranium"
   },
   "result": "tconstruct:necronium_head"
 }

@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:storage_blocks/silver"
+      "tag": "c:storage_blocks/silver"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:storage_blocks/silver"
+    "tag": "c:storage_blocks/silver"
   },
   "result": {
     "amount": 810,
-    "tag": "forge:molten_silver"
+    "tag": "c:molten_silver"
   },
   "temperature": 790,
   "time": 179

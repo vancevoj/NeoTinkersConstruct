@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:plates/iron"
+      "tag": "c:plates/iron"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:plates/iron"
+    "tag": "c:plates/iron"
   },
   "result": {
     "amount": 90,
-    "tag": "forge:molten_iron"
+    "tag": "c:molten_iron"
   },
   "temperature": 800,
   "time": 60

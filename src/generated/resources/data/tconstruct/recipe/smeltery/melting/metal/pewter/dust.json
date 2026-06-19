@@ -2,16 +2,16 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:dusts/pewter"
+      "tag": "c:dusts/pewter"
     }
   ],
   "type": "tconstruct:melting",
   "ingredient": {
-    "tag": "forge:dusts/pewter"
+    "tag": "c:dusts/pewter"
   },
   "result": {
     "amount": 90,
-    "tag": "forge:molten_pewter"
+    "tag": "c:molten_pewter"
   },
   "temperature": 400,
   "time": 35

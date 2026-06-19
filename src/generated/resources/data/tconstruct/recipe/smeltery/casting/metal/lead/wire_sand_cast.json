@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:wires/lead"
+      "tag": "c:wires/lead"
     }
   ],
   "type": "tconstruct:casting_table",
@@ -13,9 +13,9 @@
   "cooling_time": 31,
   "fluid": {
     "amount": 45,
-    "tag": "forge:molten_lead"
+    "tag": "c:molten_lead"
   },
   "result": {
-    "tag": "forge:wires/lead"
+    "tag": "c:wires/lead"
   }
 }

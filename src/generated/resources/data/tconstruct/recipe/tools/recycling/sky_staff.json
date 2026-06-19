@@ -14,7 +14,7 @@
     },
     "tconstruct:ingot": {
       "count": 1,
-      "tag": "forge:ingots/rose_gold"
+      "tag": "c:ingots/rose_gold"
     }
   },
   "tool": {

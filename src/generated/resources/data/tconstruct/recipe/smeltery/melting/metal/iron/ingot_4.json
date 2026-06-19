@@ -10,7 +10,7 @@
   ],
   "result": {
     "amount": 360,
-    "tag": "forge:molten_iron"
+    "tag": "c:molten_iron"
   },
   "temperature": 800,
   "time": 120

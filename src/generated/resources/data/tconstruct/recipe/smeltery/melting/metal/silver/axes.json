@@ -11,7 +11,7 @@
   },
   "result": {
     "amount": 270,
-    "tag": "forge:molten_silver",
+    "tag": "c:molten_silver",
     "unit_size": 10
   },
   "temperature": 790,

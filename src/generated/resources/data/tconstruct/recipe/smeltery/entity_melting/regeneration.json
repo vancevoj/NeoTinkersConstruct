@@ -12,6 +12,6 @@
     "nbt": {
       "Potion": "minecraft:regeneration"
     },
-    "tag": "forge:potion"
+    "tag": "c:potion"
   }
 }

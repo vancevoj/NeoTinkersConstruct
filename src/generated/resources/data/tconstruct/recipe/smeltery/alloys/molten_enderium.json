@@ -2,18 +2,18 @@
   "neoforge:conditions": [
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/enderium"
+      "tag": "c:ingots/enderium"
     },
     {
       "type": "mantle:tag_filled",
-      "tag": "forge:ingots/lead"
+      "tag": "c:ingots/lead"
     }
   ],
   "type": "tconstruct:alloy",
   "inputs": [
     {
       "amount": 270,
-      "tag": "forge:molten_lead"
+      "tag": "c:molten_lead"
     },
     {
       "amount": 100,
@@ -21,12 +21,12 @@
     },
     {
       "amount": 500,
-      "tag": "forge:ender"
+      "tag": "c:ender"
     }
   ],
   "result": {
     "amount": 180,
-    "tag": "forge:molten_enderium"
+    "tag": "c:molten_enderium"
   },
   "temperature": 1350
 }

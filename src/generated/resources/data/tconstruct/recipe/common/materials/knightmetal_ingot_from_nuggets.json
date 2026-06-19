@@ -4,7 +4,7 @@
   "group": "tconstruct:knightmetal_ingot",
   "key": {
     "#": {
-      "tag": "forge:nuggets/knightmetal"
+      "tag": "c:nuggets/knightmetal"
     },
     "*": {
       "item": "tconstruct:knightmetal_nugget"

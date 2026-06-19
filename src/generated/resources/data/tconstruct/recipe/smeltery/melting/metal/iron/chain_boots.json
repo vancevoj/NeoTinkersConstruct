@@ -3,7 +3,7 @@
   "byproducts": [
     {
       "amount": 120,
-      "tag": "forge:molten_steel",
+      "tag": "c:molten_steel",
       "unit_size": 10
     }
   ],
@@ -12,7 +12,7 @@
   },
   "result": {
     "amount": 240,
-    "tag": "forge:molten_iron",
+    "tag": "c:molten_iron",
     "unit_size": 10
   },
   "temperature": 800,
