@@ -67,7 +67,7 @@ public abstract class AbstractStructureRepalleter extends GenericNBTProvider {
     for (Entry<ResourceLocation,Collection<RepaletteTask>> entry : structures.asMap().entrySet()) {
       ResourceLocation original = entry.getKey();
 
-      try (InputStream io = existingFileHelper.getResource(original, PackType.SERVER_DATA, ".nbt", "structures").open()) {
+      try (InputStream io = existingFileHelper.getResource(original, PackType.SERVER_DATA, ".nbt", "structure").open()) {
         CompoundTag inputNBT = NbtIo.readCompressed(io, net.minecraft.nbt.NbtAccounter.unlimitedHeap());
         for (RepaletteTask task : entry.getValue()) {
           // start by fetching the palette, we assume its not randomized

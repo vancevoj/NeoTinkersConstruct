@@ -112,7 +112,7 @@ public class ModifierEvents {
     LivingEntity entity = event.getEntity();
     TinkerDataCapability.Holder data = TinkerDataCapability.getData(entity);
     double knockback = entity.getAttributeValue(TinkerAttributes.KNOCKBACK_MULTIPLIER)
-                     + (data != null ? data.get(TinkerDataKeys.KNOCKBACK) : 0f);
+                     + (data != null ? data.get(TinkerDataKeys.KNOCKBACK, 0f) : 0f);
     if (knockback != 1) {
       event.setStrength((float) (event.getStrength() * knockback));
     }

@@ -291,7 +291,9 @@ public class ToolClientEvents extends ClientEventBase {
     event.register((stack, index) -> {
       ModifierId modifier = ModifierCrystalItem.getModifier(stack);
       if (modifier != null) {
-        return ResourceColorManager.getColor(Util.makeTranslationKey("modifier", modifier));
+        // 1.21 item colors honor the alpha byte; ResourceColorManager returns 0xRRGGBB (alpha 0),
+        // which renders the tinted layer0 fully transparent (the crystal looked invisible). Force opaque.
+        return 0xFF000000 | ResourceColorManager.getColor(Util.makeTranslationKey("modifier", modifier));
       }
       return -1;
     }, TinkerModifiers.modifierCrystal);

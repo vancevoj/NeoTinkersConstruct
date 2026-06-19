@@ -60,6 +60,7 @@ import slimeknights.tconstruct.library.modifiers.modules.capacity.OverslimeModul
 import slimeknights.tconstruct.common.json.ConfigEnabledCondition;
 import slimeknights.tconstruct.library.json.condition.TagDifferencePresentCondition;
 import slimeknights.tconstruct.library.json.condition.TagIntersectionPresentCondition;
+import slimeknights.tconstruct.library.json.condition.TagNotEmptyCondition;
 import slimeknights.tconstruct.library.recipe.ingredient.BlockTagIngredient;
 import slimeknights.tconstruct.library.recipe.ingredient.MaterialIngredient;
 import slimeknights.tconstruct.library.recipe.ingredient.MaterialValueIngredient;
@@ -332,6 +333,9 @@ public final class TinkerTools extends TinkerModule {
       event.register(NeoForgeRegistries.Keys.CONDITION_CODECS, ConfigEnabledCondition.ID, () -> ConfigEnabledCondition.CODEC);
       event.register(NeoForgeRegistries.Keys.CONDITION_CODECS, TagIntersectionPresentCondition.NAME, () -> TagIntersectionPresentCondition.CODEC);
       event.register(NeoForgeRegistries.Keys.CONDITION_CODECS, TagDifferencePresentCondition.NAME, () -> TagDifferencePresentCondition.CODEC);
+      // tconstruct:tag_not_empty is used by every book's index.json (section visibility); without this
+      // the FileRepository fails to deserialize and the book breaks ("Unknown registry key ... tag_not_empty").
+      event.register(NeoForgeRegistries.Keys.CONDITION_CODECS, TagNotEmptyCondition.NAME, () -> TagNotEmptyCondition.CODEC);
     }
     // 1.21: tool item sub-predicate type, used by tool advancements to match Tinker tools (replaces legacy ItemPredicate.register)
     if (event.getRegistryKey() == Registries.ITEM_SUB_PREDICATE_TYPE) {
