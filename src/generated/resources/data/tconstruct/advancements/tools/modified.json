@@ -1,0 +1,38 @@
+{
+  "parent": "tconstruct:tools/tinker_tool",
+  "criteria": {
+    "crafted_tool": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": "tconstruct:has_upgrades"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.tconstruct.tools.modified.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:redstone"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.tools.modified.title"
+    }
+  },
+  "requirements": [
+    [
+      "crafted_tool"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,39 @@
+{
+  "parent": "tconstruct:tools/part_builder",
+  "criteria": {
+    "crafted_part": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#tconstruct:parts"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.tconstruct.tools.make_part.description"
+    },
+    "icon": {
+      "components": {
+        "minecraft:custom_data": {
+          "Material": "tconstruct:wood"
+        }
+      },
+      "count": 1,
+      "id": "tconstruct:pick_head"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.tools.make_part.title"
+    }
+  },
+  "requirements": [
+    [
+      "crafted_part"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,34 @@
+{
+  "parent": "tconstruct:foundry/fantastic_foundry",
+  "criteria": {
+    "crafted_book": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tconstruct:encyclopedia"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.tconstruct.foundry.encyclopedia.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "tconstruct:encyclopedia"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.foundry.encyclopedia.title"
+    }
+  },
+  "requirements": [
+    [
+      "crafted_book"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

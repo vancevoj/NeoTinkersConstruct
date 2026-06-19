@@ -1,0 +1,82 @@
+{
+  "parent": "tconstruct:tools/modified",
+  "criteria": {
+    "has_modified": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "tconstruct:has_modifier",
+                      "check": "upgrades",
+                      "modifier": {
+                        "type": "tconstruct:single",
+                        "modifier": "tconstruct:writable"
+                      }
+                    },
+                    {
+                      "type": "tconstruct:has_modifier",
+                      "check": "upgrades",
+                      "modifier": {
+                        "type": "tconstruct:single",
+                        "modifier": "tconstruct:recapitated"
+                      }
+                    },
+                    {
+                      "type": "tconstruct:has_modifier",
+                      "check": "upgrades",
+                      "modifier": {
+                        "type": "tconstruct:single",
+                        "modifier": "tconstruct:harmonious"
+                      }
+                    },
+                    {
+                      "type": "tconstruct:has_modifier",
+                      "check": "upgrades",
+                      "modifier": {
+                        "type": "tconstruct:single",
+                        "modifier": "tconstruct:forecast"
+                      }
+                    },
+                    {
+                      "type": "tconstruct:has_modifier",
+                      "check": "upgrades",
+                      "modifier": {
+                        "type": "tconstruct:single",
+                        "modifier": "tconstruct:gilded"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.tconstruct.tools.upgrade_slots.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:writable_book"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.tools.upgrade_slots.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_modified"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

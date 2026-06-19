@@ -1,0 +1,34 @@
+{
+  "parent": "tconstruct:tools/materials_and_you",
+  "criteria": {
+    "crafted_book": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tconstruct:puny_smelting"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.tconstruct.smeltery.puny_smelting.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "tconstruct:puny_smelting"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.smeltery.puny_smelting.title"
+    }
+  },
+  "requirements": [
+    [
+      "crafted_book"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

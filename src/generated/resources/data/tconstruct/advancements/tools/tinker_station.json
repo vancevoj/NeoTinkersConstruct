@@ -1,0 +1,34 @@
+{
+  "parent": "tconstruct:tools/part_builder",
+  "criteria": {
+    "crafted_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tconstruct:tinker_station"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.tconstruct.tools.tinker_station.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "tconstruct:tinker_station"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.tools.tinker_station.title"
+    }
+  },
+  "requirements": [
+    [
+      "crafted_block"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

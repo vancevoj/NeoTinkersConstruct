@@ -1,0 +1,46 @@
+{
+  "parent": "tconstruct:tools/tinker_station",
+  "criteria": {
+    "crafted_tool": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#tconstruct:modifiable/multipart"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.tconstruct.tools.tinker_tool.description"
+    },
+    "icon": {
+      "components": {
+        "tconstruct:tool_data": {
+          "tic_display": 1,
+          "tic_materials": [
+            "tconstruct:ui_render#head",
+            "tconstruct:ui_render#handle",
+            "tconstruct:ui_render#extra",
+            "tconstruct:ui_render#large",
+            "tconstruct:ui_render#extra_large"
+          ]
+        }
+      },
+      "count": 1,
+      "id": "tconstruct:pickaxe"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.tools.tinker_tool.title"
+    }
+  },
+  "requirements": [
+    [
+      "crafted_tool"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

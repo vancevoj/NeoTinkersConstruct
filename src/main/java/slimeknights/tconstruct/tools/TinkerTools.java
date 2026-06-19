@@ -45,6 +45,7 @@ import slimeknights.tconstruct.library.json.predicate.tool.PersistentDataPredica
 import slimeknights.tconstruct.library.json.predicate.tool.StatInRangePredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.StatInSetPredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.ToolContextPredicate;
+import slimeknights.tconstruct.library.json.predicate.tool.ToolStackItemPredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.ToolStackPredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.ToolVariableRangePredicate;
 import slimeknights.tconstruct.library.json.predicate.tool.VolatileDataPredicate;
@@ -332,9 +333,10 @@ public final class TinkerTools extends TinkerModule {
       event.register(NeoForgeRegistries.Keys.CONDITION_CODECS, TagIntersectionPresentCondition.NAME, () -> TagIntersectionPresentCondition.CODEC);
       event.register(NeoForgeRegistries.Keys.CONDITION_CODECS, TagDifferencePresentCondition.NAME, () -> TagDifferencePresentCondition.CODEC);
     }
-    // TODO(neoport): cross-package - ToolStackItemPredicate needs an ItemSubPredicate.Type<> (BuiltInRegistries.ITEM_SUB_PREDICATE_TYPE)
-    //  with a Codec bridge for the mantle ToolStackPredicate loadable, owned by the mantle/registration agent. The legacy
-    //  ItemPredicate.register(ID, deserialize) API was removed in 1.21, so the registration is dropped until that Type exists.
+    // 1.21: tool item sub-predicate type, used by tool advancements to match Tinker tools (replaces legacy ItemPredicate.register)
+    if (event.getRegistryKey() == Registries.ITEM_SUB_PREDICATE_TYPE) {
+      event.register(Registries.ITEM_SUB_PREDICATE_TYPE, ToolStackItemPredicate.ID, () -> ToolStackItemPredicate.TYPE);
+    }
   }
 
   @SubscribeEvent

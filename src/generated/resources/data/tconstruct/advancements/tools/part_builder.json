@@ -1,0 +1,34 @@
+{
+  "parent": "tconstruct:tools/materials_and_you",
+  "criteria": {
+    "crafted_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tconstruct:part_builder"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.tconstruct.tools.part_builder.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "tconstruct:part_builder"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.tools.part_builder.title"
+    }
+  },
+  "requirements": [
+    [
+      "crafted_block"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

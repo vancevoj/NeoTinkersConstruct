@@ -1,0 +1,605 @@
+{
+  "parent": "tconstruct:world/slimesuit",
+  "criteria": {
+    "blaze": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:blaze"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "blazing_bone": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:blazing_bone"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "bone": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:bone"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "copper": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:copper"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "darkthread": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:darkthread"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "dragon_scale": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:dragon_scale"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "ender_pearl": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:ender_pearl"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "glass": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:glass"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "gold": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:gold"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "ice": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:ice"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "iron": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:iron"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "knightmetal": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:knightmetal"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "leather": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:leather"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "necrotic_bone": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:necrotic_bone"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "pig_iron": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:pig_iron"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "rose_gold": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:rose_gold"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "string": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:string"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "venombone": {
+      "conditions": {
+        "items": [
+          {
+            "predicates": {
+              "tconstruct:tool_stack": {
+                "predicate": {
+                  "type": "mantle:and",
+                  "predicates": [
+                    {
+                      "type": "mantle:set",
+                      "items": [
+                        "tconstruct:slime_helmet"
+                      ]
+                    },
+                    {
+                      "type": "tconstruct:has_material",
+                      "index": 0,
+                      "material": "tconstruct:venombone"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.tconstruct.world.slimeskull.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "components": {
+        "tconstruct:tool_data": {
+          "tic_materials": [
+            "tconstruct:glass",
+            "tconstruct:enderslime"
+          ]
+        }
+      },
+      "count": 1,
+      "id": "tconstruct:slime_helmet"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.world.slimeskull.title"
+    }
+  },
+  "requirements": [
+    [
+      "glass"
+    ],
+    [
+      "blaze"
+    ],
+    [
+      "leather"
+    ],
+    [
+      "iron"
+    ],
+    [
+      "copper"
+    ],
+    [
+      "string"
+    ],
+    [
+      "darkthread"
+    ],
+    [
+      "bone"
+    ],
+    [
+      "ice"
+    ],
+    [
+      "necrotic_bone"
+    ],
+    [
+      "gold"
+    ],
+    [
+      "rose_gold"
+    ],
+    [
+      "pig_iron"
+    ],
+    [
+      "ender_pearl"
+    ],
+    [
+      "dragon_scale"
+    ],
+    [
+      "venombone"
+    ],
+    [
+      "blazing_bone"
+    ],
+    [
+      "knightmetal"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

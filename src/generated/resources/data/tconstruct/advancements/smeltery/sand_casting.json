@@ -1,0 +1,34 @@
+{
+  "parent": "tconstruct:smeltery/melter",
+  "criteria": {
+    "crafted_cast": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#tconstruct:casts/single_use/blank"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.tconstruct.smeltery.sand_casting.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "tconstruct:tool_handle_sand_cast"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.smeltery.sand_casting.title"
+    }
+  },
+  "requirements": [
+    [
+      "crafted_cast"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

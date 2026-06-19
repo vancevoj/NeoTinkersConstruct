@@ -1,0 +1,34 @@
+{
+  "parent": "tconstruct:tools/materials_and_you",
+  "criteria": {
+    "crafted_book": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tconstruct:fantastic_foundry"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.tconstruct.foundry.fantastic_foundry.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "tconstruct:fantastic_foundry"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.foundry.fantastic_foundry.title"
+    }
+  },
+  "requirements": [
+    [
+      "crafted_book"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

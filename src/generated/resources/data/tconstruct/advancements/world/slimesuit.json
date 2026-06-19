@@ -1,0 +1,81 @@
+{
+  "parent": "tconstruct:world/sky_island",
+  "criteria": {
+    "crafted_boots": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tconstruct:slime_boots"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "crafted_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tconstruct:slimy_chestplate"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "crafted_helmet": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tconstruct:slime_helmet"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "crafted_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tconstruct:slime_leggings"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.tconstruct.world.slimesuit.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "components": {
+        "tconstruct:tool_data": {
+          "tic_materials": [
+            "tconstruct:bone",
+            "tconstruct:skyslime"
+          ]
+        }
+      },
+      "count": 1,
+      "id": "tconstruct:slimy_chestplate"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.world.slimesuit.title"
+    }
+  },
+  "requirements": [
+    [
+      "crafted_helmet"
+    ],
+    [
+      "crafted_chestplate"
+    ],
+    [
+      "crafted_leggings"
+    ],
+    [
+      "crafted_boots"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

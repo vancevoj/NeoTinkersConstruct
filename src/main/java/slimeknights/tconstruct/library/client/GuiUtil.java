@@ -30,7 +30,13 @@ public final class GuiUtil {
    * @param background  Background location
    */
   public static void drawBackground(GuiGraphics graphics, AbstractContainerScreen<?> screen, ResourceLocation background) {
+    // reset the shader color before drawing the opaque background; the 7-arg blit uses the colorless
+    // position_tex shader, so a stale RenderSystem shader color (e.g. a fluid tint alpha < 1 left over
+    // from immediate-mode fluid/highlight rendering) would otherwise make the GUI background transparent,
+    // letting the dimmed inventory show through. Mirrors MultiModuleScreen.drawBackground / BackgroundContainerScreen.
+    graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
     graphics.blit(background, screen.leftPos, screen.topPos, 0, 0, screen.imageWidth, screen.imageHeight);
+    graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
   }
 
   /**

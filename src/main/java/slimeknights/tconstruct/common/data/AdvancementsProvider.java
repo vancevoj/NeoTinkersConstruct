@@ -494,14 +494,8 @@ public class AdvancementsProvider extends GenericDataProvider {
     return lookup.lookupOrThrow(Registries.STRUCTURE).getOrThrow(key);
   }
 
-  // TODO(neoport): cross-package - this wraps a Tinkers ItemSubPredicate (ToolStackItemPredicate) into a vanilla ItemPredicate.
-  //  For datagen serialization to round-trip, the ItemSubPredicate.Type below must be the SAME instance registered in
-  //  BuiltInRegistries.ITEM_SUB_PREDICATE_TYPE by TinkerTools (see ToolStackItemPredicate TODO). When TinkerTools exposes that
-  //  registered Type (e.g. TinkerTools.TOOL_STACK_ITEM_PREDICATE), replace TOOL_PREDICATE_TYPE with the public constant and drop the
-  //  local Codec. The matching/structure here is final; only the Type ownership is the cross-package decision.
-  @SuppressWarnings("unchecked")
-  private static final ItemSubPredicate.Type<ToolStackItemPredicate> TOOL_PREDICATE_TYPE =
-    new ItemSubPredicate.Type<>(com.mojang.serialization.MapCodec.unit((ToolStackItemPredicate)null).codec());
+  /** Registered tool sub-predicate type (registered in BuiltInRegistries.ITEM_SUB_PREDICATE_TYPE by TinkerTools). */
+  private static final ItemSubPredicate.Type<ToolStackItemPredicate> TOOL_PREDICATE_TYPE = ToolStackItemPredicate.TYPE;
 
   /** Wraps a tool sub-predicate into a criterion via an ItemPredicate */
   private Criterion<?> hasTool(ToolStackItemPredicate predicate) {

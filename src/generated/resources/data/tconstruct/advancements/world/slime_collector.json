@@ -1,0 +1,86 @@
+{
+  "parent": "tconstruct:world/tinkers_gadgetry",
+  "criteria": {
+    "earth": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#forge:slimeball/earth"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "ender": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#forge:slimeball/ender"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "ichor": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#forge:slimeball/ichor"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "magma_cream": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:magma_cream"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "sky": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#forge:slimeball/sky"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.tconstruct.world.slime_collector.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "tconstruct:ichor_slime_ball"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.world.slime_collector.title"
+    }
+  },
+  "requirements": [
+    [
+      "earth"
+    ],
+    [
+      "sky"
+    ],
+    [
+      "ichor"
+    ],
+    [
+      "ender"
+    ],
+    [
+      "magma_cream"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

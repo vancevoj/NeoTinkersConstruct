@@ -175,10 +175,8 @@ public class TConstruct {
 
     // other datagen
     generator.addProvider(server, new TConstructLootTableProvider(packOutput));
-    // TODO(neoport): AdvancementsProvider needs ToolStackItemPredicate's ItemSubPredicate.Type registered in
-    // BuiltInRegistries.ITEM_SUB_PREDICATE_TYPE (the same instance used here) before its tool advancements can serialize.
-    // Temporarily disabled so the rest of datagen completes; achievements are absent until this is wired.
-    // generator.addProvider(server, new AdvancementsProvider(packOutput, datapackRegistryProvider.getRegistryProvider()));
+    // tool advancements (ItemSubPredicate.Type registered by TinkerTools, see SmelteryCapabilities/ToolStackItemPredicate)
+    generator.addProvider(server, new AdvancementsProvider(packOutput, datapackRegistryProvider.getRegistryProvider()));
     // TODO(neoport): GlobalLootModifiersProvider datagen throws encoding a loot-modifier condition codec (KeyDispatch null);
     // temporarily disabled so the rest of datagen regenerates. Loot modifiers (extra drops: lustrous/tasty/wither_bone) are off until re-enabled.
     // generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));

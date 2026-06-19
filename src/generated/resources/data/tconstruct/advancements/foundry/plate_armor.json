@@ -1,0 +1,85 @@
+{
+  "parent": "tconstruct:foundry/blaze",
+  "criteria": {
+    "crafted_boots": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tconstruct:plate_boots"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "crafted_chestplate": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tconstruct:plate_chestplate"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "crafted_helmet": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tconstruct:plate_helmet"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "crafted_leggings": {
+      "conditions": {
+        "items": [
+          {
+            "items": "tconstruct:plate_leggings"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.tconstruct.foundry.plate_armor.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "components": {
+        "tconstruct:tool_data": {
+          "tic_display": 1,
+          "tic_materials": [
+            "tconstruct:ui_render#head",
+            "tconstruct:ui_render#handle",
+            "tconstruct:ui_render#extra",
+            "tconstruct:ui_render#large",
+            "tconstruct:ui_render#extra_large"
+          ]
+        }
+      },
+      "count": 1,
+      "id": "tconstruct:plate_chestplate"
+    },
+    "title": {
+      "translate": "advancements.tconstruct.foundry.plate_armor.title"
+    }
+  },
+  "requirements": [
+    [
+      "crafted_helmet"
+    ],
+    [
+      "crafted_chestplate"
+    ],
+    [
+      "crafted_leggings"
+    ],
+    [
+      "crafted_boots"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
