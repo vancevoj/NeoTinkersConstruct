@@ -28,7 +28,7 @@ public class TinkerPartSpriteProvider extends AbstractPartSpriteProvider {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Parts";
+    return "Neo Tinkers Parts";
   }
 
   @Override

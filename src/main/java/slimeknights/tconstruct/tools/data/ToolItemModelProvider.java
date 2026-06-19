@@ -87,6 +87,6 @@ public class ToolItemModelProvider extends AbstractToolItemModelProvider {
 
   @Override
   public String getName() {
-    return "Tinkers Construct Tool Item Model Provider";
+    return "Neo Tinkers Tool Item Model Provider";
   }
 }

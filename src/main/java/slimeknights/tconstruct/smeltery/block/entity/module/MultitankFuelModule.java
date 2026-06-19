@@ -291,12 +291,13 @@ public class MultitankFuelModule extends FuelModule implements IFluidHandler {
   @Nonnull
   @Override
   public FluidStack getFluidInTank(int tank) {
-    return getTank(tank).getFluidInTank(tank);
+    // getTank(tank) returns the single-slot handler for that outer index; its inner slot is always 0
+    return getTank(tank).getFluidInTank(0);
   }
 
   @Override
   public int getTankCapacity(int tank) {
-    return getTank(tank).getTankCapacity(tank);
+    return getTank(tank).getTankCapacity(0);
   }
 
   @Override

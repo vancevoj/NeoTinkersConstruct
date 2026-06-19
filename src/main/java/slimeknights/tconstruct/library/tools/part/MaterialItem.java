@@ -164,9 +164,15 @@ public class MaterialItem extends Item implements IMaterialItem {
     }
   }
 
-  // TODO(neoport): Item#verifyTagAfterLoad was removed in 1.21 (no per-load NBT validation hook). Material remapping on load
-  // needs a different home (e.g. a DataComponent validation step or a tick handler). Helper kept for explicit callers.
-  public void verifyTagAfterLoad(CompoundTag nbt) {
-    verifyTag(nbt);
+  // 1.21: Item#verifyTagAfterLoad was replaced by verifyComponentsAfterLoad(ItemStack). Remap renamed materials
+  // on load by validating the CUSTOM_DATA tag.
+  @Override
+  public void verifyComponentsAfterLoad(ItemStack stack) {
+    CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+    if (data != null) {
+      CompoundTag nbt = data.copyTag();
+      verifyTag(nbt);
+      stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
+    }
   }
 }

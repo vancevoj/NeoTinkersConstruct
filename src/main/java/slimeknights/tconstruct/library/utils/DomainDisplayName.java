@@ -6,8 +6,8 @@ import net.neoforged.fml.ModList;
 import org.apache.commons.lang3.text.WordUtils;
 import slimeknights.mantle.data.listener.ISafeManagerReloadListener;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
@@ -17,7 +17,7 @@ public class DomainDisplayName {
   private DomainDisplayName() {}
 
   /** Map of domain name to display name */
-  private static final Map<String,String> DISPLAY_NAME_LOOKUP = new HashMap<>();
+  private static final Map<String,String> DISPLAY_NAME_LOOKUP = new ConcurrentHashMap<>();
   /** Cached pattern for matching a dash or underscore */
   private static final Pattern DASH_UNDERSCORE = Pattern.compile("[_-]");
   /** Reload listener to clear names on resource pack reload */

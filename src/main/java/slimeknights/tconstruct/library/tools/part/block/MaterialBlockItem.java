@@ -44,9 +44,14 @@ public class MaterialBlockItem extends BlockItem implements IMaterialItem {
     return MaterialItem.getCreatorModId(this, stack);
   }
 
-  // TODO(neoport): Item#verifyTagAfterLoad was removed in 1.21 (no per-load NBT validation hook). Material remapping on load
-  // needs a different home; helper kept for explicit callers.
-  public void verifyTagAfterLoad(CompoundTag tag) {
-    MaterialItem.verifyTag(tag);
+  // 1.21: Item#verifyTagAfterLoad was replaced by verifyComponentsAfterLoad(ItemStack). Remap renamed materials on load.
+  @Override
+  public void verifyComponentsAfterLoad(ItemStack stack) {
+    CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+    if (data != null) {
+      CompoundTag nbt = data.copyTag();
+      MaterialItem.verifyTag(nbt);
+      stack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
+    }
   }
 }

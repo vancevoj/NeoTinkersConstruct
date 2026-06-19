@@ -54,11 +54,15 @@ public class TippingCastingRecipe extends PotionCastingRecipe {
     // must have the modifier to cast
     ItemStack stack = inv.getStack();
     if (super.matches(inv, level) && ModifierUtil.getModifierLevel(stack, modifier) > 0) {
-      // must also have a specific potion, it's what we are going to copy
-      // but it can't match what is already on the stack
-      CompoundTag fluidTag = inv.getFluidTag();
-      return fluidTag != null && fluidTag.contains(TAG_POTION, Tag.TAG_STRING)
-        && !ModifierUtil.getPersistentString(stack, modifier).equals(fluidTag.getString(TAG_POTION));
+      // must also have a specific potion, it's what we are going to copy, but it can't match what is
+      // already on the stack. 1.21: potion data lives on the FluidStack's POTION_CONTENTS component, not
+      // the legacy fluid NBT tag (getFluidTag() now always returns null, so the old check never matched).
+      PotionContents contents = inv.getFluidStack().get(DataComponents.POTION_CONTENTS);
+      if (contents == null || contents.potion().isEmpty()) {
+        return false;
+      }
+      String potionId = Loadables.POTION.getString(contents.potion().get().value());
+      return !ModifierUtil.getPersistentString(stack, modifier).equals(potionId);
     }
     return false;
   }
@@ -66,9 +70,11 @@ public class TippingCastingRecipe extends PotionCastingRecipe {
   @Override
   public ItemStack assemble(ICastingContainer inv, HolderLookup.Provider access) {
     ItemStack result = inv.getStack().copy();
-    CompoundTag tag = inv.getFluidTag();
-    if (tag != null) {
-      ToolStack.from(result).getPersistentData().putString(modifier, tag.getString(TAG_POTION));
+    // 1.21: read the potion from the FluidStack's POTION_CONTENTS component (see matches)
+    PotionContents contents = inv.getFluidStack().get(DataComponents.POTION_CONTENTS);
+    if (contents != null) {
+      contents.potion().ifPresent(potion ->
+        ToolStack.from(result).getPersistentData().putString(modifier, Loadables.POTION.getString(potion.value())));
     }
     return result;
   }

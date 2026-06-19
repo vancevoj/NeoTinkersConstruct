@@ -23,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -225,8 +226,15 @@ public abstract class CastingBlockEntity extends TableBlockEntity implements Wor
     }
     // update the block property for having an item
     if (level != null && !level.isClientSide) {
-      boolean hasItem = !getItem(INPUT).isEmpty() || !getItem(OUTPUT).isEmpty();
       BlockState state = getBlockState();
+      // Push a full block-entity update so the in-world renderer receives the changed item. The
+      // targeted InventorySlotSyncPacket is unreliable for the casting table's sided inventory
+      // wrapper (items placed by hand stayed invisible), so sync the whole BE (saveSynced now
+      // includes the inventory) on any item change.
+      if (!ItemStack.matches(original, stack)) {
+        level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_CLIENTS);
+      }
+      boolean hasItem = !getItem(INPUT).isEmpty() || !getItem(OUTPUT).isEmpty();
       if (state.getValue(AbstractCastingBlock.HAS_ITEM) != hasItem) {
         level.setBlockAndUpdate(worldPosition, state.setValue(AbstractCastingBlock.HAS_ITEM, hasItem));
       }
@@ -594,6 +602,10 @@ public abstract class CastingBlockEntity extends TableBlockEntity implements Wor
   @Override
   public void saveSynced(CompoundTag tags, HolderLookup.Provider registries) {
     super.saveSynced(tags, registries);
+    // the casting block renders its item in-world via the block entity renderer, so the inventory
+    // must be synced to the client. InventoryBlockEntity.saveSynced only syncs the size by default,
+    // which left the cast/mold/input invisible client-side (present server-side, reappears on removal).
+    this.writeInventoryToNBT(tags, registries);
     tags.put(TAG_TANK, tank.writeToTag(registries, new CompoundTag()));
     if (currentRecipe != null || recipeName != null) {
       tags.putInt(TAG_TIMER, timer);

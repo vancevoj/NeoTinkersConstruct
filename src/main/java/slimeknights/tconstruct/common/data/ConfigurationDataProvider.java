@@ -102,7 +102,7 @@ public class ConfigurationDataProvider extends GenericDataProvider {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Configuration Data Provider";
+    return "Neo Tinkers Configuration Data Provider";
   }
 
   /** Gets or creates a config object */

@@ -62,6 +62,6 @@ public class EnchantmentTagProvider extends TagsProvider<Enchantment> {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Block Enchantment Tags";
+    return "Neo Tinkers Block Enchantment Tags";
   }
 }

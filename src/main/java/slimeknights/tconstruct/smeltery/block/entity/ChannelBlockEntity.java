@@ -137,7 +137,7 @@ public class ChannelBlockEntity extends MantleBlockEntity implements IFluidPacke
 			ChannelConnection connection = state.getValue(ChannelBlock.DIRECTION_MAP.get(side));
 			// if no longer flowing out, remove the neighbor tank
 			if (connection != ChannelConnection.OUT) {
-				neighborTanks.remove(Direction.DOWN);
+				neighborTanks.remove(side);
 			}
 		}
 	}

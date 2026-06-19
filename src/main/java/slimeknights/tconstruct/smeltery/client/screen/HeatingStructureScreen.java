@@ -101,8 +101,8 @@ public class HeatingStructureScreen extends MultiModuleScreen<HeatingStructureCo
     // draw other components
     super.renderBg(graphics, partialTicks, mouseX, mouseY);
 
-    // render fluids
-    if (tank != null) tank.renderFluids(graphics.pose());
+    // render fluids (GuiGraphics-native now, no immediate-mode batching issues)
+    if (tank != null) tank.renderFluids(graphics);
   }
 
   /** Checks if the bucket button is hovered */

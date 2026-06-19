@@ -207,7 +207,7 @@ public class LootTableInjectionProvider extends AbstractLootTableInjectionProvid
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Loot Table Injections";
+    return "Neo Tinkers Loot Table Injections";
   }
 
   /** Makes a seed injection loot entry */

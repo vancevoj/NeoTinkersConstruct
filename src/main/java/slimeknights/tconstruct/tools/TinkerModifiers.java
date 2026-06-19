@@ -183,7 +183,10 @@ import slimeknights.tconstruct.library.recipe.tinkerstation.repairing.ModifierMa
 import slimeknights.tconstruct.library.recipe.tinkerstation.repairing.ModifierRepairCraftingRecipe;
 import slimeknights.tconstruct.library.recipe.tinkerstation.repairing.ModifierRepairTinkerStationRecipe;
 import slimeknights.tconstruct.library.recipe.worktable.ModifierSetWorktableRecipe;
+import net.minecraft.core.registries.BuiltInRegistries;
 import slimeknights.tconstruct.library.tools.capability.BlockItemProviderCapability;
+import slimeknights.tconstruct.library.tools.capability.ToolCapabilityProvider;
+import slimeknights.tconstruct.library.tools.item.IModifiable;
 import slimeknights.tconstruct.library.tools.capability.EntityModifierCapability;
 import slimeknights.tconstruct.library.tools.capability.TinkerDataKeys;
 import slimeknights.tconstruct.library.tools.capability.fluid.TankModule;
@@ -1077,6 +1080,11 @@ public final class TinkerModifiers extends TinkerModule {
   void registerCapabilities(final RegisterCapabilitiesEvent event) {
     // the data-attachment registers (TinkerDataCapability/PersistentDataCapability/EntityModifierCapability) are registered on the mod bus in TConstruct
     BlockItemProviderCapability.register(event);
+    // 1.21: register the tool item capabilities (FluidHandler.ITEM, ItemHandler.ITEM, EnergyStorage.ITEM and the
+    // block-item provider) for every modifiable tool and armor item. This was never wired up, so modifier-added
+    // tool tanks, tool inventories and energy storage silently did nothing.
+    Item[] modifiable = BuiltInRegistries.ITEM.stream().filter(item -> item instanceof IModifiable).toArray(Item[]::new);
+    ToolCapabilityProvider.registerToolCaps(event, modifiable);
   }
 
   @SubscribeEvent

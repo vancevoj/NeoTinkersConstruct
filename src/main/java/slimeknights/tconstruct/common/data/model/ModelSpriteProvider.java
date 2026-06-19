@@ -151,6 +151,6 @@ public class ModelSpriteProvider extends GenericTextureGenerator {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct model sprite provider";
+    return "Neo Tinkers model sprite provider";
   }
 }

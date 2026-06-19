@@ -25,6 +25,6 @@ public class PotionTagProvider extends BuiltinRegistryTagProvider<Potion> {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Potion Tags";
+    return "Neo Tinkers Potion Tags";
   }
 }

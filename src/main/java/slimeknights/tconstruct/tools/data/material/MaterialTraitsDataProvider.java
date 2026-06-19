@@ -24,7 +24,7 @@ public class MaterialTraitsDataProvider extends AbstractMaterialTraitDataProvide
 
   @Override
   public String getName() {
-    return "Tinker's Construct Material Traits";
+    return "Neo Tinkers Material Traits";
   }
 
   @Override

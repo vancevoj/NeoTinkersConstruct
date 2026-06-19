@@ -110,13 +110,14 @@ public class AdvancementsProvider extends GenericDataProvider {
   private record Conditional(ResourceLocation id, AdvancementHolder advancement, ICondition condition) {}
 
   public AdvancementsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-    super(output, Target.DATA_PACK, "advancements");
+    // 1.21: ServerAdvancementManager reads the singular "advancement" datapack folder; "advancements" is silently ignored
+    super(output, Target.DATA_PACK, "advancement");
     this.registries = registries;
   }
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Advancements";
+    return "Neo Tinkers Advancements";
   }
 
   /** Resolved holder lookup, only valid during {@link #generate} */

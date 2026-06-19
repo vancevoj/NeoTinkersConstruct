@@ -735,7 +735,7 @@ public class ItemTagProvider extends ItemTagsProvider {
 
   @Override
   public String getName() {
-    return "Tinkers Construct Item Tags";
+    return "Neo Tinkers Item Tags";
   }
 
 

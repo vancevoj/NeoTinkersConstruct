@@ -70,6 +70,6 @@ public class StructureRepalleter extends AbstractStructureRepalleter {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Structure Repaletter";
+    return "Neo Tinkers Structure Repaletter";
   }
 }

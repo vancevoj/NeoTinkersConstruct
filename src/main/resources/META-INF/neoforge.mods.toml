@@ -7,11 +7,11 @@ license="MIT"
 [[mods]]
     modId="tconstruct"
     version="${version}"
-    displayName="Neo Tinkers' Construct"
+    displayName="Neo Tinkers"
     enumExtensions="META-INF/enumextensions.json"
     authors="Slime Knights, vancevoj"
     description='''
-A little of this, a little of that, a lot of tinkering, and a lot of tools. Neo Tinkers' Construct is vancevoj's NeoForge 1.21.1 port of Slime Knights' Tinkers' Construct ${mod_version}.
+A little of this, a little of that, a lot of tinkering, and a lot of tools. Neo Tinkers is vancevoj's NeoForge 1.21.1 port of Slime Knights' Tinkers' Construct ${mod_version}; it was inspired by their work and nearly all of the design and programming belong to them.
     '''
     displayURL="https://github.com/vancevoj/NeoTinkersConstruct"
 

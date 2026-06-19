@@ -9,19 +9,21 @@ import slimeknights.mantle.data.listener.ISafeManagerReloadListener;
 import slimeknights.tconstruct.library.materials.definition.MaterialVariantId;
 import slimeknights.tconstruct.library.utils.Util;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class MaterialTooltipCache {
+  // 1.21: vanilla builds the creative-search tooltip tree on a background thread (SessionSearchTrees),
+  // so these caches are read concurrently with the render thread. Plain HashMap threw ConcurrentModificationException.
   /** Map of the key for each material variant */
-  private static final Map<MaterialVariantId,String> KEY_CACHE = new HashMap<>();
+  private static final Map<MaterialVariantId,String> KEY_CACHE = new ConcurrentHashMap<>();
   /** Map of the color for each material variant */
-  private static final Map<MaterialVariantId,TextColor> COLOR_CACHE = new HashMap<>();
+  private static final Map<MaterialVariantId,TextColor> COLOR_CACHE = new ConcurrentHashMap<>();
   /** Map of the key for each material variant */
-  private static final Map<MaterialVariantId,Component> DISPLAY_NAME_CACHE = new HashMap<>();
+  private static final Map<MaterialVariantId,Component> DISPLAY_NAME_CACHE = new ConcurrentHashMap<>();
   /** Map of the key for each material variant */
-  private static final Map<MaterialVariantId,Component> COLORED_DISPLAY_NAME_CACHE = new HashMap<>();
+  private static final Map<MaterialVariantId,Component> COLORED_DISPLAY_NAME_CACHE = new ConcurrentHashMap<>();
 
   /** Clears all resource pack driven caches */
   private static final ISafeManagerReloadListener RELOAD_LISTENER = manager -> {

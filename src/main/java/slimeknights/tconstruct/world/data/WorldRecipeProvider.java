@@ -32,7 +32,7 @@ public class WorldRecipeProvider extends BaseRecipeProvider implements ICommonRe
 
   @Override
   public String getName() {
-    return "Tinkers' Construct World Recipes";
+    return "Neo Tinkers World Recipes";
   }
 
   @Override

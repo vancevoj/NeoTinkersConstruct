@@ -227,6 +227,6 @@ public class MaterialTagProvider extends AbstractMaterialTagProvider {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Material Tag Provider";
+    return "Neo Tinkers Material Tag Provider";
   }
 }

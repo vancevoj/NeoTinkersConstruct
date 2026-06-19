@@ -543,7 +543,7 @@ public class BlockTagProvider extends BlockTagsProvider {
 
   @Override
   public String getName() {
-    return "Tinkers Construct Block Tags";
+    return "Neo Tinkers Block Tags";
   }
 
   /** Applies a tag to a set of suppliers */

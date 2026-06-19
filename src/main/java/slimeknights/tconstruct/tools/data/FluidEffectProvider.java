@@ -357,6 +357,6 @@ public class FluidEffectProvider extends AbstractFluidEffectProvider {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Spilling Fluid Provider";
+    return "Neo Tinkers Spilling Fluid Provider";
   }
 }

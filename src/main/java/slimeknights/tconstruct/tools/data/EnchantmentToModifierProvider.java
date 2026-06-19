@@ -101,6 +101,6 @@ public class EnchantmentToModifierProvider extends AbstractEnchantmentToModifier
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Enchantment to Modifier Mapping";
+    return "Neo Tinkers Enchantment to Modifier Mapping";
   }
 }

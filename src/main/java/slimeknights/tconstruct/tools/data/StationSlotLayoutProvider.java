@@ -188,6 +188,6 @@ public class StationSlotLayoutProvider extends AbstractStationSlotLayoutProvider
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Tinker Station Slot Layouts";
+    return "Neo Tinkers Tinker Station Slot Layouts";
   }
 }

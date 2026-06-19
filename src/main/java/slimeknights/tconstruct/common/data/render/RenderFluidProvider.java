@@ -130,6 +130,6 @@ public class RenderFluidProvider extends BlockStateDataMapProvider<List<FluidCub
 
   @Override
   public String getName() {
-    return "Tinkers' Construct block render fluid provider";
+    return "Neo Tinkers block render fluid provider";
   }
 }

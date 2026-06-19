@@ -68,6 +68,6 @@ public class MobEquipmentProvider extends AbstractMobEquipmentProvider {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct mob equipment";
+    return "Neo Tinkers mob equipment";
   }
 }

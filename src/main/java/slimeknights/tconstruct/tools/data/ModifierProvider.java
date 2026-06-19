@@ -1680,7 +1680,7 @@ public class ModifierProvider extends AbstractModifierProvider implements ICondi
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Modifiers";
+    return "Neo Tinkers Modifiers";
   }
 
   /** Short helper to get a modifier ID */

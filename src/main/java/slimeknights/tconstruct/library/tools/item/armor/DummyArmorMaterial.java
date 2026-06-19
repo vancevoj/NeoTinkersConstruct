@@ -40,7 +40,11 @@ public class DummyArmorMaterial implements IdAwareObject {
   public DummyArmorMaterial(ResourceLocation id, SoundEvent equipSound) {
     this.id = id;
     this.equipSound = equipSound;
-    this.armorMaterial = Holder.direct(new ArmorMaterial(NO_DEFENSE, 0, Holder.direct(equipSound), () -> Ingredient.EMPTY, List.of(), 0, 0));
+    // 1.21: NeoForge only invokes the custom armor model (getGenericArmorModel) INSIDE the per-layer
+    // loop in HumanoidArmorLayer.renderArmorPiece. With an empty layer list the loop never runs and
+    // all Tinkers armor renders invisible, so declare a single dummy layer. Its texture is never
+    // drawn (MultilayerArmorModel renders to its own buffer), it only makes the loop iterate once.
+    this.armorMaterial = Holder.direct(new ArmorMaterial(NO_DEFENSE, 0, Holder.direct(equipSound), () -> Ingredient.EMPTY, List.of(new ArmorMaterial.Layer(id)), 0, 0));
   }
 
   /** Gets the name of this material, matching the ID. Used as the registry key by Tinkers' display logic. */

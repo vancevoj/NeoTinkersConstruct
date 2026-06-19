@@ -57,6 +57,6 @@ public class BlockEntityTypeTagProvider extends IntrinsicHolderTagsProvider<Bloc
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Block Entity Type Tags";
+    return "Neo Tinkers Block Entity Type Tags";
   }
 }

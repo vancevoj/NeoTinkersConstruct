@@ -178,6 +178,6 @@ public class MaterialRenderInfoProvider extends AbstractMaterialRenderInfoProvid
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Material Render Info Provider";
+    return "Neo Tinkers Material Render Info Provider";
   }
 }

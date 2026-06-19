@@ -3,11 +3,12 @@ package slimeknights.tconstruct.library.modifiers.fluid.entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.EffectCures;
+import net.neoforged.neoforge.common.EffectCure;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 import slimeknights.mantle.data.loadable.common.ItemStackLoadable;
 import slimeknights.mantle.data.loadable.record.RecordLoadable;
+import slimeknights.tconstruct.library.utils.TinkerEffectCures;
 import slimeknights.tconstruct.library.modifiers.fluid.EffectLevel;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffect;
 import slimeknights.tconstruct.library.modifiers.fluid.FluidEffectContext;
@@ -28,13 +29,15 @@ public record CureEffectsFluidEffect(ItemStack stack) implements FluidEffect<Flu
   public float apply(FluidStack fluid, EffectLevel level, Entity context, FluidAction action) {
     LivingEntity target = context.getLivingTarget();
     if (target != null && level.isFull()) {
-      // TODO(neoport): MobEffectInstance#isCurativeItem and LivingEntity#curePotionEffects(ItemStack) were removed in 1.21; item-based curing is replaced by NeoForge EffectCure tokens (LivingEntity#removeEffectsCuredBy(EffectCure)). We map the cure stack to EffectCures.MILK (the standard milk bucket); supporting arbitrary cure items per-stack is a cross-package decision shared with CureOnRemovalModule/RevengeModifier (still on the legacy API).
+      // 1.21: item-based curing maps to a NeoForge EffectCure token keyed off the configured cure item, so a
+      // non-milk cure stack (e.g. honey) cures its own effects rather than always behaving like milk.
+      EffectCure cure = TinkerEffectCures.itemCure(stack.getItem());
       // when simulating, search the effects list directly for curative effects
       // may still be wrong if the event cancels things though, no way to safely simulate it
       if (action.simulate()) {
-        return target.getActiveEffects().stream().anyMatch(effect -> effect.getCures().contains(EffectCures.MILK)) ? 1 : 0;
+        return target.getActiveEffects().stream().anyMatch(effect -> effect.getCures().contains(cure)) ? 1 : 0;
       }
-      return target.removeEffectsCuredBy(EffectCures.MILK) ? 1 : 0;
+      return target.removeEffectsCuredBy(cure) ? 1 : 0;
     }
     return 0;
   }

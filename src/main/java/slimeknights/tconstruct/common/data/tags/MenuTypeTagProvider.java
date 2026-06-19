@@ -37,6 +37,6 @@ public class MenuTypeTagProvider extends BuiltinRegistryTagProvider<MenuType<?>>
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Menu Type Tags";
+    return "Neo Tinkers Menu Type Tags";
   }
 }

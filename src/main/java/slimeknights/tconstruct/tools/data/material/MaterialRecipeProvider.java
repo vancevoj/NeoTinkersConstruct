@@ -48,7 +48,7 @@ public class MaterialRecipeProvider extends BaseRecipeProvider implements IMater
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Material Recipe";
+    return "Neo Tinkers Material Recipe";
   }
 
   @Override

@@ -909,6 +909,6 @@ public class ToolDefinitionDataProvider extends AbstractToolDefinitionDataProvid
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Tool Definition Data Generator";
+    return "Neo Tinkers Tool Definition Data Generator";
   }
 }

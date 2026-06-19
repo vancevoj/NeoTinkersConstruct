@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import slimeknights.mantle.recipe.container.ISingleStackContainer;
 
@@ -24,10 +25,12 @@ public interface ICastingContainer extends ISingleStackContainer, RecipeInput {
     return index == 0 ? getStack() : ItemStack.EMPTY;
   }
 
-  // disambiguate the unrelated isEmpty() defaults inherited from Container (via ISingleStackContainer) and RecipeInput
+  // disambiguate the unrelated isEmpty() defaults inherited from Container (via ISingleStackContainer) and RecipeInput.
+  // 1.21: RecipeManager.getRecipeFor short-circuits to Optional.empty() when input.isEmpty(), so a no-cast pour
+  // (empty item slot but fluid present) must NOT report empty or basin/no-cast-table recipes never get matched.
   @Override
   default boolean isEmpty() {
-    return getStack().isEmpty();
+    return getStack().isEmpty() && getFluid() == Fluids.EMPTY;
   }
 
   /**

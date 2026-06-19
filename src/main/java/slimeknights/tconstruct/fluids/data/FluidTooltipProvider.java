@@ -64,6 +64,6 @@ public class FluidTooltipProvider extends AbstractFluidTooltipProvider {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Fluid Tooltip Provider";
+    return "Neo Tinkers Fluid Tooltip Provider";
   }
 }

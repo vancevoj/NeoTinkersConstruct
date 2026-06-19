@@ -210,6 +210,6 @@ public class FluidTextureProvider extends AbstractFluidTextureProvider {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Fluid Texture Providers";
+    return "Neo Tinkers Fluid Texture Providers";
   }
 }

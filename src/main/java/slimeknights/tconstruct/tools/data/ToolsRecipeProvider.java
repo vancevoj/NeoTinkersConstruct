@@ -66,7 +66,7 @@ public class ToolsRecipeProvider extends BaseRecipeProvider implements IMaterial
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Tool Recipes";
+    return "Neo Tinkers Tool Recipes";
   }
 
   @Override

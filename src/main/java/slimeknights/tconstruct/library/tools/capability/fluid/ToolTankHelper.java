@@ -86,9 +86,9 @@ public class ToolTankHelper {
     if (fluid.getAmount() > capacity) {
       fluid.setAmount(capacity);
     }
-    // save encodes into the passed compound and returns it (never empty here as we guarded above)
-    CompoundTag saved = new CompoundTag();
-    fluid.save(fluidLookup(), saved);
+    // 1.21: FluidStack.save RETURNS the encoded tag and must be used; discarding it lost the tool tank
+    // fluid on save (tank modifier emptied on reload).
+    CompoundTag saved = (CompoundTag) fluid.save(fluidLookup(), new CompoundTag());
     tool.getPersistentData().put(fluidKey, saved);
     return fluid;
   }

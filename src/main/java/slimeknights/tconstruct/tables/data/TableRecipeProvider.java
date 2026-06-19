@@ -50,7 +50,7 @@ public class TableRecipeProvider extends BaseRecipeProvider {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Table Recipes";
+    return "Neo Tinkers Table Recipes";
   }
 
   @Override

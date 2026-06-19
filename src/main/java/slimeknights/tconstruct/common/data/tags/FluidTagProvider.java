@@ -236,7 +236,7 @@ public class FluidTagProvider extends FluidTagsProvider {
 
   @Override
   public String getName() {
-    return "Tinkers Construct Fluid TinkerTags";
+    return "Neo Tinkers Fluid TinkerTags";
   }
 
   /** Adds tags for an unplacable fluid */

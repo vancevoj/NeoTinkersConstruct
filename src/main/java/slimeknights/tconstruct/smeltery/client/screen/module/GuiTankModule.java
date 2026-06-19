@@ -93,10 +93,10 @@ public class GuiTankModule implements IScreenWithFluidTank, ClickableTankModule 
     if (horizontal) {
       if(!stack.isEmpty() && capacity > 0) {
         int fluidWidth = Math.min(width * stack.getAmount() / capacity, width);
-        GuiUtil.renderTiledFluid(graphics.pose(), screen, stack, x, y, fluidWidth, height, 100);
+        GuiUtil.renderTiledFluid(graphics, screen, stack, x, y, fluidWidth, height, 100);
       }
     } else {
-      GuiUtil.renderFluidTank(graphics.pose(), screen, stack, capacity, x, y, width, height, 100);
+      GuiUtil.renderFluidTank(graphics, screen, stack, capacity, x, y, width, height, 100);
     }
   }
 

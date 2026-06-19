@@ -5,11 +5,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import slimeknights.mantle.network.packet.ISimplePacket;
 import slimeknights.mantle.network.packet.IThreadsafePacket;
@@ -56,10 +55,14 @@ public class InventorySlotSyncPacket implements IThreadsafePacket {
   private static class HandleClient {
     private static void handle(InventorySlotSyncPacket packet) {
       Level world = Minecraft.getInstance().level;
-      if (world != null) {
-        IItemHandler cap = world.getCapability(Capabilities.ItemHandler.BLOCK, packet.pos, null);
-        if (cap instanceof IItemHandlerModifiable modifiable) {
-          modifiable.setStackInSlot(packet.slot, packet.itemStack);
+      if (world != null && world.isLoaded(packet.pos)) {
+        // Set the item directly on the block entity's container using the RAW slot index. The old
+        // path went through the ItemHandler.BLOCK capability, which for the casting table/basin is a
+        // SidedInvWrapper(DOWN) that remaps slot indices via getSlotsForFace, so the synced item
+        // landed on the wrong slot (or out of range) and the in-world renderer saw an empty slot.
+        BlockEntity te = world.getBlockEntity(packet.pos);
+        if (te instanceof Container container && packet.slot >= 0 && packet.slot < container.getContainerSize()) {
+          container.setItem(packet.slot, packet.itemStack);
           //noinspection ConstantConditions
           Minecraft.getInstance().levelRenderer.blockChanged(null, packet.pos, null, null, 0);
         }

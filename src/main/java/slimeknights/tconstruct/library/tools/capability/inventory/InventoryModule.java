@@ -288,10 +288,10 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
    * @return Tag written to, same as {@code compound}.
    */
   public static CompoundTag writeStack(ItemStack stack, int slot, CompoundTag compound) {
-    // save encodes the stack into the passed compound (non-empty guaranteed by callers) and returns it
-    stack.save(itemLookup(), compound);
+    // 1.21: ItemStack.save RETURNS the encoded tag (merged with prefix) and must be used; discarding it
+    // lost the item. Put SLOT first so it merges into the returned tag.
     compound.putInt(TAG_SLOT, slot);
-    return compound;
+    return (CompoundTag) stack.save(itemLookup(), compound);
   }
 
   @Override

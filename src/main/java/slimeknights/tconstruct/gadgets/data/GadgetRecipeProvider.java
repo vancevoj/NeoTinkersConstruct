@@ -36,7 +36,7 @@ public class GadgetRecipeProvider extends BaseRecipeProvider {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Gadget Recipes";
+    return "Neo Tinkers Gadget Recipes";
   }
 
   @Override

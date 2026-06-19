@@ -94,7 +94,7 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Modifier Recipes";
+    return "Neo Tinkers Modifier Recipes";
   }
 
   @Override

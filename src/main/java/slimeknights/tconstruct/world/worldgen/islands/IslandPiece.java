@@ -86,9 +86,12 @@ public class IslandPiece extends TemplateStructurePiece {
   protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor level, RandomSource rand, BoundingBox sbb) {
     switch (function) {
       case "tconstruct:slime_vine" -> {
-        Block vines = this.structure.getVines();
-        if (vines != null && rand.nextBoolean()) {
-          placeVine(level, pos, rand, vines.defaultBlockState());
+        // structure may be null if deserialization failed; guard to avoid NPE during decoration
+        if (this.structure != null) {
+          Block vines = this.structure.getVines();
+          if (vines != null && rand.nextBoolean()) {
+            placeVine(level, pos, rand, vines.defaultBlockState());
+          }
         }
       }
       case "tconstruct:slime_tree" -> {
@@ -99,7 +102,7 @@ public class IslandPiece extends TemplateStructurePiece {
         }
       }
       case "tconstruct:slime_tall_grass" -> {
-        if (rand.nextBoolean()) {
+        if (this.structure != null && rand.nextBoolean()) {
           Optional<Block> plant = this.structure.getGrasses().getRandomValue(rand);
           if (plant.isPresent()) {
             Block block = plant.get();

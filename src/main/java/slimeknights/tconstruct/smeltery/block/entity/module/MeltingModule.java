@@ -212,11 +212,13 @@ public class MeltingModule implements IMeltingContainer, ContainerData {
   public CompoundTag writeToTag(HolderLookup.Provider registries) {
     CompoundTag nbt = new CompoundTag();
     if (!stack.isEmpty()) {
-      // ItemStack.save returns the populated tag; mutate our compound to keep the extra keys alongside
-      stack.save(registries, nbt);
+      // 1.21: ItemStack.save RETURNS the encoded tag (merged with the prefix) and must be used; the old
+      // code discarded the return, so the slot item was lost on world save. Put our extra keys first so
+      // they merge into the returned tag.
       nbt.putInt(TAG_CURRENT_TIME, currentTime);
       nbt.putInt(TAG_REQUIRED_TIME, requiredTime);
       nbt.putInt(TAG_REQUIRED_TEMP, requiredTemp);
+      return (CompoundTag) stack.save(registries, nbt);
     }
     return nbt;
   }

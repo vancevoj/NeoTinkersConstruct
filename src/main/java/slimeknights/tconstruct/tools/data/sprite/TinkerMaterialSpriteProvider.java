@@ -31,7 +31,7 @@ public class TinkerMaterialSpriteProvider extends AbstractMaterialSpriteProvider
 
   @Override
   public String getName() {
-    return "Tinkers' Construct Materials";
+    return "Neo Tinkers Materials";
   }
 
   @SuppressWarnings("removal")

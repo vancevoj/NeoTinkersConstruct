@@ -3,6 +3,7 @@ package slimeknights.tconstruct.library.tools.nbt;
 import com.google.common.collect.ImmutableSet;
 import lombok.AccessLevel;
 import lombok.Getter;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -370,7 +371,9 @@ public class ToolStack implements IToolStackView {
 
   @Override
   public boolean isUnbreakable() {
-    return nbt.getBoolean(TAG_UNBREAKABLE);
+    // 1.21: vanilla unbreakable moved from the "Unbreakable" NBT flag (which lived on the item's root tag,
+    // not our CUSTOM_DATA-backed nbt) to DataComponents.UNBREAKABLE. Read it from the backing stack.
+    return stack != null && stack.has(DataComponents.UNBREAKABLE);
   }
 
   /**

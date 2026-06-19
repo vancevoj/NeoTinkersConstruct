@@ -67,7 +67,8 @@ public class AlloyerScreen extends AbstractContainerScreen<AlloyerContainerMenu>
 
   @Override
   public void render(GuiGraphics graphics, int x, int y, float partialTicks) {
-    this.renderBackground(graphics, x, y, partialTicks);
+    // 1.21: super.render() already calls renderBackground (dim overlay + renderBg/our tank fluids).
+    // Calling it manually too double-rendered both (dark background panel + duplicated fluid band).
     super.render(graphics, x, y, partialTicks);
     this.renderTooltip(graphics, x, y);
   }
