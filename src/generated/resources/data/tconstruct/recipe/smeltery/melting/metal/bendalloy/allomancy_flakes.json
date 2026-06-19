@@ -1,0 +1,21 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "allomancy:bendalloy_flakes"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "allomancy:bendalloy_flakes"
+    ]
+  },
+  "result": {
+    "amount": 30,
+    "tag": "forge:molten_bendalloy"
+  },
+  "temperature": 100,
+  "time": 19
+}

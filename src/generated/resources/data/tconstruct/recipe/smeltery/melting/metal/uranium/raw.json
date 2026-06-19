@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:raw_materials/uranium"
+    }
+  ],
+  "type": "tconstruct:ore_melting",
+  "byproducts": [
+    {
+      "amount": 90,
+      "rate": "metal",
+      "tag": "forge:molten_copper"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:raw_materials/uranium"
+  },
+  "rate": "metal",
+  "result": {
+    "amount": 90,
+    "tag": "forge:molten_uranium"
+  },
+  "temperature": 830,
+  "time": 92
+}

@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:storage_blocks/raw_nicrosil"
+    }
+  ],
+  "type": "tconstruct:ore_melting",
+  "ingredient": {
+    "tag": "forge:storage_blocks/raw_nicrosil"
+  },
+  "rate": "metal",
+  "result": {
+    "amount": 810,
+    "tag": "forge:molten_nicrosil"
+  },
+  "temperature": 1100,
+  "time": 416
+}

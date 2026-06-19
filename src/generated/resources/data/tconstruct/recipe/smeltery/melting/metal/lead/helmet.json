@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:armors/helmets/lead"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "tag": "forge:armors/helmets/lead"
+  },
+  "result": {
+    "amount": 450,
+    "tag": "forge:molten_lead",
+    "unit_size": 10
+  },
+  "temperature": 330,
+  "time": 97
+}

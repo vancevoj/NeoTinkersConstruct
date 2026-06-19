@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "tools_complement:invar_hammer"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "tools_complement:invar_hammer"
+    ]
+  },
+  "result": {
+    "amount": 1170,
+    "tag": "forge:molten_invar",
+    "unit_size": 10
+  },
+  "temperature": 900,
+  "time": 228
+}

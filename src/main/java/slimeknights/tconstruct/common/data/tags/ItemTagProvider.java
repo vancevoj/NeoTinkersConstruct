@@ -392,18 +392,18 @@ public class ItemTagProvider extends ItemTagsProvider {
     // care about order for armor in the book
     tag(BASIC_ARMOR);
     IntrinsicTagAppender<Item> bookArmor = tag(PUNY_ARMOR);
-    for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
+    for (ArmorItem.Type slotType : new ArmorItem.Type[]{ArmorItem.Type.HELMET, ArmorItem.Type.CHESTPLATE, ArmorItem.Type.LEGGINGS, ArmorItem.Type.BOOTS}) { // 1.21 BODY type unused by Tinkers armor
       bookArmor.add(TinkerTools.travelersGear.get(slotType));
     }
     bookArmor.add(TinkerTools.travelersShield.get());
-    for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
+    for (ArmorItem.Type slotType : new ArmorItem.Type[]{ArmorItem.Type.HELMET, ArmorItem.Type.CHESTPLATE, ArmorItem.Type.LEGGINGS, ArmorItem.Type.BOOTS}) { // 1.21 BODY type unused by Tinkers armor
       bookArmor.add(TinkerTools.plateArmor.get(slotType));
     }
     bookArmor.add(TinkerTools.plateShield.get());
     tag(MIGHTY_ARMOR);
     tag(FANTASTIC_ARMOR);
     bookArmor = tag(GADGETRY_ARMOR);
-    for (ArmorItem.Type slotType : ArmorItem.Type.values()) {
+    for (ArmorItem.Type slotType : new ArmorItem.Type[]{ArmorItem.Type.HELMET, ArmorItem.Type.CHESTPLATE, ArmorItem.Type.LEGGINGS, ArmorItem.Type.BOOTS}) { // 1.21 BODY type unused by Tinkers armor
       bookArmor.add(TinkerTools.slimesuit.get(slotType));
     }
     bookArmor.add(TinkerTools.slimeWings.asItem());

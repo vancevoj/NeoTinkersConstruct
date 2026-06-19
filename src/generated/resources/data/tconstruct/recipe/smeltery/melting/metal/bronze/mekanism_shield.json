@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "mekanism:bronze_shield"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "mekanism:bronze_shield"
+    ]
+  },
+  "result": {
+    "amount": 540,
+    "tag": "forge:molten_bronze",
+    "unit_size": 10
+  },
+  "temperature": 700,
+  "time": 139
+}

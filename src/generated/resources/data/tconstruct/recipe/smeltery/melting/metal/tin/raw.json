@@ -3,10 +3,6 @@
     {
       "type": "mantle:tag_filled",
       "tag": "forge:raw_materials/tin"
-    },
-    {
-      "type": "mantle:tag_filled",
-      "tag": "forge:ingots/nickel"
     }
   ],
   "type": "tconstruct:ore_melting",
@@ -14,7 +10,7 @@
     {
       "amount": 90,
       "rate": "metal",
-      "tag": "forge:molten_nickel"
+      "tag": "forge:molten_copper"
     }
   ],
   "ingredient": {

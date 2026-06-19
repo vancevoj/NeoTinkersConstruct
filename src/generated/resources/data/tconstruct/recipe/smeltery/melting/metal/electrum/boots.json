@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:armors/boots/electrum"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "tag": "forge:armors/boots/electrum"
+  },
+  "result": {
+    "amount": 360,
+    "tag": "forge:molten_electrum",
+    "unit_size": 10
+  },
+  "temperature": 760,
+  "time": 118
+}

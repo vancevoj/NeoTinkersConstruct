@@ -1,0 +1,14 @@
+{
+  "values": [
+    "#c:stones",
+    "#c:cobblestones",
+    "#c:sandstone/blocks",
+    "#c:end_stones",
+    "#c:gravels",
+    "minecraft:netherrack",
+    "minecraft:basalt",
+    "minecraft:polished_basalt",
+    "minecraft:blackstone",
+    "minecraft:polished_blackstone"
+  ]
+}

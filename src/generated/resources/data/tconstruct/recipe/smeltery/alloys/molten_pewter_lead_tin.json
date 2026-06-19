@@ -1,0 +1,46 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:or",
+      "values": [
+        {
+          "type": "tconstruct:config",
+          "prop": "allow_ingotless_alloys"
+        },
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/pewter"
+        }
+      ]
+    },
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/lead"
+        },
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/tin"
+        }
+      ]
+    }
+  ],
+  "type": "tconstruct:alloy",
+  "inputs": [
+    {
+      "amount": 270,
+      "tag": "forge:molten_tin"
+    },
+    {
+      "amount": 90,
+      "tag": "forge:molten_lead"
+    }
+  ],
+  "result": {
+    "amount": 360,
+    "tag": "forge:molten_pewter"
+  },
+  "temperature": 400
+}

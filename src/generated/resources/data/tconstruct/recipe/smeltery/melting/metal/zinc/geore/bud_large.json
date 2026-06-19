@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:geore_large_buds/zinc"
+    }
+  ],
+  "type": "tconstruct:ore_melting",
+  "byproducts": [
+    {
+      "amount": 270,
+      "rate": "metal",
+      "tag": "forge:molten_copper"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:geore_large_buds/zinc"
+  },
+  "rate": "metal",
+  "result": {
+    "amount": 270,
+    "tag": "forge:molten_zinc"
+  },
+  "temperature": 420,
+  "time": 94
+}

@@ -1,0 +1,37 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_combination_filled",
+      "match": [
+        "forge:ores/cadmium",
+        "c:ore_rates/sparse"
+      ]
+    }
+  ],
+  "type": "tconstruct:ore_melting",
+  "byproducts": [
+    {
+      "amount": 90,
+      "rate": "metal",
+      "tag": "forge:molten_copper"
+    }
+  ],
+  "ingredient": {
+    "type": "neoforge:intersection",
+    "children": [
+      {
+        "tag": "forge:ores/cadmium"
+      },
+      {
+        "tag": "c:ore_rates/sparse"
+      }
+    ]
+  },
+  "rate": "metal",
+  "result": {
+    "amount": 90,
+    "tag": "forge:molten_cadmium"
+  },
+  "temperature": 294,
+  "time": 63
+}

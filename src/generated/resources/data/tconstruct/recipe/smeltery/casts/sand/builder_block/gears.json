@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:gears"
+    }
+  ],
+  "type": "tconstruct:item_part_builder",
+  "pattern": "tconstruct:gear",
+  "pattern_item": {
+    "tag": "c:sands/colorless"
+  },
+  "result": {
+    "count": 4,
+    "item": "tconstruct:gear_sand_cast"
+  }
+}

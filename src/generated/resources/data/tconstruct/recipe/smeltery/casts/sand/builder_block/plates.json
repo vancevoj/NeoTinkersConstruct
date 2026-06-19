@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:plates"
+    }
+  ],
+  "type": "tconstruct:item_part_builder",
+  "pattern": "tconstruct:plate",
+  "pattern_item": {
+    "tag": "c:sands/colorless"
+  },
+  "result": {
+    "count": 4,
+    "item": "tconstruct:plate_sand_cast"
+  }
+}

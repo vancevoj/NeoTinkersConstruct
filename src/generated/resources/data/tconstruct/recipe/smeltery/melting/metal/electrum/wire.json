@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:wires/electrum"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:wires/electrum"
+  },
+  "result": {
+    "amount": 45,
+    "tag": "forge:molten_electrum"
+  },
+  "temperature": 760,
+  "time": 12
+}

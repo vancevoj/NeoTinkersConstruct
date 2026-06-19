@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:raw_materials/zinc"
+    }
+  ],
+  "type": "tconstruct:ore_melting",
+  "byproducts": [
+    {
+      "amount": 90,
+      "rate": "metal",
+      "tag": "forge:molten_copper"
+    }
+  ],
+  "ingredient": {
+    "tag": "forge:raw_materials/zinc"
+  },
+  "rate": "metal",
+  "result": {
+    "amount": 90,
+    "tag": "forge:molten_zinc"
+  },
+  "temperature": 420,
+  "time": 70
+}

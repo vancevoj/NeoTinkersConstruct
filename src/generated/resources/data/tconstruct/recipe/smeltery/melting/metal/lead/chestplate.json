@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:armors/chestplates/lead"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "tag": "forge:armors/chestplates/lead"
+  },
+  "result": {
+    "amount": 720,
+    "tag": "forge:molten_lead",
+    "unit_size": 10
+  },
+  "temperature": 330,
+  "time": 123
+}

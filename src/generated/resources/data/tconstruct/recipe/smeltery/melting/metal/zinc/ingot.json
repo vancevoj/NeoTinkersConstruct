@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:ingots/zinc"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:ingots/zinc"
+  },
+  "result": {
+    "amount": 90,
+    "tag": "forge:molten_zinc"
+  },
+  "temperature": 420,
+  "time": 47
+}

@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:storage_blocks/brass"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:storage_blocks/brass"
+  },
+  "result": {
+    "amount": 810,
+    "tag": "forge:molten_brass"
+  },
+  "temperature": 605,
+  "time": 161
+}

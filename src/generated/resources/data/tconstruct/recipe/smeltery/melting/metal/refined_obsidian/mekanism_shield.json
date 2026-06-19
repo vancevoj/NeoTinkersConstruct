@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "mekanism:refined_obsidian_shield"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "mekanism:refined_obsidian_shield"
+    ]
+  },
+  "result": {
+    "amount": 540,
+    "tag": "forge:molten_refined_obsidian",
+    "unit_size": 10
+  },
+  "temperature": 1475,
+  "time": 195
+}

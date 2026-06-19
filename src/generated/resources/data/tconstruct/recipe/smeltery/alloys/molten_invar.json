@@ -1,0 +1,37 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:ingots/nickel"
+    },
+    {
+      "type": "neoforge:or",
+      "values": [
+        {
+          "type": "tconstruct:config",
+          "prop": "allow_ingotless_alloys"
+        },
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/invar"
+        }
+      ]
+    }
+  ],
+  "type": "tconstruct:alloy",
+  "inputs": [
+    {
+      "amount": 180,
+      "tag": "forge:molten_iron"
+    },
+    {
+      "amount": 90,
+      "tag": "forge:molten_nickel"
+    }
+  ],
+  "result": {
+    "amount": 270,
+    "tag": "forge:molten_invar"
+  },
+  "temperature": 900
+}

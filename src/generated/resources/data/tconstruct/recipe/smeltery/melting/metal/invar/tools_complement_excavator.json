@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "tools_complement:invar_excavator"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "tools_complement:invar_excavator"
+    ]
+  },
+  "result": {
+    "amount": 990,
+    "tag": "forge:molten_invar",
+    "unit_size": 10
+  },
+  "temperature": 900,
+  "time": 210
+}

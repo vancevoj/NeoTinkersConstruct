@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:armors/helmets/invar"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "tag": "forge:armors/helmets/invar"
+  },
+  "result": {
+    "amount": 450,
+    "tag": "forge:molten_invar",
+    "unit_size": 10
+  },
+  "temperature": 900,
+  "time": 142
+}

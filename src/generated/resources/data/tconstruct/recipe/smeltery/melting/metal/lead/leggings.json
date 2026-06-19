@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:armors/leggings/lead"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "tag": "forge:armors/leggings/lead"
+  },
+  "result": {
+    "amount": 630,
+    "tag": "forge:molten_lead",
+    "unit_size": 10
+  },
+  "temperature": 330,
+  "time": 115
+}

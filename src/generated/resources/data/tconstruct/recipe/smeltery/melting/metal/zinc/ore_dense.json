@@ -1,0 +1,37 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_combination_filled",
+      "match": [
+        "forge:ores/zinc",
+        "c:ore_rates/dense"
+      ]
+    }
+  ],
+  "type": "tconstruct:ore_melting",
+  "byproducts": [
+    {
+      "amount": 540,
+      "rate": "metal",
+      "tag": "forge:molten_copper"
+    }
+  ],
+  "ingredient": {
+    "type": "neoforge:intersection",
+    "children": [
+      {
+        "tag": "forge:ores/zinc"
+      },
+      {
+        "tag": "c:ore_rates/dense"
+      }
+    ]
+  },
+  "rate": "metal",
+  "result": {
+    "amount": 540,
+    "tag": "forge:molten_zinc"
+  },
+  "temperature": 420,
+  "time": 211
+}

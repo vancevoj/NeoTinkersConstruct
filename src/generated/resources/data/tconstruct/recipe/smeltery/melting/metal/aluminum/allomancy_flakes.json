@@ -1,0 +1,21 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "allomancy:aluminum_flakes"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "allomancy:aluminum_flakes"
+    ]
+  },
+  "result": {
+    "amount": 30,
+    "tag": "forge:molten_aluminum"
+  },
+  "temperature": 425,
+  "time": 27
+}

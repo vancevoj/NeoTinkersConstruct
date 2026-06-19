@@ -1,0 +1,19 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:armors/helmets/osmium"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "tag": "forge:armors/helmets/osmium"
+  },
+  "result": {
+    "amount": 450,
+    "tag": "forge:molten_osmium",
+    "unit_size": 10
+  },
+  "temperature": 975,
+  "time": 147
+}

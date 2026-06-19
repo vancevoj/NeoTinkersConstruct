@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:dusts/signalum"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:dusts/signalum"
+  },
+  "result": {
+    "amount": 90,
+    "tag": "forge:molten_signalum"
+  },
+  "temperature": 999,
+  "time": 50
+}

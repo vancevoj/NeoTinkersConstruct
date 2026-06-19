@@ -1,0 +1,20 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:ingots/constantan"
+    }
+  ],
+  "type": "tconstruct:casting_table",
+  "cast": {
+    "tag": "tconstruct:casts/multi_use/ingot"
+  },
+  "cooling_time": 64,
+  "fluid": {
+    "amount": 90,
+    "tag": "forge:molten_constantan"
+  },
+  "result": {
+    "tag": "forge:ingots/constantan"
+  }
+}

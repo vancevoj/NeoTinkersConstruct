@@ -1,0 +1,37 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:and",
+      "values": [
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/chromium"
+        },
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/nickel"
+        }
+      ]
+    }
+  ],
+  "type": "tconstruct:alloy",
+  "inputs": [
+    {
+      "amount": 180,
+      "tag": "forge:molten_nickel"
+    },
+    {
+      "amount": 90,
+      "tag": "forge:molten_chromium"
+    },
+    {
+      "amount": 100,
+      "tag": "tconstruct:molten_quartz"
+    }
+  ],
+  "result": {
+    "amount": 360,
+    "tag": "forge:molten_nicrosil"
+  },
+  "temperature": 1100
+}

@@ -1,0 +1,11 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ceramics"
+    }
+  ],
+  "type": "tconstruct:table_filling",
+  "container": "minecraft:air",
+  "fluid_amount": 1000
+}

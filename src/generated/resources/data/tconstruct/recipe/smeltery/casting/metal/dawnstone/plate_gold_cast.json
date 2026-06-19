@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "registry": "minecraft:fluid",
+      "tag": "forge:molten_dawnstone"
+    },
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:plates/dawnstone"
+    }
+  ],
+  "type": "tconstruct:casting_table",
+  "cast": {
+    "tag": "tconstruct:casts/multi_use/plate"
+  },
+  "cooling_time": 63,
+  "fluid": {
+    "amount": 90,
+    "tag": "forge:molten_dawnstone"
+  },
+  "result": {
+    "tag": "forge:plates/dawnstone"
+  }
+}

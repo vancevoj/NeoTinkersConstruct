@@ -1,0 +1,33 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_combination_filled",
+      "ignore": "tconstruct:non_singular_ore_rates",
+      "match": "forge:ores/uranium"
+    }
+  ],
+  "type": "tconstruct:ore_melting",
+  "byproducts": [
+    {
+      "amount": 180,
+      "rate": "metal",
+      "tag": "forge:molten_copper"
+    }
+  ],
+  "ingredient": {
+    "type": "neoforge:difference",
+    "base": {
+      "tag": "forge:ores/uranium"
+    },
+    "subtracted": {
+      "tag": "tconstruct:non_singular_ore_rates"
+    }
+  },
+  "rate": "metal",
+  "result": {
+    "amount": 180,
+    "tag": "forge:molten_uranium"
+  },
+  "temperature": 830,
+  "time": 153
+}

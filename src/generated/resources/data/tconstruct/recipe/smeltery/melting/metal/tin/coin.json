@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:coins/tin"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:coins/tin"
+  },
+  "result": {
+    "amount": 30,
+    "tag": "forge:molten_tin"
+  },
+  "temperature": 225,
+  "time": 26
+}

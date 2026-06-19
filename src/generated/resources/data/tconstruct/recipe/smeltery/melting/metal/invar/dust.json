@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:dusts/invar"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:dusts/invar"
+  },
+  "result": {
+    "amount": 90,
+    "tag": "forge:molten_invar"
+  },
+  "temperature": 900,
+  "time": 47
+}

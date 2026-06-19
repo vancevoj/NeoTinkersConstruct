@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:nuggets/platinum"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:nuggets/platinum"
+  },
+  "result": {
+    "amount": 10,
+    "tag": "forge:molten_platinum"
+  },
+  "temperature": 970,
+  "time": 22
+}

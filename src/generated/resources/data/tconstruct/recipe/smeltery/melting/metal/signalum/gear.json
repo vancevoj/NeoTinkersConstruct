@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:gears/signalum"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:gears/signalum"
+  },
+  "result": {
+    "amount": 360,
+    "tag": "forge:molten_signalum"
+  },
+  "temperature": 999,
+  "time": 133
+}

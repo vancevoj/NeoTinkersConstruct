@@ -1,0 +1,21 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "oreberriesreplanted:lead_oreberry"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "oreberriesreplanted:lead_oreberry"
+    ]
+  },
+  "result": {
+    "amount": 10,
+    "tag": "forge:molten_lead"
+  },
+  "temperature": 330,
+  "time": 14
+}

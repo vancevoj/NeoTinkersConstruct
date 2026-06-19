@@ -1,0 +1,20 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:coins/nickel"
+    }
+  ],
+  "type": "tconstruct:casting_table",
+  "cast": {
+    "tag": "tconstruct:casts/multi_use/coin"
+  },
+  "cooling_time": 37,
+  "fluid": {
+    "amount": 30,
+    "tag": "forge:molten_nickel"
+  },
+  "result": {
+    "tag": "forge:coins/nickel"
+  }
+}

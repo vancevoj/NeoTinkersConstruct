@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:item_exists",
+      "item": "tools_complement:constantan_excavator"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "tools_complement:constantan_excavator"
+    ]
+  },
+  "result": {
+    "amount": 990,
+    "tag": "forge:molten_constantan",
+    "unit_size": 10
+  },
+  "temperature": 920,
+  "time": 212
+}

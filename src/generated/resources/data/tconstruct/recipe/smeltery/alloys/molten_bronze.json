@@ -1,0 +1,37 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:ingots/tin"
+    },
+    {
+      "type": "neoforge:or",
+      "values": [
+        {
+          "type": "tconstruct:config",
+          "prop": "allow_ingotless_alloys"
+        },
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/bronze"
+        }
+      ]
+    }
+  ],
+  "type": "tconstruct:alloy",
+  "inputs": [
+    {
+      "amount": 270,
+      "tag": "forge:molten_copper"
+    },
+    {
+      "amount": 90,
+      "tag": "forge:molten_tin"
+    }
+  ],
+  "result": {
+    "amount": 360,
+    "tag": "forge:molten_bronze"
+  },
+  "temperature": 700
+}

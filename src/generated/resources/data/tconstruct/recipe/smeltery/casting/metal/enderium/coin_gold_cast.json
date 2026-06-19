@@ -1,0 +1,20 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:coins/enderium"
+    }
+  ],
+  "type": "tconstruct:casting_table",
+  "cast": {
+    "tag": "tconstruct:casts/multi_use/coin"
+  },
+  "cooling_time": 44,
+  "fluid": {
+    "amount": 30,
+    "tag": "forge:molten_enderium"
+  },
+  "result": {
+    "tag": "forge:coins/enderium"
+  }
+}

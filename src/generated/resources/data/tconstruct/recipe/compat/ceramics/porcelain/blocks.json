@@ -1,0 +1,40 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ceramics"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": [
+    {
+      "tag": "ceramics:porcelain_block"
+    },
+    {
+      "tag": "ceramics:rainbow_porcelain"
+    },
+    {
+      "type": "mantle:item_name",
+      "items": [
+        "ceramics:porcelain_bricks",
+        "ceramics:porcelain_bricks_stairs",
+        "ceramics:porcelain_bricks_wall",
+        "ceramics:monochrome_bricks",
+        "ceramics:monochrome_bricks_stairs",
+        "ceramics:monochrome_bricks_wall",
+        "ceramics:marine_bricks",
+        "ceramics:marine_bricks_stairs",
+        "ceramics:marine_bricks_wall",
+        "ceramics:rainbow_bricks",
+        "ceramics:rainbow_bricks_stairs",
+        "ceramics:rainbow_bricks_wall"
+      ]
+    }
+  ],
+  "result": {
+    "amount": 1000,
+    "fluid": "tconstruct:molten_porcelain"
+  },
+  "temperature": 700,
+  "time": 114
+}

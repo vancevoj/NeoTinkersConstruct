@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ceramics"
+    }
+  ],
+  "type": "tconstruct:damagable_melting",
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "ceramics:clay_boots"
+    ]
+  },
+  "result": {
+    "amount": 1000,
+    "fluid": "tconstruct:molten_clay",
+    "unit_size": 50
+  },
+  "temperature": 450,
+  "time": 96
+}

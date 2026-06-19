@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "#forge:tools/swords/steel",
+      "required": false
+    },
+    {
+      "id": "#forge:tools/hoes/steel",
+      "required": false
+    },
+    {
+      "id": "immersiveengineering:sword_steel",
+      "required": false
+    },
+    {
+      "id": "immersiveengineering:hoe_steel",
+      "required": false
+    }
+  ]
+}

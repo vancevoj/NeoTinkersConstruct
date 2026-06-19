@@ -1,0 +1,16 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:gears"
+    }
+  ],
+  "type": "tconstruct:molding_table",
+  "material": {
+    "tag": "tconstruct:casts/sand"
+  },
+  "pattern": {
+    "tag": "forge:gears"
+  },
+  "result": "tconstruct:gear_sand_cast"
+}

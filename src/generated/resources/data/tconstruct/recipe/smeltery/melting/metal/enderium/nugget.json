@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:nuggets/enderium"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:nuggets/enderium"
+  },
+  "result": {
+    "amount": 10,
+    "tag": "forge:molten_enderium"
+  },
+  "temperature": 1350,
+  "time": 25
+}

@@ -1,0 +1,37 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:ingots/silver"
+    },
+    {
+      "type": "neoforge:or",
+      "values": [
+        {
+          "type": "tconstruct:config",
+          "prop": "allow_ingotless_alloys"
+        },
+        {
+          "type": "mantle:tag_filled",
+          "tag": "forge:ingots/electrum"
+        }
+      ]
+    }
+  ],
+  "type": "tconstruct:alloy",
+  "inputs": [
+    {
+      "amount": 90,
+      "tag": "forge:molten_gold"
+    },
+    {
+      "amount": 90,
+      "tag": "forge:molten_silver"
+    }
+  ],
+  "result": {
+    "amount": 180,
+    "tag": "forge:molten_electrum"
+  },
+  "temperature": 760
+}

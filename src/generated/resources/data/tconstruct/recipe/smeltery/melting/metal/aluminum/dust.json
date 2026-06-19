@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:dusts/aluminum"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:dusts/aluminum"
+  },
+  "result": {
+    "amount": 90,
+    "tag": "forge:molten_aluminum"
+  },
+  "temperature": 425,
+  "time": 35
+}

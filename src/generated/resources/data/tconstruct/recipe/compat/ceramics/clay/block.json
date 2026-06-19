@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ceramics"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "ceramics:dark_bricks",
+      "ceramics:dark_bricks_stairs",
+      "ceramics:dark_bricks_wall",
+      "ceramics:dragon_bricks",
+      "ceramics:dragon_bricks_stairs",
+      "ceramics:dragon_bricks_wall"
+    ]
+  },
+  "result": {
+    "amount": 1000,
+    "fluid": "tconstruct:molten_clay"
+  },
+  "temperature": 450,
+  "time": 96
+}

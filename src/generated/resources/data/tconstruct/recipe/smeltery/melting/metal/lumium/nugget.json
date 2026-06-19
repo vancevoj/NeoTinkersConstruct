@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:nuggets/lumium"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:nuggets/lumium"
+  },
+  "result": {
+    "amount": 10,
+    "tag": "forge:molten_lumium"
+  },
+  "temperature": 1050,
+  "time": 23
+}

@@ -1,0 +1,18 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:dusts/nickel"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "ingredient": {
+    "tag": "forge:dusts/nickel"
+  },
+  "result": {
+    "amount": 90,
+    "tag": "forge:molten_nickel"
+  },
+  "temperature": 950,
+  "time": 49
+}

@@ -175,7 +175,7 @@ public class TConstruct {
 
     // other datagen
     generator.addProvider(server, new TConstructLootTableProvider(packOutput));
-    generator.addProvider(server, new AdvancementsProvider(packOutput, lookupProvider));
+    generator.addProvider(server, new AdvancementsProvider(packOutput, datapackRegistryProvider.getRegistryProvider()));
     // TODO(neoport): GlobalLootModifiersProvider datagen throws encoding a loot-modifier condition codec (KeyDispatch null);
     // temporarily disabled so the rest of datagen regenerates. Loot modifiers (extra drops: lustrous/tasty/wither_bone) are off until re-enabled.
     // generator.addProvider(server, new GlobalLootModifiersProvider(packOutput));

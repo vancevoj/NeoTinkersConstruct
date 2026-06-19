@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:plates"
+    }
+  ],
+  "type": "tconstruct:item_part_builder",
+  "pattern": "tconstruct:plate",
+  "pattern_item": {
+    "tag": "tconstruct:casts/sand"
+  },
+  "result": "tconstruct:plate_sand_cast"
+}

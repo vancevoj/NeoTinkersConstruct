@@ -1,0 +1,20 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:gears/silver"
+    }
+  ],
+  "type": "tconstruct:casting_table",
+  "cast": {
+    "tag": "tconstruct:casts/multi_use/gear"
+  },
+  "cooling_time": 120,
+  "fluid": {
+    "amount": 360,
+    "tag": "forge:molten_silver"
+  },
+  "result": {
+    "tag": "forge:gears/silver"
+  }
+}

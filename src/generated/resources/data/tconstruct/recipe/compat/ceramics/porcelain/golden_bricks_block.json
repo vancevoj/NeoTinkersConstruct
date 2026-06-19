@@ -1,0 +1,29 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ceramics"
+    }
+  ],
+  "type": "tconstruct:melting",
+  "byproducts": [
+    {
+      "amount": 10,
+      "tag": "forge:molten_gold"
+    }
+  ],
+  "ingredient": {
+    "type": "mantle:item_name",
+    "items": [
+      "ceramics:golden_bricks",
+      "ceramics:golden_bricks_stairs",
+      "ceramics:golden_bricks_wall"
+    ]
+  },
+  "result": {
+    "amount": 1000,
+    "fluid": "tconstruct:molten_porcelain"
+  },
+  "temperature": 700,
+  "time": 114
+}

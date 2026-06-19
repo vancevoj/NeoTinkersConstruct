@@ -1,0 +1,20 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:gears/signalum"
+    }
+  ],
+  "type": "tconstruct:casting_table",
+  "cast": {
+    "tag": "tconstruct:casts/multi_use/gear"
+  },
+  "cooling_time": 133,
+  "fluid": {
+    "amount": 360,
+    "tag": "forge:molten_signalum"
+  },
+  "result": {
+    "tag": "forge:gears/signalum"
+  }
+}

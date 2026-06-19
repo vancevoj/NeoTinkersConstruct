@@ -1,0 +1,20 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "mantle:tag_filled",
+      "tag": "forge:nuggets/uranium"
+    }
+  ],
+  "type": "tconstruct:casting_table",
+  "cast": {
+    "tag": "tconstruct:casts/multi_use/nugget"
+  },
+  "cooling_time": 20,
+  "fluid": {
+    "amount": 10,
+    "tag": "forge:molten_uranium"
+  },
+  "result": {
+    "tag": "forge:nuggets/uranium"
+  }
+}
