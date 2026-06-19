@@ -20,13 +20,14 @@ public class TinkerItemDisplays {
 
   /* Enum proxies, referenced by META-INF/enumextensions.json. Params match the modded ItemDisplayContext constructor
      (int id, String name, String fallback): the int id is passed as -1 (the enum-extension loader replaces it with the
-     assigned ordinal), name is the serialized id, fallback is the serialized name of the vanilla context to fall back to. */
-  public static final EnumProxy<ItemDisplayContext> MELTER_PROXY = new EnumProxy<>(ItemDisplayContext.class, -1, "tconstruct:melter", "none");
-  public static final EnumProxy<ItemDisplayContext> TABLE_PROXY = new EnumProxy<>(ItemDisplayContext.class, -1, "tconstruct:table", "none");
-  public static final EnumProxy<ItemDisplayContext> CASTING_TABLE_PROXY = new EnumProxy<>(ItemDisplayContext.class, -1, "tconstruct:casting_table", "fixed");
-  public static final EnumProxy<ItemDisplayContext> CASTING_BASIN_PROXY = new EnumProxy<>(ItemDisplayContext.class, -1, "tconstruct:casting_basin", "none");
-  public static final EnumProxy<ItemDisplayContext> FLUID_CANNON_PROXY = new EnumProxy<>(ItemDisplayContext.class, -1, "tconstruct:fluid_cannon", "fixed");
-  public static final EnumProxy<ItemDisplayContext> THROWN_PROXY = new EnumProxy<>(ItemDisplayContext.class, -1, "tconstruct:thrown", "fixed");
+     assigned ordinal), name is the serialized id, fallback is the ENUM CONSTANT name of the vanilla context to fall back
+     to (resolved via ItemDisplayContext.valueOf, so it must be NONE/FIXED/etc., not the lowercase serialized name). */
+  public static final EnumProxy<ItemDisplayContext> MELTER_PROXY = new EnumProxy<>(ItemDisplayContext.class, -1, "tconstruct:melter", "NONE");
+  public static final EnumProxy<ItemDisplayContext> TABLE_PROXY = new EnumProxy<>(ItemDisplayContext.class, -1, "tconstruct:table", "NONE");
+  public static final EnumProxy<ItemDisplayContext> CASTING_TABLE_PROXY = new EnumProxy<>(ItemDisplayContext.class, -1, "tconstruct:casting_table", "FIXED");
+  public static final EnumProxy<ItemDisplayContext> CASTING_BASIN_PROXY = new EnumProxy<>(ItemDisplayContext.class, -1, "tconstruct:casting_basin", "NONE");
+  public static final EnumProxy<ItemDisplayContext> FLUID_CANNON_PROXY = new EnumProxy<>(ItemDisplayContext.class, -1, "tconstruct:fluid_cannon", "FIXED");
+  public static final EnumProxy<ItemDisplayContext> THROWN_PROXY = new EnumProxy<>(ItemDisplayContext.class, -1, "tconstruct:thrown", "FIXED");
 
   /** Used by the melter and smeltery for display of items its melting */
   public static final ItemDisplayContext MELTER = MELTER_PROXY.getValue();
