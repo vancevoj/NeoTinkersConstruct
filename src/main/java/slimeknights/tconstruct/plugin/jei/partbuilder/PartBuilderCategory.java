@@ -90,6 +90,8 @@ public class PartBuilderCategory implements IRecipeCategory<IDisplayPartBuilderR
 
   @Override
   public ResourceLocation getRegistryName(IDisplayPartBuilderRecipe recipe) {
-    return recipe.getId();
+    // recipes no longer expose their id in 1.21 (it lives on RecipeHolder, which JEI does not pass here), and the
+    // display interface has no id accessor; returning null lets JEI fall back to its own identity for these recipes
+    return null;
   }
 }

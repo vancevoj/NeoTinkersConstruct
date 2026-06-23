@@ -5,7 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import lombok.Getter;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -112,7 +112,7 @@ public abstract class AbstractCastingCategory implements IRecipeCategory<IDispla
            .addTooltipCallback(FluidTooltipCallback.UNITS)
            .setFluidRenderer(capacity, false, 32, 32)
            .setOverlay(tankOverlay, 0, 0)
-           .addIngredients(ForgeTypes.FLUID_STACK, inputs);
+           .addIngredients(NeoForgeTypes.FLUID_STACK, inputs);
     // pouring fluid
     int h = 11;
     if (!recipe.hasCast()) {
@@ -121,7 +121,7 @@ public abstract class AbstractCastingCategory implements IRecipeCategory<IDispla
     IRecipeSlotBuilder faucet = builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 43, 8)
            .addTooltipCallback(FluidTooltipCallback.UNITS)
            .setFluidRenderer(1, false, 6, h)
-           .addIngredients(ForgeTypes.FLUID_STACK, inputs);
+           .addIngredients(NeoForgeTypes.FLUID_STACK, inputs);
 
     builder.createFocusLink(tank, faucet);
   }
