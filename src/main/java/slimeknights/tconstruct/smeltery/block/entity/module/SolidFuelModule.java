@@ -96,10 +96,15 @@ public class SolidFuelModule extends FuelModule {
 
   /** Fetches any relevant fuel handlers from the target position */
   private void fetchHandlers() {
-    // if we have already fetched, nothing to do
-    if (fetched) {
+    // if we already resolved a non-null handler, nothing to do
+    if (fluidHandler != null || itemHandler != null) {
       return;
     }
+    // NeoForge block capabilities resolve lazily: on the client (and immediately after a structure/neighbor change)
+    // the neighbor tank's capability may not be available the first time the GUI queries it. Upstream wrapped these in
+    // LazyOptionals with invalidation listeners so the cache self-healed; here we instead re-query every time both
+    // handlers are still null so a transiently-missing capability (which made the fuel tank render empty / read 0
+    // temperature -> "not hot enough") recovers on a later display tick. resetHandler() still clears them on changes.
     Level level = getLevel();
     // first, identify a capability that has what we need
     // on the chance both are present, we prioritize fluid; we don't expect that to change

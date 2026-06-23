@@ -69,15 +69,22 @@ public class MultitankFuelModule extends FuelModule implements IFluidHandler {
 
   /** Gets the map from position to fluid handler */
   private Map<BlockPos,IFluidHandler> getTankHandlers() {
-    if (tankHandlers == null) {
-      tankHandlers = new LinkedHashMap<>();
+    // Rebuild when the cache is null or empty: NeoForge block capabilities resolve lazily, so on the client (and right
+    // after a structure rebuild) every getCapability call here can transiently return null, leaving an empty cached map
+    // that would otherwise stick forever -> the fuel tank renders empty and reads 0 temperature ("not hot enough").
+    // The supplier only returns positions that have tanks, so a non-empty structure with an empty map means the caps
+    // were not ready yet; re-querying lets the display recover on a later tick. clearFluidListeners() still resets it.
+    if (tankHandlers == null || tankHandlers.isEmpty()) {
+      List<BlockPos> positions = tankSupplier.get();
+      Map<BlockPos,IFluidHandler> handlers = new LinkedHashMap<>();
       Level world = getLevel();
-      for (BlockPos pos : tankSupplier.get()) {
+      for (BlockPos pos : positions) {
         IFluidHandler handler = world.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
         if (handler != null) {
-          tankHandlers.put(pos, handler);
+          handlers.put(pos, handler);
         }
       }
+      tankHandlers = handlers;
     }
     return tankHandlers;
   }
