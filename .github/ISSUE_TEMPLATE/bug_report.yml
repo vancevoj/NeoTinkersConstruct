@@ -1,0 +1,81 @@
+name: Bug Report
+description: Report a bug in Neo Tinkers (NeoForge 1.21.1)
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report! Please [search existing issues](https://github.com/vancevoj/neotinkers/issues?q=is%3Aissue) first so we don't get duplicates.
+  - type: input
+    id: neotinkers-version
+    attributes:
+      label: Neo Tinkers version
+      description: From the mods list or the jar name.
+      placeholder: "v1.21"
+    validations:
+      required: true
+  - type: input
+    id: neomantle-version
+    attributes:
+      label: Neo Mantle version
+      description: Neo Tinkers requires Neo Mantle — which version is installed?
+      placeholder: "v1.21"
+    validations:
+      required: true
+  - type: input
+    id: neoforge-version
+    attributes:
+      label: NeoForge version
+      placeholder: "21.1.233"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the bug — what you expected to happen, and what actually happened.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: log
+    attributes:
+      label: Crash report or log
+      description: Paste a link (e.g. mclo.gs, gist, pastebin) to your crash report or latest.log, if there is one.
+    validations:
+      required: false
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Does it happen with only Neo Tinkers + Neo Mantle installed?
+      options:
+        - "Yes — just Neo Tinkers + Neo Mantle"
+        - "No — only with other mods / a modpack"
+        - "Haven't tested"
+    validations:
+      required: true
+  - type: textarea
+    id: other-mods
+    attributes:
+      label: Other mods / modpack
+      description: If it only happens with other mods, list them (or link your modpack). Helps rule out conflicts. Leave blank if you tested with just Neo Tinkers + Neo Mantle.
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and this isn't a duplicate
+          required: true
+        - label: I'm on the latest version of Neo Tinkers and Neo Mantle
+          required: true
