@@ -31,6 +31,8 @@ import java.util.List;
  * usable liquid fuels and (for low temperatures) solid fuels. Layout positions match the JEI 132x40 background.
  */
 public class MeltingEmiRecipe extends BasicEmiRecipe {
+  /** JEI melting GUI texture, reused as the EMI backdrop */
+  private static final ResourceLocation BACKGROUND_LOC = TConstruct.getResource("textures/gui/jei/melting.png");
   private static final String KEY_TEMPERATURE = TConstruct.makeTranslationKey("jei", "temperature");
   private static final String KEY_MULTIPLIER = TConstruct.makeTranslationKey("jei", "melting.multiplier");
   private static final String KEY_COOLING_TIME = TConstruct.makeTranslationKey("jei", "melting.time");
@@ -98,6 +100,14 @@ public class MeltingEmiRecipe extends BasicEmiRecipe {
 
   @Override
   public void addWidgets(WidgetHolder widgets) {
+    // backdrop: the JEI melting background (0,0,132,40)
+    widgets.addTexture(BACKGROUND_LOC, 0, 0, 132, 40, 0, 0);
+
+    // solid fuel sprite (sheet 164,0 18x20) drawn at (1,19) when the recipe is cool enough for solid fuel
+    if (hasSolidFuel) {
+      widgets.addTexture(BACKGROUND_LOC, 1, 19, 18, 20, 164, 0);
+    }
+
     // melting arrow (animated over the melting time, JEI uses time * 5 ticks; 50ms per tick)
     widgets.addFillingArrow(56, 18, recipe.getTime() * 5 * 50);
     widgets.addTooltipText(List.of(Component.translatable(KEY_COOLING_TIME, recipe.getTime() / 4)), 56, 18, 24, 17);
@@ -108,16 +118,18 @@ public class MeltingEmiRecipe extends BasicEmiRecipe {
     int textX = 56 - font.width(tempString) / 2;
     widgets.addText(Component.literal(tempString), textX, 3, Color.GRAY.getRGB(), false);
 
-    // input slot
-    widgets.addSlot(this.inputs.get(0), 24, 18);
+    // input slot at (24,18). Inset 1px so the 18x18 slot background lines up with the JEI texture's slot.
+    widgets.addSlot(this.inputs.get(0), 23, 17).drawBack(false);
 
-    // output fluid tank (32x32), capacity one metal block
+    // output fluid tank (32x32) at (96,4), capacity one metal block, with the JEI tank overlay frame on top
     if (!this.outputs.isEmpty()) {
       widgets.addTank(this.outputs.get(0), 96, 4, 32, 32, FluidValues.METAL_BLOCK)
+             .drawBack(false)
              .recipeContext(this);
+      widgets.addTexture(BACKGROUND_LOC, 96, 4, 32, 32, 132, 0);
     }
 
-    // liquid fuel tank, drawn on the left. shrinks to make room for the solid fuel when present
+    // liquid fuel tank, drawn on the left as a bare fluid (no frame). shrinks to make room for solid fuel when present
     int fuelHeight = hasSolidFuel ? 15 : 32;
     if (!liquidFuels.isEmpty()) {
       widgets.addTank(liquidFuels, 4, 4, 12, fuelHeight, 1)
@@ -135,8 +147,9 @@ public class MeltingEmiRecipe extends BasicEmiRecipe {
              .appendTooltip(Component.translatable(KEY_MULTIPLIER, solid.getRate() / 10f).withStyle(ChatFormatting.GRAY));
     }
 
-    // ore indicator tooltip over the output (JEI draws a "+" at 87,31)
+    // ore indicator: JEI draws a "+" sprite (sheet 132,34 6x6) at (87,31) with an ore tooltip
     if (recipe.getOreType() != null) {
+      widgets.addTexture(BACKGROUND_LOC, 87, 31, 6, 6, 132, 34);
       widgets.addTooltipText(List.of(TOOLTIP_ORE), 87, 31, 16, 16);
     }
   }

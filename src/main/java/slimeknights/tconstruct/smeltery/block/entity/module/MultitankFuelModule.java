@@ -6,7 +6,6 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.EmptyFluidHandler;
@@ -54,32 +53,36 @@ public class MultitankFuelModule extends FuelModule implements IFluidHandler {
   /** Called on structure rebuild to clear the gui handler list */
   public void clearFluidListeners() {
     tankHandlers = null;
+    invalidateHandlerCaches();
   }
 
   /** Called on servant load to ensure the handler is present in the cache */
   public void ensureTankPresent(BlockEntity be) {
     BlockPos pos = be.getBlockPos();
     if (tankHandlers != null && !tankHandlers.containsKey(pos)) {
-      IFluidHandler handler = getLevel().getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+      IFluidHandler handler = getHandlerAt(pos);
       if (handler != null) {
         tankHandlers.put(pos, handler);
       }
     }
   }
 
-  /** Gets the map from position to fluid handler */
+  /**
+   * Gets the map from position to fluid handler.
+   * The handlers are resolved through {@link #getHandlerAt} so each entry is backed by a {@link net.neoforged.neoforge.capabilities.BlockCapabilityCache}
+   * on the server (self-healing on invalidation) and re-queried on the client. We rebuild the map whenever it is null,
+   * empty, or its key set no longer matches the structure's tank positions, so a transiently-missing capability (e.g.
+   * right after a world reload, which previously left the fuel tank rendering empty / 0 temperature) recovers on a
+   * later tick rather than sticking forever.
+   */
   private Map<BlockPos,IFluidHandler> getTankHandlers() {
-    // Rebuild when the cache is null or empty: NeoForge block capabilities resolve lazily, so on the client (and right
-    // after a structure rebuild) every getCapability call here can transiently return null, leaving an empty cached map
-    // that would otherwise stick forever -> the fuel tank renders empty and reads 0 temperature ("not hot enough").
-    // The supplier only returns positions that have tanks, so a non-empty structure with an empty map means the caps
-    // were not ready yet; re-querying lets the display recover on a later tick. clearFluidListeners() still resets it.
-    if (tankHandlers == null || tankHandlers.isEmpty()) {
-      List<BlockPos> positions = tankSupplier.get();
+    List<BlockPos> positions = tankSupplier.get();
+    // rebuild when the cache is null, empty, or no longer resolves every tank position. The latter is what makes the
+    // display recover after a world reload: positions that returned null on a previous (too-early) query are retried.
+    if (tankHandlers == null || tankHandlers.size() != positions.size()) {
       Map<BlockPos,IFluidHandler> handlers = new LinkedHashMap<>();
-      Level world = getLevel();
       for (BlockPos pos : positions) {
-        IFluidHandler handler = world.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+        IFluidHandler handler = getHandlerAt(pos);
         if (handler != null) {
           handlers.put(pos, handler);
         }
@@ -228,11 +231,9 @@ public class MultitankFuelModule extends FuelModule implements IFluidHandler {
       assert mainTank != null;
     }
 
-    // fetch primary fuel handler
-    if (fluidHandler == null) {
-      // null is acceptable here; it just means no fuel present
-      fluidHandler = getTankHandlers().get(mainTank);
-    }
+    // fetch primary fuel handler. Re-resolve from the (self-healing) handler map each call rather than caching it once,
+    // so the display recovers if the handler was missing/stale on an earlier query (e.g. right after a world reload).
+    fluidHandler = getTankHandlers().get(mainTank);
 
     // determine what fluid we have and hpw many other fluids we have
     FuelInfo info = super.getFuelInfo();

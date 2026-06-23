@@ -66,13 +66,16 @@ public class MoldingEmiRecipe extends BasicEmiRecipe {
 
   @Override
   public void addWidgets(WidgetHolder widgets) {
-    // block icon comes from the JEI sheet: table at (117,0), basin at (117,16), each 16x16
+    // backdrop: the JEI molding layout lives at sheet (0,55) size 70x57
+    widgets.addTexture(BACKGROUND_LOC, 0, 0, 70, 57, 0, 55);
+
+    // block icon comes from the JEI sheet: table at (117,0), basin at (117,16), each 16x16, drawn at (3,40)
     int blockV = this.basin ? 16 : 0;
     widgets.addTexture(BACKGROUND_LOC, 3, 40, 16, 16, 117, blockV);
 
-    // material slot and result slot (matches JEI 3,24 and 51,24)
-    widgets.addSlot(this.inputs.get(0), 3, 24);
-    widgets.addSlot(this.result, 51, 24).recipeContext(this);
+    // material slot and result slot (matches JEI 3,24 and 51,24), inset 1px for the 18x18 slot background
+    widgets.addSlot(this.inputs.get(0), 2, 23).drawBack(false);
+    widgets.addSlot(this.result, 50, 23).drawBack(false).recipeContext(this);
 
     if (this.hasPattern) {
       // pressing into the block: draw the block on the output side too, plus a downward arrow
@@ -80,11 +83,11 @@ public class MoldingEmiRecipe extends BasicEmiRecipe {
       // down arrow at (70,55) on the sheet, 6x6, drawn at (8,17)
       widgets.addTexture(BACKGROUND_LOC, 8, 17, 6, 6, 70, 55);
 
-      // pattern slot on the material side (JEI 3,1)
-      widgets.addSlot(this.pattern, 3, 1);
+      // pattern slot on the material side (JEI 3,1), inset 1px
+      widgets.addSlot(this.pattern, 2, 0).drawBack(false);
       // if not consumed, show the preserved pattern on the output side (JEI 51,8)
       if (!this.patternConsumed) {
-        widgets.addSlot(this.pattern, 51, 8).drawBack(false);
+        widgets.addSlot(this.pattern, 50, 7).drawBack(false);
       }
     } else {
       // picking up the item: upward arrow at (76,55) on the sheet, 6x6, drawn at (8,17)

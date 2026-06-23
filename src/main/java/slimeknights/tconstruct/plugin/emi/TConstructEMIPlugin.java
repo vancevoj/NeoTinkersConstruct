@@ -82,9 +82,9 @@ public class TConstructEMIPlugin implements EmiPlugin {
 
     // casting: the type yields ICastingRecipe, filter to IDisplayableCastingRecipe
     addRecipes(registry, manager, TinkerRecipeTypes.CASTING_BASIN.get(), IDisplayableCastingRecipe.class,
-               holder -> new CastingEmiRecipe(TConstructEmiCategories.CASTING_BASIN, narrow(holder)));
+               holder -> new CastingEmiRecipe(TConstructEmiCategories.CASTING_BASIN, narrow(holder), true));
     addRecipes(registry, manager, TinkerRecipeTypes.CASTING_TABLE.get(), IDisplayableCastingRecipe.class,
-               holder -> new CastingEmiRecipe(TConstructEmiCategories.CASTING_TABLE, narrow(holder)));
+               holder -> new CastingEmiRecipe(TConstructEmiCategories.CASTING_TABLE, narrow(holder), false));
 
     // molding: both table and basin recipes feed the single molding category
     addRecipes(registry, manager, TinkerRecipeTypes.MOLDING_TABLE.get(), MoldingRecipe.class,

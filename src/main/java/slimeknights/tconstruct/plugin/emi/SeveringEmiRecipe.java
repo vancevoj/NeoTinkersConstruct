@@ -5,9 +5,11 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import slimeknights.mantle.recipe.ingredient.EntityIngredient;
+import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.recipe.modifiers.severing.SeveringRecipe;
 
 import java.util.List;
@@ -20,6 +22,9 @@ import java.util.List;
  * JEI uses for focus links). Entity types without a spawn egg are skipped.
  */
 public class SeveringEmiRecipe extends BasicEmiRecipe {
+  /** JEI tinker station GUI texture; the severing layout lives at sheet (0,78) size 100x38 */
+  private static final ResourceLocation BACKGROUND_LOC = TConstruct.getResource("textures/gui/jei/tinker_station.png");
+
   public SeveringEmiRecipe(EmiRecipeCategory category, RecipeHolder<SeveringRecipe> holder) {
     super(category, holder.id(), 100, 38);
     SeveringRecipe recipe = holder.value();
@@ -45,9 +50,13 @@ public class SeveringEmiRecipe extends BasicEmiRecipe {
 
   @Override
   public void addWidgets(WidgetHolder widgets) {
-    // input slot mirrors JEI (3,3); the JEI renderer is 32px so use a larger slot region
-    widgets.addSlot(this.inputs.get(0), 3, 3).drawBack(true);
-    // output slot mirrors JEI (76,11)
-    widgets.addSlot(this.outputs.get(0), 76, 11).recipeContext(this);
+    // backdrop: the JEI severing layout lives at sheet (0,78) size 100x38
+    widgets.addTexture(BACKGROUND_LOC, 0, 0, 100, 38, 0, 78);
+
+    // input slot mirrors JEI (3,3). JEI renders a 32px entity here; we show spawn eggs in the standard slot,
+    // inset 1px so the 18x18 slot background lines up with the JEI texture's slot.
+    widgets.addSlot(this.inputs.get(0), 2, 2).drawBack(false);
+    // output slot mirrors JEI (76,11), inset 1px.
+    widgets.addSlot(this.outputs.get(0), 75, 10).drawBack(false).recipeContext(this);
   }
 }

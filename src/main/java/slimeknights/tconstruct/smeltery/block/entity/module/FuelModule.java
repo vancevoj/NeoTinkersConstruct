@@ -4,11 +4,15 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
@@ -18,6 +22,8 @@ import slimeknights.tconstruct.library.recipe.fuel.MeltingFuel;
 import slimeknights.tconstruct.library.recipe.fuel.MeltingFuelLookup;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -57,6 +63,14 @@ public abstract class FuelModule implements ContainerData {
    * Helpers
    */
 
+  /**
+   * Server-side caches of the fluid handler at each fuel-tank position. {@link BlockCapabilityCache} auto-tracks
+   * capability invalidation (neighbor change, BE unload/reload, etc.) and refetches, restoring the self-healing
+   * behavior upstream had with {@code LazyOptional} invalidation listeners. Only valid on a {@link ServerLevel};
+   * the client uses a fresh {@link Level#getCapability} query each call (see {@link #getHandlerAt}).
+   */
+  private final Map<BlockPos,BlockCapabilityCache<IFluidHandler,?>> serverHandlerCaches = new HashMap<>();
+
   /** Called when the capability invalidates to reset any cached handlers */
   protected void resetHandler(@Nullable IFluidHandler source) {
     if (source == null || source == fluidHandler) {
@@ -67,6 +81,32 @@ public abstract class FuelModule implements ContainerData {
   /** Gets a nonnull world instance from the parent */
   protected Level getLevel() {
     return Objects.requireNonNull(parent.getLevel(), "Parent tile entity has null world");
+  }
+
+  /**
+   * Resolves the fluid handler at the given position in a way that survives world reloads and capability invalidation.
+   * On the server a {@link BlockCapabilityCache} is used so the handler self-heals (refetched automatically when the
+   * neighbor tank's capability invalidates). On the client (where the fuel DISPLAY runs) we cannot build a capability
+   * cache (it requires a {@link ServerLevel}), so we re-query every call and never permanently cache a null or stale
+   * handler - this is what makes the GUI recover after a world reload.
+   * @param pos  Position to resolve, should not be mutated externally
+   * @return  Fluid handler, or null if none present
+   */
+  @Nullable
+  protected IFluidHandler getHandlerAt(BlockPos pos) {
+    Level level = getLevel();
+    if (level instanceof ServerLevel serverLevel) {
+      // immutable copy as the cache holds the reference long-term
+      BlockPos key = pos.immutable();
+      return serverHandlerCaches.computeIfAbsent(key, p -> BlockCapabilityCache.create(Capabilities.FluidHandler.BLOCK, serverLevel, p, null)).getCapability();
+    }
+    // client: always re-query so a transiently-missing capability (e.g. right after a reload) recovers on a later tick
+    return level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+  }
+
+  /** Clears any server-side capability caches; called when the set of relevant positions may have changed */
+  protected void invalidateHandlerCaches() {
+    serverHandlerCaches.clear();
   }
 
 

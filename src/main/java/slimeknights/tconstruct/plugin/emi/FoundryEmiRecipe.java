@@ -8,6 +8,7 @@ import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.fluids.FluidStack;
 import slimeknights.tconstruct.TConstruct;
@@ -25,6 +26,8 @@ import java.util.List;
  * and usable liquid fuels. Unlike melting, the foundry has no solid fuel. Layout matches the JEI 132x40 background.
  */
 public class FoundryEmiRecipe extends BasicEmiRecipe {
+  /** JEI melting GUI texture, reused as the EMI backdrop (shared by melting and foundry) */
+  private static final ResourceLocation BACKGROUND_LOC = TConstruct.getResource("textures/gui/jei/melting.png");
   private static final String KEY_TEMPERATURE = TConstruct.makeTranslationKey("jei", "temperature");
   private static final String KEY_COOLING_TIME = TConstruct.makeTranslationKey("jei", "melting.time");
 
@@ -79,6 +82,9 @@ public class FoundryEmiRecipe extends BasicEmiRecipe {
 
   @Override
   public void addWidgets(WidgetHolder widgets) {
+    // backdrop: the JEI melting background (0,0,132,40)
+    widgets.addTexture(BACKGROUND_LOC, 0, 0, 132, 40, 0, 0);
+
     // melting arrow (animated over the melting time, JEI uses time * 5 ticks; 50ms per tick)
     widgets.addFillingArrow(56, 18, recipe.getTime() * 5 * 50);
     widgets.addTooltipText(List.of(Component.translatable(KEY_COOLING_TIME, recipe.getTime() / 4)), 56, 18, 24, 17);
@@ -89,8 +95,8 @@ public class FoundryEmiRecipe extends BasicEmiRecipe {
     int textX = 56 - font.width(tempString) / 2;
     widgets.addText(Component.literal(tempString), textX, 3, Color.GRAY.getRGB(), false);
 
-    // input slot
-    widgets.addSlot(this.inputs.get(0), 24, 18);
+    // input slot at (24,18). Inset 1px so the 18x18 slot background lines up with the JEI texture's slot.
+    widgets.addSlot(this.inputs.get(0), 23, 17).drawBack(false);
 
     // output fluid tanks (result + byproducts) split across the 32x32 output region at (96, 4)
     int count = outputFluids.size();
@@ -102,11 +108,14 @@ public class FoundryEmiRecipe extends BasicEmiRecipe {
         // last slot takes the remaining width to fill the region
         int w = (i == count - 1) ? totalWidth - slotWidth * (count - 1) : slotWidth;
         widgets.addTank(outputFluids.get(i), slotX, 4, w, 32, FluidValues.METAL_BLOCK)
+               .drawBack(false)
                .recipeContext(this);
       }
+      // JEI tank overlay frame drawn once over the full output region (sheet 132,0 32x32)
+      widgets.addTexture(BACKGROUND_LOC, 96, 4, 32, 32, 132, 0);
     }
 
-    // liquid fuel tank, drawn on the left at full height (no solid fuel on the foundry)
+    // liquid fuel tank, drawn on the left at full height as a bare fluid (no solid fuel on the foundry)
     if (!liquidFuels.isEmpty()) {
       widgets.addTank(liquidFuels, 4, 4, 12, 32, 1)
              .drawBack(false)

@@ -7,9 +7,11 @@ import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.fluids.FluidStack;
+import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.recipe.FluidValues;
 import slimeknights.tconstruct.library.recipe.entitymelting.EntityMeltingRecipe;
 import slimeknights.tconstruct.plugin.jei.melting.MeltingFuelHandler;
@@ -31,6 +33,8 @@ import java.util.List;
  * no eggs are available so the display stays defensive rather than showing an empty slot.
  */
 public class EntityMeltingEmiRecipe extends BasicEmiRecipe {
+  /** JEI melting GUI texture; the entity melting layout lives in the lower region (v=41) */
+  private static final ResourceLocation BACKGROUND_LOC = TConstruct.getResource("textures/gui/jei/melting.png");
   private final int damage;
 
   public EntityMeltingEmiRecipe(RecipeHolder<EntityMeltingRecipe> holder) {
@@ -63,9 +67,12 @@ public class EntityMeltingEmiRecipe extends BasicEmiRecipe {
 
   @Override
   public void addWidgets(WidgetHolder widgets) {
-    // input slot at (19,11)
+    // backdrop: the JEI entity melting background lives at sheet (0,41) size 150x62
+    widgets.addTexture(BACKGROUND_LOC, 0, 0, 150, 62, 0, 41);
+
+    // input slot at (19,11). Inset 1px so the 18x18 slot background lines up with the JEI texture's slot.
     if (!this.inputs.isEmpty()) {
-      widgets.addSlot(this.inputs.get(0), 19, 11);
+      widgets.addSlot(this.inputs.get(0), 18, 10).drawBack(false);
     }
 
     // animated arrow at (71,21), 24x17
@@ -73,12 +80,13 @@ public class EntityMeltingEmiRecipe extends BasicEmiRecipe {
 
     // output tank at (115,11), 16x32, capacity matches JEI's INGOT*2 renderer
     if (!this.outputs.isEmpty()) {
-      widgets.addTank(this.outputs.get(0), 115, 11, 16, 32, FluidValues.INGOT * 2).recipeContext(this);
+      widgets.addTank(this.outputs.get(0), 115, 11, 16, 32, FluidValues.INGOT * 2).drawBack(false).recipeContext(this);
     }
 
-    // fuel tank at (75,43), 16x16
+    // fuel tank at (75,43), 16x16, with the JEI fuel tank overlay frame (sheet 150,74 16x16)
     if (!this.catalysts.isEmpty()) {
-      widgets.addTank(this.catalysts.get(0), 75, 43, 16, 16, 1).catalyst(true);
+      widgets.addTank(this.catalysts.get(0), 75, 43, 16, 16, 1).drawBack(false).catalyst(true);
+      widgets.addTexture(BACKGROUND_LOC, 75, 43, 16, 16, 150, 74);
     }
 
     // damage as hearts, drawn right-aligned to x=84 at y=8 (matches JEI draw())

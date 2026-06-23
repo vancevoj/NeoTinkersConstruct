@@ -7,6 +7,7 @@ import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.fluids.FluidStack;
 import slimeknights.tconstruct.TConstruct;
@@ -26,6 +27,8 @@ import java.util.List;
  * text centered on x=102 at y=5.
  */
 public class AlloyEmiRecipe extends BasicEmiRecipe {
+  /** JEI alloy GUI texture, reused as the EMI backdrop */
+  private static final ResourceLocation BACKGROUND_LOC = TConstruct.getResource("textures/gui/jei/alloy.png");
   private static final String KEY_TEMPERATURE = TConstruct.makeTranslationKey("jei", "temperature");
 
   private final int temperature;
@@ -72,7 +75,11 @@ public class AlloyEmiRecipe extends BasicEmiRecipe {
 
   @Override
   public void addWidgets(WidgetHolder widgets) {
-    // input tanks: spread across x=19..67 (48px wide) at y=11, height 32, like JEI's drawVariableFluids
+    // backdrop: the JEI alloy background (0,0,172,62)
+    widgets.addTexture(BACKGROUND_LOC, 0, 0, 172, 62, 0, 0);
+
+    // input tanks: spread across x=19..67 (48px wide) at y=11, height 32, like JEI's drawVariableFluids.
+    // The background already provides the tank frames, so draw bare fluids.
     int count = this.inputs.size();
     if (count > 0) {
       int totalWidth = 48;
@@ -81,7 +88,7 @@ public class AlloyEmiRecipe extends BasicEmiRecipe {
         int x = 19 + i * w;
         // last tank takes the remaining width so the row fills exactly 48px
         int tankWidth = (i == count - 1) ? totalWidth - (w * (count - 1)) : w;
-        widgets.addTank(this.inputs.get(i), x, 11, tankWidth, 32, (int) this.capacityMb);
+        widgets.addTank(this.inputs.get(i), x, 11, tankWidth, 32, (int) this.capacityMb).drawBack(false);
       }
     }
 
@@ -90,12 +97,13 @@ public class AlloyEmiRecipe extends BasicEmiRecipe {
 
     // output tank at (137,11), 16x32
     if (!this.outputs.isEmpty()) {
-      widgets.addTank(this.output, 137, 11, 16, 32, (int) this.capacityMb).recipeContext(this);
+      widgets.addTank(this.output, 137, 11, 16, 32, (int) this.capacityMb).drawBack(false).recipeContext(this);
     }
 
-    // fuel tank at (94,43), 16x16
+    // fuel tank at (94,43), 16x16, with the JEI fuel tank overlay frame (sheet 172,17 16x16)
     if (!this.catalysts.isEmpty()) {
-      widgets.addTank(this.catalysts.get(0), 94, 43, 16, 16, 1).catalyst(true);
+      widgets.addTank(this.catalysts.get(0), 94, 43, 16, 16, 1).drawBack(false).catalyst(true);
+      widgets.addTexture(BACKGROUND_LOC, 94, 43, 16, 16, 172, 17);
     }
 
     // temperature text centered on x=102 at y=5 (matches JEI draw())
