@@ -43,6 +43,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import slimeknights.mantle.data.predicate.damage.DamageSourcePredicate;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerEffect;
@@ -73,6 +75,7 @@ import slimeknights.tconstruct.library.tools.definition.ModifiableArmorMaterial;
 import slimeknights.tconstruct.library.tools.definition.module.mining.IsEffectiveToolHook;
 import slimeknights.tconstruct.library.tools.helper.ArmorUtil;
 import slimeknights.tconstruct.library.tools.helper.ModifierUtil;
+import slimeknights.tconstruct.library.tools.helper.ToolHarvestLogic;
 import slimeknights.tconstruct.library.tools.helper.ToolAttackUtil;
 import slimeknights.tconstruct.library.tools.helper.ToolDamageUtil;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
@@ -93,6 +96,46 @@ import java.util.Objects;
  */
 @EventBusSubscriber(modid = TConstruct.MOD_ID)
 public class ToolEvents {
+  /**
+   * Re-entrancy guard for {@link #onBlockBreak(BlockEvent.BreakEvent)}. Tinkers' own AOE breaking fires
+   * {@link BlockEvent.BreakEvent} again for every extra block (via {@link ToolHarvestLogic#breakExtraBlock}),
+   * which would otherwise re-enter this handler and recurse. Block breaking runs on the server thread, so a
+   * ThreadLocal flag both prevents recursion and avoids interference between players/dimensions.
+   */
+  private static final ThreadLocal<Boolean> BREAKING = ThreadLocal.withInitial(() -> Boolean.FALSE);
+
+  /**
+   * NeoForge 1.21 removed {@code IForgeItem#onBlockStartBreak}, the hook Tinkers used to trigger AOE/expanded
+   * block breaking (hammer, broad axe, vein miner, etc.). {@link BlockEvent.BreakEvent} is the game-bus
+   * replacement: it fires server-side just before the block is removed and can be canceled to take over breaking.
+   * This re-wires the orphaned {@link ToolHarvestLogic#handleBlockBreak}, restoring all AOE mining tools.
+   */
+  @SubscribeEvent
+  static void onBlockBreak(BlockEvent.BreakEvent event) {
+    // server only (handleBlockBreak also guards this, but skip the work entirely on the client)
+    if (!(event.getPlayer() instanceof ServerPlayer player) || player.level().isClientSide()) {
+      return;
+    }
+    // breakExtraBlock fires BreakEvent for each AOE block; bail out so we don't recurse into nested AOE breaking
+    if (BREAKING.get()) {
+      return;
+    }
+    ItemStack stack = player.getMainHandItem();
+    if (!stack.is(TinkerTags.Items.HARVEST)) {
+      return;
+    }
+    BREAKING.set(Boolean.TRUE);
+    try {
+      // handleBlockBreak breaks the center block itself plus any AOE blocks, so cancel the vanilla break to avoid
+      // breaking (and dropping) the center block a second time. Mirrors the old onBlockStartBreak returning true.
+      if (ToolHarvestLogic.handleBlockBreak(stack, event.getPos(), player)) {
+        event.setCanceled(true);
+      }
+    } finally {
+      BREAKING.set(Boolean.FALSE);
+    }
+  }
+
   @SuppressWarnings("removal")
   @SubscribeEvent
   static void onBreakSpeed(PlayerEvent.BreakSpeed event) {

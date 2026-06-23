@@ -360,9 +360,8 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
   public float getDestroySpeed(ItemStack stack, BlockState state) {
     return MiningSpeedToolHook.getDestroySpeed(stack, state);
   }
-  // TODO(neoport): Item#onBlockStartBreak was removed in NeoForge 1.21; AoE/expanded block breaking
-  //  (ToolHarvestLogic.handleBlockBreak) must be re-wired through a game-bus event handler (BlockEvent.BreakEvent)
-  //  in the events/harvest package. Removed the dead override here.
+  // NeoForge 1.21 removed Item#onBlockStartBreak; AoE/expanded block breaking (ToolHarvestLogic.handleBlockBreak)
+  // is now triggered via the game-bus BlockEvent.BreakEvent handler in ToolEvents#onBlockBreak.
 
 
   /* Multishot helper */

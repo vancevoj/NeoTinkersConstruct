@@ -252,9 +252,8 @@ public class ModifiableItem extends TieredItem implements IModifiableDisplay {
   public float getDestroySpeed(ItemStack stack, BlockState state) {
     return stack.getCount() == 1 ? MiningSpeedToolHook.getDestroySpeed(stack, state) : 0;
   }
-  // TODO(neoport): Item#onBlockStartBreak was removed in NeoForge 1.21; AoE/expanded block breaking
-  //  (ToolHarvestLogic.handleBlockBreak) must be re-wired through a game-bus event handler (BlockEvent.BreakEvent)
-  //  in the events/harvest package. Removed the dead override here.
+  // NeoForge 1.21 removed Item#onBlockStartBreak; AoE/expanded block breaking (ToolHarvestLogic.handleBlockBreak)
+  // is now triggered via the game-bus BlockEvent.BreakEvent handler in ToolEvents#onBlockBreak.
 
 
   /* Modifier interactions */

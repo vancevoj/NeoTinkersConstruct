@@ -96,10 +96,16 @@ import static slimeknights.tconstruct.library.client.model.tools.ToolModel.regis
 @SuppressWarnings("unused")
 @EventBusSubscriber(modid = TConstruct.MOD_ID, value = Dist.CLIENT, bus = Bus.MOD)
 public class ToolClientEvents extends ClientEventBase {
-  /** Keybinding for interacting using a helmet */
-  private static final KeyMapping HELMET_INTERACT = new KeyMapping(TConstruct.makeTranslationKey("key", "helmet_interact"), KeyConflictContext.IN_GAME, InputConstants.getKey("key.keyboard.z"), "key.categories.tconstruct");
-  /** Keybinding for interacting using leggings */
-  private static final KeyMapping LEGGINGS_INTERACT = new KeyMapping(TConstruct.makeTranslationKey("key", "leggings_interact"), KeyConflictContext.IN_GAME, InputConstants.getKey("key.keyboard.i"), "key.categories.tconstruct");
+  /**
+   * Keybinding for interacting using a helmet. Constructed lazily inside {@link #registerKeyBinding} rather than in a
+   * static initializer: building a KeyMapping touches {@code KeyMapping}/{@code InputConstants}, so doing it at field
+   * init forced those classes to initialize the moment this client-only subscriber was class-loaded during mod setup.
+   * If another mod (e.g. via Sinytra Connector) has already broken {@code KeyMapping}'s static init, that early touch
+   * makes Tinkers the apparent trigger of an unrelated crash. Deferring to {@link RegisterKeyMappingsEvent} avoids it.
+   */
+  private static KeyMapping HELMET_INTERACT;
+  /** Keybinding for interacting using leggings. Initialized lazily; see {@link #HELMET_INTERACT}. */
+  private static KeyMapping LEGGINGS_INTERACT;
 
   /** Listener to clear modifier cache */
   private static final ISafeManagerReloadListener MODIFIER_RELOAD_LISTENER = manager -> {
@@ -161,6 +167,9 @@ public class ToolClientEvents extends ClientEventBase {
 
   @SubscribeEvent
   static void registerKeyBinding(RegisterKeyMappingsEvent event) {
+    // construct the keybinds here (not in static fields) so class-loading this subscriber never forces KeyMapping init
+    HELMET_INTERACT = new KeyMapping(TConstruct.makeTranslationKey("key", "helmet_interact"), KeyConflictContext.IN_GAME, InputConstants.getKey("key.keyboard.z"), "key.categories.tconstruct");
+    LEGGINGS_INTERACT = new KeyMapping(TConstruct.makeTranslationKey("key", "leggings_interact"), KeyConflictContext.IN_GAME, InputConstants.getKey("key.keyboard.i"), "key.categories.tconstruct");
     event.register(HELMET_INTERACT);
     event.register(LEGGINGS_INTERACT);
   }
@@ -325,8 +334,8 @@ public class ToolClientEvents extends ClientEventBase {
       }
       wasJumping = isJumping;
 
-      // helmet interaction
-      boolean isHelmetInteracting = HELMET_INTERACT.isDown();
+      // helmet interaction (keybinds are lazily constructed in registerKeyBinding; guard in case input fires first)
+      boolean isHelmetInteracting = HELMET_INTERACT != null && HELMET_INTERACT.isDown();
       if (!wasHelmetInteracting && isHelmetInteracting) {
         TooltipKey key = SafeClientAccess.getTooltipKey();
         if (InteractionHandler.startArmorInteract(event.getEntity(), EquipmentSlot.HEAD, key)) {
@@ -340,7 +349,7 @@ public class ToolClientEvents extends ClientEventBase {
       }
 
       // leggings interaction
-      boolean isLeggingsInteract = LEGGINGS_INTERACT.isDown();
+      boolean isLeggingsInteract = LEGGINGS_INTERACT != null && LEGGINGS_INTERACT.isDown();
       if (!wasLeggingsInteracting && isLeggingsInteract) {
         TooltipKey key = SafeClientAccess.getTooltipKey();
         if (InteractionHandler.startArmorInteract(event.getEntity(), EquipmentSlot.LEGS, key)) {
