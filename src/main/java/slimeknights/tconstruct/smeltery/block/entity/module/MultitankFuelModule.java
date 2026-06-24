@@ -54,6 +54,13 @@ public class MultitankFuelModule extends FuelModule implements IFluidHandler {
   public void clearFluidListeners() {
     tankHandlers = null;
     invalidateHandlerCaches();
+    // Also drop the cached active fuel handler (and lastPos). Structure rebuilds are exactly when a fuel tank is
+    // added/removed/swapped; without this, findFuel() short-circuits on the stale fluidHandler (e.g. the dead tank
+    // block entity from a swapped-out lava tank) and never re-resolves the new tank's fluid - so a hotter fuel like
+    // blazing blood is never read and items report "not hot enough". resetHandler(null) is the port's stand-in for
+    // upstream's LazyOptional invalidation listener, which is otherwise never fired. On world load this is safe:
+    // setStructure() -> clearFluidListeners() runs before fuelModule.readFromTag(), which restores lastPos from NBT.
+    resetHandler(null);
   }
 
   /** Called on servant load to ensure the handler is present in the cache */

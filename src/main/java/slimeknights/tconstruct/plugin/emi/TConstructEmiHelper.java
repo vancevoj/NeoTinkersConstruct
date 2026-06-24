@@ -8,23 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Shared helpers used by the Tinkers' Construct EMI recipe classes. Centralizes the conversion between NeoForge
- * {@link FluidStack}s (measured in millibuckets) and EMI {@link EmiStack}s (measured in droplets, where 1mb = 81
- * droplets).
+ * Shared helpers used by the Tinkers' Construct EMI recipe classes. Wraps NeoForge {@link FluidStack}s as EMI
+ * {@link EmiStack}s.
+ * <p>
+ * NOTE: EMI on NeoForge measures fluids in raw NeoForge millibuckets (its own {@code NeoForgeEmiStack.of(FluidStack)}
+ * stores {@code FluidStack.getAmount()} verbatim) — NOT in Fabric "droplets". Multiplying by 81 here made every
+ * displayed fluid amount 81x too large and broke tank fill ratios against the mB-based capacities (issue #6), so the
+ * amount is passed through unchanged.
  */
 public final class TConstructEmiHelper {
-  /** Number of EMI droplets per millibucket */
-  public static final long DROPLETS_PER_MB = 81L;
 
   private TConstructEmiHelper() {}
 
   /**
-   * Converts a NeoForge {@link FluidStack} into an EMI {@link EmiStack}, applying the millibucket to droplet conversion.
+   * Wraps a NeoForge {@link FluidStack} as an EMI {@link EmiStack}, keeping the raw millibucket amount.
    * @param stack  fluid stack to convert
-   * @return  EMI stack with the droplet amount
+   * @return  EMI stack with the same millibucket amount
    */
   public static EmiStack fluid(FluidStack stack) {
-    return EmiStack.of(stack.getFluid(), stack.getComponentsPatch(), stack.getAmount() * DROPLETS_PER_MB);
+    return EmiStack.of(stack.getFluid(), stack.getComponentsPatch(), stack.getAmount());
   }
 
   /**

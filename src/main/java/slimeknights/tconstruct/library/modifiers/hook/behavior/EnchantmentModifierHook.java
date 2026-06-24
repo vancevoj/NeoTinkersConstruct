@@ -2,15 +2,21 @@ package slimeknights.tconstruct.library.modifiers.hook.behavior;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.Level;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.hook.mining.BlockHarvestModifierHook;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.nbt.ToolStack;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,6 +101,44 @@ public interface EnchantmentModifierHook {
     // we allow hooks to return negative, such as to cancel out an enchantment
     enchantments.values().removeIf(VALUE_REMOVER);
     return enchantments;
+  }
+
+  /**
+   * Writes the main-hand tool's full enchantment set ({@link #getAllEnchantments(ItemStack)}, including virtual modifier
+   * enchantments such as fortune/silk touch that are never stored in NBT) onto the stack's
+   * {@link DataComponents#ENCHANTMENTS} component, so vanilla block-drop loot actually sees them. Restore with
+   * {@link slimeknights.tconstruct.library.modifiers.hook.mining.HarvestEnchantmentsModifierHook#restoreEnchantments}.
+   * <p>
+   * 1.21: in older versions the tool surfaced its enchantments to loot via {@code Item#getAllEnchantments}; that hook
+   * no longer exists, so the loot context only sees enchantments actually present in the ENCHANTMENTS component. The
+   * {@code HarvestEnchantmentsModifierHook} path only injects OFFHAND/armor enchantments (it skips the main hand), so
+   * without this the main hand's own fortune/silk touch (issue #11) never reached block drops.
+   * @param stack   Main hand tool stack
+   * @param player  Player breaking the block, may be null (e.g. projectile harvest)
+   * @param level   Level, used to resolve enchantment holders from the datapack registry
+   * @return  Original enchantments component to restore afterwards, or null if nothing changed (so no restore needed)
+   */
+  @Nullable
+  static ItemEnchantments updateToolEnchantments(ItemStack stack, @Nullable Player player, Level level) {
+    // creative players don't generate block loot, matching HarvestEnchantmentsModifierHook's guard
+    if (player != null && player.isCreative()) {
+      return null;
+    }
+    Map<Enchantment,Integer> enchantments = getAllEnchantments(stack);
+    ItemEnchantments original = stack.getEnchantments();
+    // wrap the raw enchantment map back into the component, resolving holders from the datapack enchantment registry
+    Registry<Enchantment> registry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+    ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+    for (Map.Entry<Enchantment,Integer> entry : enchantments.entrySet()) {
+      mutable.set(registry.wrapAsHolder(entry.getKey()), entry.getValue());
+    }
+    ItemEnchantments updated = mutable.toImmutable();
+    // nothing to do if the tool has no virtual enchantments beyond what is already in the component
+    if (updated.equals(original)) {
+      return null;
+    }
+    stack.set(DataComponents.ENCHANTMENTS, updated);
+    return original;
   }
 
   /** Merger that combines all modules together */

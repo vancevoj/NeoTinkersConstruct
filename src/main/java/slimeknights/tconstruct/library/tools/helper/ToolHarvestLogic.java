@@ -27,6 +27,7 @@ import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.common.network.TinkerNetwork;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.hook.behavior.EnchantmentModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.mining.HarvestEnchantmentsModifierHook;
 import slimeknights.tconstruct.library.tools.context.ToolHarvestContext;
 import slimeknights.tconstruct.library.tools.definition.module.ToolHooks;
@@ -296,6 +297,10 @@ public class ToolHarvestLogic {
     for (ModifierEntry entry : tool.getModifierList()) {
       entry.getHook(ModifierHooks.BLOCK_HARVEST).startHarvest(tool, entry, context);
     }
+    // inject the main hand tool's own modifier enchantments (fortune, silk touch, ...) onto the stack so vanilla block
+    // loot sees them (#11). Must run after startHarvest above so harvest-conditioned enchantment modules are active,
+    // and before the offhand path below so that path stacks on top of these. Restored in reverse order after breaking.
+    ItemEnchantments originalToolEnchants = EnchantmentModifierHook.updateToolEnchantments(stack, player, world);
     // let armor change enchantments
     // TODO: should we have a hook for non-enchantment armor responses?
     ItemEnchantments originalEnchantments = HarvestEnchantmentsModifierHook.updateHarvestEnchantments(tool, stack, context);
@@ -319,9 +324,12 @@ public class ToolHarvestLogic {
         }
       }
     }
-    // restore the enchantments harvest changed
+    // restore the enchantments harvest changed (reverse order of application: offhand first, then the main hand tool)
     if (originalEnchantments != null) {
       HarvestEnchantmentsModifierHook.restoreEnchantments(stack, originalEnchantments);
+    }
+    if (originalToolEnchants != null) {
+      HarvestEnchantmentsModifierHook.restoreEnchantments(stack, originalToolEnchants);
     }
     // alert modifiers we finished harvesting. Always run even if we broke nothing as it's important for cleanup
     for (ModifierEntry entry : tool.getModifierList()) {

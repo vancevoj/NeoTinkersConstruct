@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import slimeknights.tconstruct.TConstruct;
@@ -27,6 +28,8 @@ import java.util.List;
  */
 public class PartBuilderEmiRecipe extends BasicEmiRecipe {
   private static final String KEY_COST = TConstruct.makeTranslationKey("jei", "part_builder.cost");
+  /** Background panel, matches the JEI part builder background (textures/gui/jei/tinker_station.png, 121x46 at 0,117). */
+  private static final ResourceLocation BACKGROUND_LOC = TConstruct.getResource("textures/gui/jei/tinker_station.png");
 
   private final IDisplayPartBuilderRecipe recipe;
   /** Material variant for the title text, may be empty */
@@ -70,21 +73,25 @@ public class PartBuilderEmiRecipe extends BasicEmiRecipe {
 
   @Override
   public void addWidgets(WidgetHolder widgets) {
+    // EMI does not auto-draw the JEI background; draw the Tinkers panel so the recipe isn't an empty floating set of
+    // slots (issue #6). The panel art already includes the slot insets, so the slots use drawBack(false).
+    widgets.addTexture(BACKGROUND_LOC, 0, 0, 121, 46, 0, 117);
+
     // pattern slot (default patterns)
-    widgets.addSlot(this.inputs.get(0), 4, 16);
+    widgets.addSlot(this.inputs.get(0), 4, 16).drawBack(false);
     // material slot
     EmiIngredient materialInput = this.inputs.get(1);
     if (this.showPlaceholder) {
       // no material items: render the ingot pattern placeholder behind an empty slot
-      widgets.addSlot(materialInput, 25, 16);
+      widgets.addSlot(materialInput, 25, 16).drawBack(false);
       widgets.addDrawable(25, 16, 16, 16, (graphics, mouseX, mouseY, delta) ->
         GuiUtil.renderPattern(graphics, Patterns.INGOT, 0, 0));
     } else {
-      widgets.addSlot(materialInput, 25, 16);
+      widgets.addSlot(materialInput, 25, 16).drawBack(false);
     }
 
     // pattern-type slot: draw the pattern texture defensively, falling back to an empty slot
-    widgets.addSlot(46, 16);
+    widgets.addSlot(46, 16).drawBack(false);
     if (this.pattern != null) {
       widgets.addDrawable(46, 16, 16, 16, (graphics, mouseX, mouseY, delta) ->
         GuiUtil.renderPattern(graphics, this.pattern, 0, 0));
