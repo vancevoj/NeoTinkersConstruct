@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import slimeknights.mantle.block.entity.NameableBlockEntity;
+import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.tables.block.entity.inventory.IChestItemHandler;
 import slimeknights.tconstruct.tables.menu.TinkerChestContainerMenu;
 
@@ -55,12 +57,28 @@ public abstract class AbstractChestBlockEntity extends NameableBlockEntity {
     tags.put(KEY_ITEMS, handlerNBT.getList(KEY_ITEMS, Tag.TAG_COMPOUND));
   }
 
-  /** Reads the inventory from NBT */
+  /**
+   * Reads the inventory from NBT, resiliently. Each stack is parsed independently so a single corrupt or
+   * unparseable item can never take down the whole load. Previously any exception here propagated out of
+   * {@link #loadAdditional}, and vanilla's {@code BlockEntity.loadStatic} discards the entire block entity when
+   * loading throws, so the chest reloaded completely empty (every stored item lost). Bad slots are now logged
+   * and skipped, keeping every item that still parses.
+   */
   public void readInventory(CompoundTag tags, HolderLookup.Provider registries) {
-    // copy in just the items key for deserializing, don't want to change the size
-    CompoundTag handlerNBT = new CompoundTag();
-    handlerNBT.put(KEY_ITEMS, tags.getList(KEY_ITEMS, Tag.TAG_COMPOUND));
-    itemHandler.deserializeNBT(registries, handlerNBT);
+    ListTag items = tags.getList(KEY_ITEMS, Tag.TAG_COMPOUND);
+    int slots = itemHandler.getSlots();
+    for (int i = 0; i < items.size(); i++) {
+      CompoundTag itemTags = items.getCompound(i);
+      int slot = itemTags.getInt("Slot");
+      if (slot < 0 || slot >= slots) {
+        continue;
+      }
+      try {
+        ItemStack.parse(registries, itemTags).ifPresent(stack -> itemHandler.setStackInSlot(slot, stack));
+      } catch (Exception e) {
+        TConstruct.LOG.error("Skipping unloadable item in Tinkers' chest at {} slot {}: {}", getBlockPos(), slot, e.toString());
+      }
+    }
   }
 
   @Override
