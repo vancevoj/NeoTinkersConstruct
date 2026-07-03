@@ -77,6 +77,12 @@ public class TConstructEMIPlugin implements EmiPlugin {
     registry.addWorkstation(TConstructEmiCategories.TOOL_BUILDING, EmiStack.of(TinkerTools.pickaxe.get().getRenderTool()));
     registry.addWorkstation(TConstructEmiCategories.SEVERING, EmiStack.of(TinkerTools.cleaver.get().getRenderTool()));
 
+    // crafting station: enable EMI "+" transfer of vanilla crafting recipes into its 3x3 grid, and list it as a
+    // valid station under the vanilla Crafting category (it is a crafting table). Mirrors the JEI-side
+    // CraftingStationTransferInfo that JEI registers for RecipeTypes.CRAFTING.
+    registry.addRecipeHandler(TinkerTables.craftingStationContainer.get(), new CraftingStationRecipeHandler());
+    registry.addWorkstation(dev.emi.emi.api.recipe.VanillaEmiRecipeCategories.CRAFTING, EmiStack.of(TinkerTables.craftingStation));
+
     // populate the fuel cache so the fuel tanks render (JEI does this in registerRecipes)
     MeltingFuelHandler.setMeltngFuels(RecipeHelper.getRecipes(manager, TinkerRecipeTypes.FUEL.get(), MeltingFuel.class));
 

@@ -54,13 +54,15 @@ public class MultitankFuelModule extends FuelModule implements IFluidHandler {
   public void clearFluidListeners() {
     tankHandlers = null;
     invalidateHandlerCaches();
-    // Also drop the cached active fuel handler (and lastPos). Structure rebuilds are exactly when a fuel tank is
-    // added/removed/swapped; without this, findFuel() short-circuits on the stale fluidHandler (e.g. the dead tank
-    // block entity from a swapped-out lava tank) and never re-resolves the new tank's fluid - so a hotter fuel like
-    // blazing blood is never read and items report "not hot enough". resetHandler(null) is the port's stand-in for
-    // upstream's LazyOptional invalidation listener, which is otherwise never fired. On world load this is safe:
-    // setStructure() -> clearFluidListeners() runs before fuelModule.readFromTag(), which restores lastPos from NBT.
-    resetHandler(null);
+    // Drop the cached ACTIVE fuel handler so findFuel() re-resolves a swapped/added/removed tank (a swapped-out lava
+    // tank's dead handler would otherwise stick and a hotter fuel like blazing blood would never be read -> "not hot
+    // enough"). This is the port's stand-in for upstream's LazyOptional invalidation listener, which never fires.
+    // Use clearLastListener(), NOT resetHandler(null): the latter also wipes lastPos, which is the fuel-tank position
+    // the client GUI needs to render the fuel gauge. Structure re-checks fire routinely (inner-block checks, servant
+    // loads, world load), so wiping lastPos here left reopened menus with a blank fuel gauge / "no fuel source" even
+    // though fuel was still being consumed (issue #7 regression). findFuel() still re-resolves correctly: with
+    // fluidHandler null it takes the lastPos branch and refetches through the rebuilt, self-healing handler map.
+    clearLastListener();
   }
 
   /** Called on servant load to ensure the handler is present in the cache */
@@ -229,13 +231,25 @@ public class MultitankFuelModule extends FuelModule implements IFluidHandler {
     // Y of big negative is how the UI syncs null
     BlockPos mainTank = lastPos;
     if (mainTank.getY() == NULL_POS.getY()) {
-      // if no first, return no fuel info
-      List<BlockPos> positions = tankSupplier.get();
-      if (positions.isEmpty()) {
-        return FuelInfo.EMPTY;
+      // No consumption has synced a fuel-tank position yet (freshly built or freshly (re)opened menu). Rather than
+      // blindly showing the first structural tank (often an empty output tank -> blank gauge), pick the first tank that
+      // actually holds a valid fuel fluid so the gauge is correct on open. This also sidesteps a stale/blank lastPos.
+      mainTank = null;
+      for (Entry<BlockPos,IFluidHandler> entry : getTankHandlers().entrySet()) {
+        FluidStack fluid = entry.getValue().getFluidInTank(0);
+        if (!fluid.isEmpty() && findRecipe(fluid.getFluid()) != null) {
+          mainTank = entry.getKey();
+          break;
+        }
       }
-      mainTank = positions.get(0);
-      assert mainTank != null;
+      if (mainTank == null) {
+        // no tank currently holds fuel: fall back to the first structural tank (may be empty)
+        List<BlockPos> positions = tankSupplier.get();
+        if (positions.isEmpty()) {
+          return FuelInfo.EMPTY;
+        }
+        mainTank = positions.get(0);
+      }
     }
 
     // fetch primary fuel handler. Re-resolve from the (self-healing) handler map each call rather than caching it once,
