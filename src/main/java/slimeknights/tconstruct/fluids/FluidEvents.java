@@ -15,6 +15,8 @@ import slimeknights.tconstruct.fluids.item.ContainerFoodItem.FluidContainerFoodI
 import slimeknights.tconstruct.fluids.item.MagmaBottleItem;
 import slimeknights.tconstruct.fluids.item.PotionBucketItem;
 import slimeknights.tconstruct.fluids.util.ConstantFluidContainerWrapper;
+import slimeknights.tconstruct.smeltery.TinkerSmeltery;
+import slimeknights.tconstruct.smeltery.item.CopperCanFluidHandler;
 
 /**
  * Event subscriber for modifier events
@@ -58,6 +60,9 @@ public class FluidEvents {
       event.registerItem(Capabilities.FluidHandler.ITEM,
         (stack, ctx) -> new ConstantFluidContainerWrapper(new FluidStack(TinkerFluids.powderedSnow.get(), FluidType.BUCKET_VOLUME), stack, Items.BUCKET.getDefaultInstance()),
         Items.POWDER_SNOW_BUCKET);
+      // copper can, holds a single ingot of fluid
+      event.registerItem(Capabilities.FluidHandler.ITEM,
+        (stack, ctx) -> new CopperCanFluidHandler(stack), TinkerSmeltery.copperCan.get());
     }
   }
 }
