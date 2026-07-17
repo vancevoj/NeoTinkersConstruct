@@ -1,6 +1,7 @@
 package slimeknights.tconstruct.library.modifiers;
 
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -208,12 +209,12 @@ public class ModifierHooks {
   /** Hook for adding item stack attributes to a tool when in the proper slot */
   public static final ModuleHook<EnchantmentModifierHook> ENCHANTMENTS = register("enchantments", EnchantmentModifierHook.class, EnchantmentModifierHook.AllMerger::new, new EnchantmentModifierHook() {
     @Override
-    public int updateEnchantmentLevel(IToolStackView tool, ModifierEntry modifier, Enchantment enchantment, int level) {
+    public int updateEnchantmentLevel(IToolStackView tool, ModifierEntry modifier, Holder<Enchantment> enchantment, int level) {
       return level;
     }
 
     @Override
-    public void updateEnchantments(IToolStackView tool, ModifierEntry modifier, Map<Enchantment,Integer> map) {}
+    public void updateEnchantments(IToolStackView tool, ModifierEntry modifier, Map<Holder<Enchantment>,Integer> map) {}
   });
 
   /** Hook to add data that resets every time stats rebuild */

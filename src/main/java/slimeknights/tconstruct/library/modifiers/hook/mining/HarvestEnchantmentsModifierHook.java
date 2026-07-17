@@ -2,9 +2,7 @@ package slimeknights.tconstruct.library.modifiers.hook.mining;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -41,10 +39,10 @@ public interface HarvestEnchantmentsModifierHook {
    * @param equipment  Context for other equipment on the player
    * @param slot       Slot being checked for harvest enchantments
    * @param map        A mutable map to add enchantments from this modifier. May contain negatives.
-   * @see EnchantmentModifierHook#addEnchantment(Map, Enchantment, int)
+   * @see EnchantmentModifierHook#addEnchantment(Map, Holder, int)
    * @see EnchantmentModifierHook.SingleHarvestEnchantment
    */
-  void updateHarvestEnchantments(IToolStackView tool, ModifierEntry modifier, ToolHarvestContext context, EquipmentContext equipment, EquipmentSlot slot, Map<Enchantment,Integer> map);
+  void updateHarvestEnchantments(IToolStackView tool, ModifierEntry modifier, ToolHarvestContext context, EquipmentContext equipment, EquipmentSlot slot, Map<Holder<Enchantment>,Integer> map);
 
 
   /* Helpers */
@@ -64,10 +62,9 @@ public interface HarvestEnchantmentsModifierHook {
       // assuming we have a modifiable tool, we iterate all tools other than the main hand (since the main hand is in charge of harvesting the blocks)
       EquipmentContext equipmentContext = EquipmentContext.withTool(context.getLiving(), tool, EquipmentSlot.MAINHAND);
       // lazily parse the enchantment map, wait until someone has a hook
-      // 1.21: enchantments live in the ItemEnchantments data component (keyed by Holder<Enchantment>); we reduce to a raw
-      // Enchantment map for the hooks then convert back using the enchantment registry from the level.
+      // 1.21: enchantments live in the ItemEnchantments data component, keyed by Holder<Enchantment> like this hook
       ItemEnchantments originalEnchants = null;
-      Map<Enchantment,Integer> enchantments = null;
+      Map<Holder<Enchantment>,Integer> enchantments = null;
       // run on all slots except main hand, to prevent double applying luck
       // TODO 1.21: take advantage of the enchantment slot filter to avoid that instead; not like armor can be in the main hand when this runs
       for (EquipmentSlot slot : APPLICABLE_SLOTS) {
@@ -81,10 +78,10 @@ public interface HarvestEnchantmentsModifierHook {
             if (hook != null) {
               // if we have not yet parsed the enchantments, time to do so
               if (enchantments == null) {
-                originalEnchants = stack.getEnchantments();
+                originalEnchants = stack.getTagEnchantments();
                 enchantments = new HashMap<>();
                 for (Object2IntMap.Entry<Holder<Enchantment>> mapEntry : originalEnchants.entrySet()) {
-                  enchantments.put(mapEntry.getKey().value(), mapEntry.getIntValue());
+                  enchantments.put(mapEntry.getKey(), mapEntry.getIntValue());
                 }
               }
               hook.updateHarvestEnchantments(armor, entry, context, equipmentContext, slot, enchantments);
@@ -96,13 +93,8 @@ public interface HarvestEnchantmentsModifierHook {
       if (enchantments != null) {
         // we allow 0 values for enchantments in the hook
         enchantments.values().removeIf(EnchantmentModifierHook.VALUE_REMOVER);
-        // wrap the raw enchantments back into the component, using the datapack enchantment registry to fetch holders
-        Registry<Enchantment> registry = context.getWorld().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
-        ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
-        for (Map.Entry<Enchantment,Integer> mapEntry : enchantments.entrySet()) {
-          mutable.set(registry.wrapAsHolder(mapEntry.getKey()), mapEntry.getValue());
-        }
-        stack.set(DataComponents.ENCHANTMENTS, mutable.toImmutable());
+        // holders come straight from the modules, so no registry round trip is needed to rebuild the component
+        stack.set(DataComponents.ENCHANTMENTS, EnchantmentModifierHook.toComponent(originalEnchants, enchantments));
         return originalEnchants;
       }
     }
@@ -126,7 +118,7 @@ public interface HarvestEnchantmentsModifierHook {
   /** Merger that runs all submodules */
   record AllMerger(Collection<HarvestEnchantmentsModifierHook> modules) implements HarvestEnchantmentsModifierHook {
     @Override
-    public void updateHarvestEnchantments(IToolStackView tool, ModifierEntry modifier, ToolHarvestContext context, EquipmentContext equipment, EquipmentSlot slot, Map<Enchantment,Integer> map) {
+    public void updateHarvestEnchantments(IToolStackView tool, ModifierEntry modifier, ToolHarvestContext context, EquipmentContext equipment, EquipmentSlot slot, Map<Holder<Enchantment>,Integer> map) {
       for (HarvestEnchantmentsModifierHook module : modules) {
         module.updateHarvestEnchantments(tool, modifier, context, equipment, slot, map);
       }

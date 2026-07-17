@@ -300,7 +300,7 @@ public class ToolHarvestLogic {
     // inject the main hand tool's own modifier enchantments (fortune, silk touch, ...) onto the stack so vanilla block
     // loot sees them (#11). Must run after startHarvest above so harvest-conditioned enchantment modules are active,
     // and before the offhand path below so that path stacks on top of these. Restored in reverse order after breaking.
-    ItemEnchantments originalToolEnchants = EnchantmentModifierHook.updateToolEnchantments(stack, player, world);
+    ItemEnchantments originalToolEnchants = EnchantmentModifierHook.updateToolEnchantments(stack, player);
     // let armor change enchantments
     // TODO: should we have a hook for non-enchantment armor responses?
     ItemEnchantments originalEnchantments = HarvestEnchantmentsModifierHook.updateHarvestEnchantments(tool, stack, context);

@@ -3,6 +3,8 @@ package slimeknights.tconstruct.library.tools.item.armor;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import lombok.Getter;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup.RegistryLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -24,6 +26,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.ItemAbility;
 import slimeknights.mantle.client.SafeClientAccess;
@@ -31,6 +35,7 @@ import slimeknights.mantle.client.TooltipKey;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.hook.behavior.EnchantmentModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.display.DurabilityDisplayModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.SlotStackModifierHook;
 import slimeknights.tconstruct.library.tools.IndestructibleItemEntity;
@@ -122,9 +127,17 @@ public class ModifiableArmorItem extends ArmorItem implements IModifiableDisplay
   public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
     return false;
   }
-  // TODO(neoport): enchantment-modifier integration (getEnchantmentLevel/getAllEnchantments/curse-only enchanting)
-  //  moved to the ItemEnchantments data component in 1.21; the EnchantmentModifierHook (library/modifiers) owns the
-  //  new wiring once it is ported. Removed the dead Item-level overrides that no longer exist in the vanilla API.
+  /** Reports the tool's virtual modifier enchantments to gameplay logic, they are never stored in NBT */
+  @Override
+  public int getEnchantmentLevel(ItemStack stack, Holder<Enchantment> enchantment) {
+    return EnchantmentModifierHook.getEnchantmentLevel(stack, enchantment);
+  }
+
+  /** Reports the tool's virtual modifier enchantments to gameplay logic, they are never stored in NBT */
+  @Override
+  public ItemEnchantments getAllEnchantments(ItemStack stack, RegistryLookup<Enchantment> lookup) {
+    return EnchantmentModifierHook.getEnchantmentComponent(stack);
+  }
 
 
   /* Loading */

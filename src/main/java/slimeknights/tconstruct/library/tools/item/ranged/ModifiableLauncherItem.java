@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup.RegistryLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -24,6 +26,8 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
@@ -34,6 +38,7 @@ import slimeknights.tconstruct.library.client.item.ModifiableItemClientExtension
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
 import slimeknights.tconstruct.library.modifiers.hook.behavior.AttributesModifierHook;
+import slimeknights.tconstruct.library.modifiers.hook.behavior.EnchantmentModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.display.DurabilityDisplayModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.EntityInteractionModifierHook;
 import slimeknights.tconstruct.library.modifiers.hook.interaction.InventoryTickModifierHook;
@@ -109,9 +114,17 @@ public abstract class ModifiableLauncherItem extends ProjectileWeaponItem implem
   public int getEnchantmentValue(ItemStack stack) {
     return 0;
   }
-  // TODO(neoport): enchantment-modifier integration (getEnchantmentLevel/getAllEnchantments/curse-only enchanting)
-  //  moved to the ItemEnchantments data component in 1.21; EnchantmentModifierHook (library/modifiers) owns the new
-  //  wiring once ported. Removed the dead Item-level overrides that no longer exist in the vanilla/NeoForge API.
+  /** Reports the tool's virtual modifier enchantments to gameplay logic, they are never stored in NBT */
+  @Override
+  public int getEnchantmentLevel(ItemStack stack, Holder<Enchantment> enchantment) {
+    return EnchantmentModifierHook.getEnchantmentLevel(stack, enchantment);
+  }
+
+  /** Reports the tool's virtual modifier enchantments to gameplay logic, they are never stored in NBT */
+  @Override
+  public ItemEnchantments getAllEnchantments(ItemStack stack, RegistryLookup<Enchantment> lookup) {
+    return EnchantmentModifierHook.getEnchantmentComponent(stack);
+  }
 
 
   /* Loading */

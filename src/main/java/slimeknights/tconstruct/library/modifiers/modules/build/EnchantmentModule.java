@@ -162,17 +162,17 @@ public interface EnchantmentModule extends ModifierModule, LevelingIntModule, Co
     }
 
     @Override
-    public int updateEnchantmentLevel(IToolStackView tool, ModifierEntry modifier, Enchantment enchantment, int level) {
-      if (enchantment == this.enchantment().value() && condition().matches(tool, modifier)) {
+    public int updateEnchantmentLevel(IToolStackView tool, ModifierEntry modifier, Holder<Enchantment> enchantment, int level) {
+      if (enchantment.value() == this.enchantment().value() && condition().matches(tool, modifier)) {
         level += getLevel(modifier);
       }
       return level;
     }
 
     @Override
-    public void updateEnchantments(IToolStackView tool, ModifierEntry modifier, Map<Enchantment,Integer> map) {
+    public void updateEnchantments(IToolStackView tool, ModifierEntry modifier, Map<Holder<Enchantment>,Integer> map) {
       if (condition().matches(tool, modifier)) {
-        EnchantmentModifierHook.addEnchantment(map, this.enchantment().value(), getLevel(modifier));
+        EnchantmentModifierHook.addEnchantment(map, this.enchantment(), getLevel(modifier));
       }
     }
 
@@ -258,17 +258,17 @@ public interface EnchantmentModule extends ModifierModule, LevelingIntModule, Co
     }
 
     @Override
-    public int updateEnchantmentLevel(IToolStackView tool, ModifierEntry modifier, Enchantment enchantment, int level) {
-      if (enchantment == this.enchantment().value() && tool.getPersistentData().getBoolean(conditionFlag)) {
+    public int updateEnchantmentLevel(IToolStackView tool, ModifierEntry modifier, Holder<Enchantment> enchantment, int level) {
+      if (enchantment.value() == this.enchantment().value() && tool.getPersistentData().getBoolean(conditionFlag)) {
         level += getLevel(modifier);
       }
       return level;
     }
 
     @Override
-    public void updateEnchantments(IToolStackView tool, ModifierEntry modifier, Map<Enchantment,Integer> map) {
+    public void updateEnchantments(IToolStackView tool, ModifierEntry modifier, Map<Holder<Enchantment>,Integer> map) {
       if (tool.getPersistentData().getBoolean(conditionFlag)) {
-        EnchantmentModifierHook.addEnchantment(map, this.enchantment().value(), getLevel(modifier));
+        EnchantmentModifierHook.addEnchantment(map, this.enchantment(), getLevel(modifier));
       }
     }
 
@@ -302,9 +302,9 @@ public interface EnchantmentModule extends ModifierModule, LevelingIntModule, Co
     }
 
     @Override
-    public void updateHarvestEnchantments(IToolStackView tool, ModifierEntry modifier, ToolHarvestContext context, EquipmentContext equipment, EquipmentSlot slot, Map<Enchantment,Integer> map) {
+    public void updateHarvestEnchantments(IToolStackView tool, ModifierEntry modifier, ToolHarvestContext context, EquipmentContext equipment, EquipmentSlot slot, Map<Holder<Enchantment>,Integer> map) {
       if (slots.contains(slot) && condition.matches(tool, modifier) && block.matches(context.getState()) && holder.matches(context.getLiving())) {
-        EnchantmentModifierHook.addEnchantment(map, enchantment.value(), getLevel(modifier));
+        EnchantmentModifierHook.addEnchantment(map, enchantment, getLevel(modifier));
       }
     }
 
