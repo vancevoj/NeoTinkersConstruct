@@ -1259,12 +1259,24 @@ public class ModifierRecipeProvider extends BaseRecipeProvider {
                          .exactLevel(3)
                          .save(consumer, wrap(ModifierIds.luck, abilityFolder, "_level_3"));
     // pants have just one level
+    // INTENTIONAL DIVERGENCE from upstream 1.20.1 HEAD: upstream commit 6cae57037b ("Implement a couple
+    // more laces", 2026-03-22) deliberately removed this add recipe, leaving only the salvage. That removal
+    // is unreleased dev work: the newest upstream release, v3.11.2.166 (2026-01-11), still has the recipe.
+    // This port declares mod_version=3.11.2, so we keep the pre-6cae57037b behavior to match the release we
+    // target. Upstream's replacement (jeweled hide lace -> fortunate) only fits slime boots, so it is not a
+    // like-for-like substitute for luck on pants. See issue #18. Shape below is verbatim from 6cae57037b^.
     ModifierRecipeBuilder.modifier(ModifierIds.luck)
                          .setTools(TinkerTags.Items.LEGGINGS)
+                         .addInput(SizedIngredient.fromItems(Items.CORNFLOWER, Items.BLUE_ORCHID))
+                         .addInput(Items.RABBIT_FOOT)
+                         .addInput(Items.GOLDEN_CARROT)
+                         .addInput(Tags.Items.GEMS_DIAMOND)
+                         .addInput(Items.NAME_TAG)
                          .setMaxLevel(1)
                          .setSlots(SlotType.ABILITY, 1)
                          .disallowCrystal() // prevents cheesing cost using luck 1
-                         .saveSalvage(consumer, wrap(ModifierIds.luck, abilitySalvage, "_pants"));
+                         .saveSalvage(consumer, wrap(ModifierIds.luck, abilitySalvage, "_pants"))
+                         .save(consumer, wrap(ModifierIds.luck, abilityFolder, "_pants"));
     ModifierRecipeBuilder.modifier(ModifierIds.luck)
                          .setTools(ingredientFromTags(TinkerTags.Items.MELEE, TinkerTags.Items.HARVEST, TinkerTags.Items.LAUNCHERS))
                          .exactLevel(1)
