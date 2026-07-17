@@ -27,6 +27,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.entity.PartEntity;
@@ -37,6 +38,7 @@ import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.modifiers.ModifierEntry;
 import slimeknights.tconstruct.library.modifiers.ModifierHooks;
+import slimeknights.tconstruct.library.modifiers.hook.mining.HarvestEnchantmentsModifierHook;
 import slimeknights.tconstruct.library.tools.context.ToolAttackContext;
 import slimeknights.tconstruct.library.tools.definition.module.ToolHooks;
 import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
@@ -246,7 +248,22 @@ public class ToolAttackUtil {
 
     // removed: sword special attack check and logic, replaced by this
     Entity targetEntity = context.getTarget();
-    boolean didHit = targetEntity.hurt(context.makeDamageSource(), damage);
+    DamageSource damageSource = context.makeDamageSource();
+
+    // 1.21 has no looting event, so temporarily write our looting level onto the main hand for the duration of the
+    // attack; death loot is generated synchronously inside hurt and reads looting off the main hand stack.
+    // fetch the stack up front so we restore the exact instance we mutated, even if the tool breaks during the attack
+    ItemStack mainHand = attackerLiving.getItemBySlot(EquipmentSlot.MAINHAND);
+    ItemEnchantments originalEnchants = targetLiving == null ? null : ModifierLootingHandler.applyLooting(attackerLiving, mainHand, damageSource, targetLiving);
+    boolean didHit;
+    try {
+      didHit = targetEntity.hurt(damageSource, damage);
+    } finally {
+      // must always restore, a leaked looting enchantment would be permanent
+      if (originalEnchants != null) {
+        HarvestEnchantmentsModifierHook.restoreEnchantments(mainHand, originalEnchants);
+      }
+    }
 
     // reset hand to make sure we don't mess with vanilla tools
     ModifierLootingHandler.setLootingSlot(attackerLiving, EquipmentSlot.MAINHAND);

@@ -1,5 +1,8 @@
 package slimeknights.tconstruct.library.tools.helper;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -7,6 +10,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import slimeknights.tconstruct.common.TinkerDamageTypes;
@@ -43,9 +50,10 @@ public class ModifierLootingHandler {
       return;
     }
     init = true;
-    // TODO(neoport): LootingLevelEvent was removed in 1.21; looting is now a minecraft:looting enchantment effect with no
-    // damage-source-aware hook. Re-implementing onLooting requires deciding how the looting modifier hooks (which take a
-    // damage source + LootingContext) map onto the new loot-context based enchantment value system. Left unbound for now.
+    // 1.21 removed LootingLevelEvent, so there is no event to bind for looting. Mob drops now read the
+    // minecraft:looting enchantment level off the killer's main hand (see the minecraft:enchanted_count_increase loot
+    // function), which our tools never carry. Instead of an event, ToolAttackUtil calls applyLooting around the attack
+    // to temporarily write the computed level onto the stack, mirroring the fortune/silk touch block drop fix.
     NeoForge.EVENT_BUS.addListener(ModifierLootingHandler::onLeaveServer);
   }
 
@@ -68,13 +76,14 @@ public class ModifierLootingHandler {
   }
 
   /**
-   * Computes the looting level for the given attack, used by the looting reimplementation once the 1.21 enchantment-effect
-   * model is wired up. Kept as a standalone method (decoupled from the removed {@code LootingLevelEvent}) so the modifier
-   * looting hooks stay exercised.
+   * Computes the looting level for the given attack. Kept as a standalone method (decoupled from the removed
+   * {@code LootingLevelEvent}) so the modifier looting hooks stay exercised.
    * @param damageSource  Damage source causing the kill
    * @param target        Entity being killed
-   * @param baseLooting   Looting level from vanilla/other mods
+   * @param baseLooting   Looting level from vanilla/other mods. This is the level vanilla would have used on its own,
+   *                      as the hooks are allowed to both add to and cancel it.
    * @return  Looting level to apply, never negative
+   * @see #applyLooting(LivingEntity, ItemStack, DamageSource, LivingEntity)
    */
   public static int getLootingLevel(DamageSource damageSource, LivingEntity target, int baseLooting) {
     // bleeding kills use the level of the effect for looting
@@ -121,6 +130,50 @@ public class ModifierLootingHandler {
     }
     // we allow the hook to return negatives to cancel out looting, so ensure its at least 0
     return Math.max(level, 0);
+  }
+
+  /**
+   * Temporarily writes the looting level from {@link #getLootingLevel(DamageSource, LivingEntity, int)} onto the
+   * attacker's main hand stack, so vanilla mob drops actually see it. Must be called immediately before the attack and
+   * paired with {@link slimeknights.tconstruct.library.modifiers.hook.mining.HarvestEnchantmentsModifierHook#restoreEnchantments}
+   * on the same stack instance in a finally block, as leaving a real looting enchantment behind would be permanent.
+   * <p>
+   * 1.21 dropped {@code LootingLevelEvent}, so there is no longer a hook to report a looting level to. Mob loot instead
+   * runs the {@code minecraft:enchanted_count_increase} loot function, which reads the {@code minecraft:looting}
+   * enchantment level from the killer and bails out early when it is 0. Tinker tools carry no real looting enchantment,
+   * so it always read 0 (issue #18). This mirrors the fortune/silk touch block drop fix (issue #11), see
+   * {@link slimeknights.tconstruct.library.modifiers.hook.behavior.EnchantmentModifierHook#updateToolEnchantments}.
+   * <p>
+   * The total level (weapon plus armor) goes on the main hand because the vanilla looting enchantment only defines the
+   * main hand slot, so that is the only stack the loot function will ever read, even for an offhand attack.
+   * @param attacker      Entity doing the attacking
+   * @param mainHand      Attacker's main hand stack, passed in so the caller restores the exact instance it mutated
+   * @param damageSource  Damage source causing the kill
+   * @param target        Entity being killed
+   * @return  Original enchantments component to restore afterwards, or null if nothing changed (so no restore needed)
+   */
+  @Nullable
+  public static ItemEnchantments applyLooting(LivingEntity attacker, ItemStack mainHand, DamageSource damageSource, LivingEntity target) {
+    // never write components to an empty stack, ItemStack.EMPTY is a shared singleton and the change would be global.
+    // costs us nothing as vanilla skips empty slots when reading looting, so there is no level we could report anyway
+    if (mainHand.isEmpty()) {
+      return null;
+    }
+    // holder must come from the registry, the enchantment hooks key their maps on registry holder identity
+    Holder<Enchantment> looting = attacker.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.LOOTING);
+    // base is whatever vanilla would have used without us, the hooks may raise or cancel it
+    int base = EnchantmentHelper.getItemEnchantmentLevel(looting, mainHand);
+    int level = getLootingLevel(damageSource, target, base);
+    // if the hooks did not change anything, vanilla already reports the right level, so skip the write and the restore
+    if (level == base) {
+      return null;
+    }
+    ItemEnchantments original = mainHand.getTagEnchantments();
+    ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(original);
+    // set handles a level of 0 by removing the enchantment, which is what we want when a hook cancelled looting
+    mutable.set(looting, level);
+    mainHand.set(DataComponents.ENCHANTMENTS, mutable.toImmutable());
+    return original;
   }
 
   /** Called when a player leaves the server to clear the face */
