@@ -167,6 +167,12 @@ public class ToolHarvestLogic {
     Block block = state.getBlock();
     if (removed && canHarvest) {
       block.playerDestroy(world, player, pos, state, te, stack);
+      // Loot generation runs the PROCESS_LOOT modifier hooks via ModifierLootModifier, which builds its own tool stack
+      // view from the held stack; the melting modifier uses that view to fill the tool tank. Our view was read before
+      // those edits, so resync it here or the hooks and damage below would flush the older data back and undo them.
+      if (tool instanceof ToolStack toolStack) {
+        toolStack.refreshFromStack();
+      }
     }
 
     // drop XP

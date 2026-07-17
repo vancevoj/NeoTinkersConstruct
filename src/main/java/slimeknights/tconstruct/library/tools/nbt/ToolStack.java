@@ -92,6 +92,13 @@ public class ToolStack implements IToolStackView {
    */
   @Nullable
   private ItemStack stack;
+  /**
+   * Component value {@link #stack} held the last time this tool stack read or wrote it. Used by
+   * {@link #refreshFromStack()} to detect edits made to the same stack through another tool stack view.
+   * Null when there is no backing stack, or when the backing stack has no tool data yet.
+   */
+  @Nullable
+  private CompoundTag syncedTag;
   /** Public view of the internal NBT, to give to modifier hooks */
   private RestrictedCompoundTag restrictedNBT;
 
@@ -138,6 +145,7 @@ public class ToolStack implements IToolStackView {
   private void syncToStack() {
     if (stack != null) {
       ToolDataComponents.setTag(stack, nbt);
+      syncedTag = nbt;
     }
   }
 
@@ -165,9 +173,10 @@ public class ToolStack implements IToolStackView {
                                 ? mod.getToolDefinition()
                                 : ToolDefinition.EMPTY;
     // in 1.21 tool data lives in the TOOL_DATA data component rather than the item NBT tag
-    CompoundTag nbt = ToolDataComponents.getTag(stack);
+    CompoundTag stored = ToolDataComponents.getTag(stack);
+    CompoundTag nbt;
     ToolStack tool;
-    if (nbt == null) {
+    if (stored == null) {
       nbt = new CompoundTag();
       if (!copyNbt) {
         // only a wrongly made tool will have an empty definition. check preferred to a tag check as tags may not be loaded when this is first called
@@ -175,6 +184,7 @@ public class ToolStack implements IToolStackView {
           // store the empty compound onto the component so the tool stack and item stack stay in sync
           // both damage and tag verification are done later, doing so now causes us to recursively call this method (though not infinite)
           ToolDataComponents.setTag(stack, nbt);
+          stored = nbt;
           // no need to set the damage value, if the tool wanted it set the stack would have had a tag already
         } else {
           switch (Config.COMMON.logInvalidToolStack.get()) {
@@ -185,16 +195,15 @@ public class ToolStack implements IToolStackView {
           }
         }
       }
-    } else if (copyNbt) {
-      nbt = nbt.copy();
     } else {
       // mutations should be local to the tool stack, copy out of the component (which is treated as immutable) and write back on change
-      nbt = nbt.copy();
+      nbt = stored.copy();
     }
     tool = from(item, definition, nbt);
     // a non-copied tool stack writes its mutations back to the source stack, mirroring the legacy shared-tag behavior
     if (!copyNbt) {
       tool.stack = stack;
+      tool.syncedTag = stored;
     }
     return tool;
   }
@@ -270,16 +279,39 @@ public class ToolStack implements IToolStackView {
   @Internal
   public void refreshTag(ItemStack stack) {
     // read the tool data from the component; copy it out so mutations stay local and write back on change
-    CompoundTag tag = ToolDataComponents.getTag(stack);
-    if (tag == null) {
-      tag = new CompoundTag();
-      ToolDataComponents.setTag(stack, tag);
+    CompoundTag stored = ToolDataComponents.getTag(stack);
+    if (stored == null) {
+      stored = new CompoundTag();
+      ToolDataComponents.setTag(stack, stored);
+      this.nbt = stored;
     } else {
-      tag = tag.copy();
+      this.nbt = stored.copy();
     }
-    this.nbt = tag;
+    this.syncedTag = stored;
     this.stack = stack;
+    // the old restricted view wraps the compound we just replaced, drop it so it gets rebuilt around the new data
+    this.restrictedNBT = null;
     clearCache();
+  }
+
+  /**
+   * Re-reads the tool data from the backing item stack when another tool stack view has replaced it since this view
+   * last read or wrote it, discarding values cached from the older data. Does nothing when there is no backing stack
+   * or when the data is unchanged, so it is cheap to call defensively.
+   * <p>
+   * Before data components, a tool stack shared its compound with the item stack, so edits made through a second view
+   * of the same stack were visible here immediately. Component values are treated as immutable, so each view now holds
+   * a private copy and flushes the whole copy back on mutation, which lets a long lived view silently undo those edits.
+   * Call this after handing the backing stack to code that may edit the tool and before mutating this view again.
+   */
+  public void refreshFromStack() {
+    if (stack != null) {
+      CompoundTag current = ToolDataComponents.getTag(stack);
+      // identity compare: a different instance means something replaced the component since we last synced
+      if (current != null && current != syncedTag) {
+        refreshTag(stack);
+      }
+    }
   }
 
   /** Creates an item stack from this tool stack */
