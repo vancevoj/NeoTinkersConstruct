@@ -176,6 +176,9 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
               compound.getAllKeys().clear();
               writeStack(stack, slot, compound);
             }
+            // in 1.21 the tool data is a copy of the item's data component, so put the list back to flush the
+            // mutation onto the backing stack. Mutating the list alone never marks the tool data dirty.
+            modData.put(key, list);
             return;
           // try to keep the stacks in order by inserting after the last slot smaller than the target
           } else if (listSlot < slot) {
@@ -187,7 +190,6 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
         return;
       } else {
         list = new ListTag();
-        modData.put(key, list);
       }
 
       // list did not contain the slot, so add it
@@ -200,6 +202,8 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
           list.add(insertIndex, compound);
         }
       }
+      // flush the mutated list back onto the backing stack, see above
+      modData.put(key, list);
     }
   }
 
@@ -211,7 +215,7 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
   public Component validate(IToolStackView tool, ModifierEntry modifier) {
     // don't validate if the module is not running
     if (condition.tool().matches(tool) && validationLevel.test(modifier.getLevel())) {
-      IModDataView persistentData = tool.getPersistentData();
+      ModDataNBT persistentData = tool.getPersistentData();
       ResourceLocation key = getKey(modifier.getModifier());
       int maxSlots = getSlots(tool, modifier);
       if (persistentData.contains(key, Tag.TAG_LIST)) {
@@ -226,6 +230,7 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
           for (int i = 0; i < listNBT.size(); i++) {
             freeSlots.set(listNBT.getCompound(i).getInt(TAG_SLOT), false);
           }
+          boolean changed = false;
           for (int i = 0; i < listNBT.size(); i++) {
             CompoundTag compoundNBT = listNBT.getCompound(i);
             if (compoundNBT.getInt(TAG_SLOT) >= maxSlots) {
@@ -235,8 +240,13 @@ public class InventoryModule implements ModifierModule, InventoryModifierHook, V
               } else {
                 freeSlots.set(free, false);
                 compoundNBT.putInt(TAG_SLOT, free);
+                changed = true;
               }
             }
+          }
+          // as in setStack, the list is a copy of the item's data component, so put it back to keep the re-homed slots
+          if (changed) {
+            persistentData.put(key, listNBT);
           }
         }
       }
