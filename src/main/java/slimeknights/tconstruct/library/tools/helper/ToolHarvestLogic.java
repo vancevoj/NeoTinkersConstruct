@@ -122,7 +122,7 @@ public class ToolHarvestLogic {
    * @param tool      Tool instance
    * @param stack     Stack instance for vanilla functions
    * @param context   Harvest context
-   * @param useLastXP If true, fetches the XP from {@link BlockSideHitListener} instead of firing the event. Prevents firing {@link net.neoforged.neoforge.event.level.BlockEvent.BreakEvent} twice.
+   * @param useLastXP If true, the break event already fired for this block, so it is not fired again. Prevents firing {@link net.neoforged.neoforge.event.level.BlockEvent.BreakEvent} twice.
    * @return  True if broken
    */
   protected static boolean breakBlock(IToolStackView tool, ItemStack stack, ToolHarvestContext context, boolean useLastXP) {
@@ -133,21 +133,17 @@ public class ToolHarvestLogic {
     GameType type = player.gameMode.getGameModeForPlayer();
     BlockState state = context.getState();
     // 1.21: BlockEvent.BreakEvent no longer carries the experience to drop (ForgeHooks.onBlockBreakEvent is gone), so we
-    // fire it only for its veto and recompute the experience from the block. TODO(neoport): experience boosting that used
-    // to run via BreakEvent#setExpToDrop (ModifierEvents#beforeBlockBreak, experienced modifier) does not apply on this path.
-    int exp;
-    if (useLastXP) {
-      exp = BlockSideHitListener.getLastXP(player);
-      if (exp == -1) {
-        return false;
-      }
-    } else {
+    // fire it only for its veto and recompute the experience from the block in both cases. useLastXP means the event
+    // already fired for this block (see ToolEvents.onBlockBreak), so we must not fire it a second time.
+    // TODO(neoport): experience boosting that used to run via BreakEvent#setExpToDrop (ModifierEvents#beforeBlockBreak,
+    // experienced modifier) does not apply on this path.
+    if (!useLastXP) {
       BlockEvent.BreakEvent breakEvent = CommonHooks.fireBlockBreak(world, type, player, pos, state);
       if (breakEvent.isCanceled()) {
         return false;
       }
-      exp = state.getExpDrop(world, pos, world.getBlockEntity(pos), player, stack);
     }
+    int exp = state.getExpDrop(world, pos, world.getBlockEntity(pos), player, stack);
     // checked after the break event, so we have to recheck
     if (player.blockActionRestricted(world, pos, type)) {
       return false;

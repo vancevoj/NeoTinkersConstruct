@@ -1,7 +1,5 @@
 package slimeknights.tconstruct.library.utils;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -9,8 +7,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.LeftClickBlock.Action;
-import net.neoforged.neoforge.event.level.BlockDropsEvent;
-import net.neoforged.bus.api.EventPriority;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +17,6 @@ import java.util.UUID;
  */
 public class BlockSideHitListener {
   private static final Map<UUID,Direction> HIT_FACE = new HashMap<>();
-  private static final Object2IntMap<UUID> LAST_XP = new Object2IntOpenHashMap<>();
   @Getter
   private static Direction clientSideHit = Direction.UP;
   private static boolean init = false;
@@ -33,7 +28,6 @@ public class BlockSideHitListener {
     }
     init = true;
     NeoForge.EVENT_BUS.addListener(BlockSideHitListener::onLeftClickBlock);
-    NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, BlockSideHitListener::breakBlock);
     NeoForge.EVENT_BUS.addListener(BlockSideHitListener::onLeaveServer);
   }
 
@@ -49,19 +43,9 @@ public class BlockSideHitListener {
     }
   }
 
-  /** Called on block break to store the last break XP */
-  private static void breakBlock(BlockDropsEvent event) {
-    // BlockEvent.BreakEvent no longer carries the experience to drop; BlockDropsEvent now exposes the post-enchantment value
-    if (event.getBreaker() instanceof Player player) {
-      LAST_XP.put(player.getUUID(), event.getDroppedExperience());
-    }
-  }
-
   /** Called when a player leaves the server to clear the face */
   private static void onLeaveServer(PlayerLoggedOutEvent event) {
-    UUID uuid = event.getEntity().getUUID();
-    HIT_FACE.remove(uuid);
-    LAST_XP.remove(uuid);
+    HIT_FACE.remove(event.getEntity().getUUID());
   }
 
   /**
@@ -76,8 +60,4 @@ public class BlockSideHitListener {
     return HIT_FACE.getOrDefault(player.getUUID(), Direction.UP);
   }
 
-  /** Gets the last XP from the break block event */
-  public static int getLastXP(Player player) {
-    return LAST_XP.getOrDefault(player.getUUID(), 0);
-  }
 }
