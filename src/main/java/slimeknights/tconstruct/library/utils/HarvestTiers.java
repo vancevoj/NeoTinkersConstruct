@@ -82,12 +82,23 @@ public class HarvestTiers {
   /**
    * Gets a numeric sort key for a tier so the larger and smaller helpers keep working without a sorting registry.
    * <p>
-   * TODO(neoport): TierSortingRegistry removed in 1.21, true cross mod tier ordering is no longer available. We approximate
-   * ordering using the vanilla Tiers ordinal; unknown tiers sort below all vanilla tiers.
+   * Mirrors the order of {@code TierSortingRegistry.getSortedTiers()} from 1.20.1: wood, gold, stone, iron, diamond,
+   * netherite. Note this is not the order the vanilla enum declares, as {@link Tiers} declares gold between diamond and
+   * netherite despite gold having wood's harvest level, so {@code ordinal()} would sort gold above diamond.
+   * <p>
+   * TODO(neoport): TierSortingRegistry removed in 1.21, true cross mod tier ordering is no longer available. Unknown
+   * tiers sort below all vanilla tiers.
    */
   private static int sortKey(Tier tier) {
     if (tier instanceof Tiers vanilla) {
-      return vanilla.ordinal();
+      return switch (vanilla) {
+        case WOOD -> 0;
+        case GOLD -> 1;
+        case STONE -> 2;
+        case IRON -> 3;
+        case DIAMOND -> 4;
+        case NETHERITE -> 5;
+      };
     }
     return -1;
   }
