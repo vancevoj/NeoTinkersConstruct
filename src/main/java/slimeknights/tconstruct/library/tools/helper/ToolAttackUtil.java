@@ -265,6 +265,14 @@ public class ToolAttackUtil {
       }
     }
 
+    // death loot is generated inside hurt above, running the PROCESS_LOOT modifier hooks via ModifierLootModifier,
+    // which build their own tool stack view from the held stack; a melting weapon uses that view to fill the tool tank
+    // from the mob's drops. Our view was read before those edits, so resync here or the hooks and damage below would
+    // flush the older data back and undo them (same clobber as the melting pan block break, issue #16 / #23).
+    if (tool instanceof ToolStack toolStack) {
+      toolStack.refreshFromStack();
+    }
+
     // reset hand to make sure we don't mess with vanilla tools
     ModifierLootingHandler.setLootingSlot(attackerLiving, EquipmentSlot.MAINHAND);
     // reset knockback if needed

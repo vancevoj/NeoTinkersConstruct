@@ -138,7 +138,9 @@ public class MobEquipmentManager extends SimpleJsonResourceReloadListener {
     Mob mob = event.getEntity();
     List<MobEquipment> equipment = get(mob.getType());
     if (!equipment.isEmpty() && MobEquipment.apply(equipment, mob, event)) {
-      event.setSpawnCancelled(true);
+      // cancel only vanilla's finalizeSpawn (MobEquipment.apply already ran ours and set the tool); NeoForge keeps the
+      // mob. setSpawnCancelled would instead delete the fully equipped mob, so it never spawns (issue #24).
+      event.setCanceled(true);
     }
   }
 }
